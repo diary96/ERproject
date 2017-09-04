@@ -28,6 +28,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -228,8 +229,8 @@ public class TravauxService extends ServiceModel {
         List<TacheModel> initialHorsCatalogue;
 
         Session session = hibernateDao.getSessionFactory().openSession();
-        String sql = "select t from TacheInitialCatalogue t join t.offre o where o.id = :id";
-        String sql1 = "select t from TacheInitialHorsCatalogue t join t.offre o where o.id = :id";
+        String sql = "select t from TacheInitialCatalogue t join t.offre o where o.id = :id ORDER BY t.id";
+        String sql1 = "select t from TacheInitialHorsCatalogue t join t.offre o where o.id = :id ORDER BY t.id";
 
         Query query = session.createQuery(sql);
         query.setParameter("id", offre.getId());
@@ -257,8 +258,8 @@ public class TravauxService extends ServiceModel {
         List<TacheModel> initialCatalogue;
         List<TacheModel> initialHorsCatalogue;
         try {
-            String sql = "select t from TacheInitialCatalogue t join t.offre o where o.id = :id";
-            String sql1 = "select t from TacheInitialHorsCatalogue t join t.offre o where o.id = :id";
+            String sql = "select t from TacheInitialCatalogue t join t.offre o where o.id = :id ORDER BY t.id";
+            String sql1 = "select t from TacheInitialHorsCatalogue t join t.offre o where o.id = :id ORDER BY t.id";
 
             Query query = session.createQuery(sql);
             query.setParameter("id", offre.getId());
@@ -293,11 +294,13 @@ public class TravauxService extends ServiceModel {
         c.createAlias("tsc.soumission", "soumission"); // inner join by default
         c.createAlias("soumission.offre", "offre");
         c.add(Restrictions.eq("offre.id", offre.getId()));
+        c.addOrder(Order.asc("tsc.id"));
 
         Criteria horsCatalogue = session.createCriteria(TacheSoumissionHorsCatalogue.class, "tsc");
         horsCatalogue.createAlias("tsc.soumission", "soumission"); // inner join by default
         horsCatalogue.createAlias("soumission.offre", "offre");
         horsCatalogue.add(Restrictions.eq("offre.id", offre.getId()));
+        horsCatalogue.addOrder(Order.asc("tsc.id"));
 
         initialSoumissionCatalogue = c.list();
         initialSoumissionHorsCatalogue = horsCatalogue.list();
@@ -326,11 +329,15 @@ public class TravauxService extends ServiceModel {
             c.createAlias("tsc.soumission", "soumission"); // inner join by default
             c.createAlias("soumission.offre", "offre");
             c.add(Restrictions.eq("offre.id", offre.getId()));
+            c.addOrder(Order.asc("tsc.id"));
+            c.addOrder(Order.asc("tsc.id"));
 
             Criteria horsCatalogue = session.createCriteria(TacheSoumissionHorsCatalogue.class, "tsc");
             horsCatalogue.createAlias("tsc.soumission", "soumission"); // inner join by default
             horsCatalogue.createAlias("soumission.offre", "offre");
             horsCatalogue.add(Restrictions.eq("offre.id", offre.getId()));
+            horsCatalogue.addOrder(Order.asc("tsc.id"));
+            horsCatalogue.addOrder(Order.asc("tsc.id"));
 
             initialSoumissionCatalogue = c.list();
             initialSoumissionHorsCatalogue = horsCatalogue.list();
@@ -363,11 +370,13 @@ public class TravauxService extends ServiceModel {
         c.createAlias("tsc.travauxSupplementaire", "soumission"); // inner join by default
         c.createAlias("soumission.offre", "offre");
         c.add(Restrictions.eq("offre.id", offre.getId()));
+        c.addOrder(Order.asc("tsc.id"));
 
         Criteria horsCatalogue = session.createCriteria(TacheTSHorsCatalogue.class, "tsc");
         horsCatalogue.createAlias("tsc.travauxSupplementaire", "soumission"); // inner join by default
         horsCatalogue.createAlias("soumission.offre", "offre");
         horsCatalogue.add(Restrictions.eq("offre.id", offre.getId()));
+        horsCatalogue.addOrder(Order.asc("tsc.id"));
 
         initialSoumissionCatalogue = c.list();
         initialSoumissionHorsCatalogue = horsCatalogue.list();
@@ -398,11 +407,13 @@ public class TravauxService extends ServiceModel {
             c.createAlias("tsc.travauxSupplementaire", "soumission"); // inner join by default
             c.createAlias("soumission.offre", "offre");
             c.add(Restrictions.eq("offre.id", offre.getId()));
+            c.addOrder(Order.asc("tsc.id"));
 
             Criteria horsCatalogue = session.createCriteria(TacheTSHorsCatalogue.class, "tsc");
             horsCatalogue.createAlias("tsc.travauxSupplementaire", "soumission"); // inner join by default
             horsCatalogue.createAlias("soumission.offre", "offre");
             horsCatalogue.add(Restrictions.eq("offre.id", offre.getId()));
+            horsCatalogue.addOrder(Order.asc("tsc.id"));
 
             initialSoumissionCatalogue = c.list();
             initialSoumissionHorsCatalogue = horsCatalogue.list();
