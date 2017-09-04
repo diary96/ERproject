@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- was: <?xml version="1.0" encoding="UTF-8"?> -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+        
+    <!--Action class-->
+    
+    <bean id="catalogue" class="com.er.erproject.action.CatalogueAction">
+        <property name="userService" ref="userService" />
+        <property name="catalogueService" ref="catalogueService"/>
+    </bean>
+    <bean id="index" class="com.er.erproject.action.IndexAction">
+        <property name="userService" ref="userService" />
+    </bean>
+    <bean id="accueil" class="com.er.erproject.action.AccueilAction">
+        <property name="offreService" ref="offreService" />
+    </bean>
+    <bean id="new" class="com.er.erproject.action.AddAction">
+        <property name="offreService" ref="offreService" />
+        <property name="typeOffreService" ref="typeOffreService" />
+       
+    </bean>
+    <bean id="offreAction" class="com.er.erproject.action.OffreAction">
+        <property name="userService" ref="userService" />
+        <property name="offreService" ref="offreService" />
+        <property name="travauxService" ref="travauxService" />       
+    </bean>
+    <bean id="gestionTravaux" class="com.er.erproject.action.GestionTravauxAction">       
+        <property name="offreService" ref="offreService" />
+        <property name="travauxService" ref="travauxService" />       
+    </bean>
+    <bean id="gestionPhoto" class="com.er.erproject.action.PhotoAction">       
+        <property name="travauxService" ref="travauxService" />       
+    </bean>
+    <bean id="gestionMateriel" class="com.er.erproject.action.MateriauxAction">      
+        <property name="offreService" ref="offreService" />
+        <property name="materiauxService" ref="materiauxService" />  
+    </bean>
+    <bean id="refelectAction" class="com.er.erproject.action.ReflectAction">       
+        <property name="reflectService" ref="reflectService" />       
+    </bean>
+    <bean id="facturationAction" class="com.er.erproject.action.FacturationAction">       
+        <property name="userService" ref="userService" />     
+        <property name="offreService" ref="offreService" />     
+        <property name="ventillationService" ref="ventillationService" />     
+        <property name="bonCommandeService" ref="bonCommandeService" />     
+    </bean>
+    
+    
+    
+    <!--service class-->
+    <bean id="catalogueService" class="com.er.erproject.service.CatalogueService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
+    <bean id="bonCommandeService" class="com.er.erproject.service.BonCommandeService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
+    <bean id="ventillationService" class="com.er.erproject.service.VentillationService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
+    <bean id="photoService" class="com.er.erproject.service.PhotoService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
+    <bean id="materiauxService" class="com.er.erproject.service.MateriauxService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
+    <bean id="typeOffreService" class="com.er.erproject.service.TypeOffreService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
+    <bean id="offreService" class="com.er.erproject.service.OffreService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
+    <bean id="userService" class="com.er.erproject.service.UserService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
+    <bean id="soumissionService" class="com.er.erproject.service.SoumissionService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
+    <bean id="travauxService" class="com.er.erproject.service.TravauxService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
+    <bean id="reflectService" class="com.er.erproject.service.ReflectService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
+    <!--hibernate dao-->
+    <bean id="hibernateDao" class="com.er.erproject.dao.HibernateDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+        
+    <!--Hibernate session factory--> 
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <!--<property name="dataSource" ref="dataSource" />-->
+        <property name="configLocation" value="classpath:hibernate.cfg.xml" />     
+    </bean>
+	
+        
+</beans>

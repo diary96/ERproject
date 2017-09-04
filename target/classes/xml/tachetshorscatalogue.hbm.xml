@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.er.erproject.model.TacheTSHorsCatalogue" table="tachetshc">
+        <id name="id" type="long" column="idtache_ts_hc">
+            <generator class="increment"/>
+        </id>
+        <property name="reference" column="reference" type="string"/>
+        <property name="quantite" column="quantite" type="int"/>
+        <property name="effectuer" column="effectuer" type="int"/>
+        <property name="remarque" column="remarque" type="string"/>
+       <many-to-one name="travauxSupplementaire" class="com.er.erproject.model.TravauxSupplementaire" fetch="select">
+            <column name="idts" not-null="true" />
+        </many-to-one>
+        <many-to-one name="catalogue" class="com.er.erproject.model.HorsCatalogue" fetch="select">
+            <column name="idhorscatalogue" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.er.erproject.model.Photo" table="photo">
+        <id name="id" type="long" column="idphoto">
+            <generator class="increment"/>
+        </id>
+        <property name="pathPhoto" column="pathphoto" type="string"/>
+        <property name="coordonnee" column="cordonnee" type="string"/>
+        <property name="description" column="description" type="string"/>
+        <property name="referenceTravaux" column="referencetravaux" type="string"/>
+    </class>
+</hibernate-mapping>

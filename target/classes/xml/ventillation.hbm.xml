@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.er.erproject.model.Ventillation" table="ventillation">
+        <id name="id" type="long" column="idventillation">
+            <generator class="increment"/>
+        </id>
+        <property name="date" column="date" type="date"/>
+        <property name="pourcentage" column="pourcentage" type="double"/>
+        <property name="typeDescription" column="typedescription" type="string"/>
+        <property name="payementName" column="payementname" type="string"/>
+        <many-to-one name="soumission" class="com.er.erproject.model.Soumission" fetch="select">
+            <column name="idsoumission" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

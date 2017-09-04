@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.er.erproject.model.TravauxSupplementaire" table="travauxsup">
+        <id name="id" type="long" column="idts">
+            <generator class="increment"/>
+        </id>
+        <property name="statu" column="statut" type="int"/>
+        <property name="tva" column="tva" type="double"/>
+        <property name="remise" column="remise" type="double"/>
+        <property name="total" column="total" type="double"/>
+        <many-to-one name="offre" class="com.er.erproject.model.Offre" fetch="select">
+            <column name="idoffre" not-null="true" />
+        </many-to-one>
+        <many-to-one name="bonCommande" class="com.er.erproject.model.BonCommande" fetch="select">
+            <column name="idboncommande" not-null="false" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>
