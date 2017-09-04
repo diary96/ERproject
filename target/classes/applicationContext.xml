@@ -11,6 +11,9 @@
         
     <!--Action class-->
     
+    <bean id="typeFichierAction" class="com.er.erproject.action.TypeFichierAction">
+        <property name="typeFichierService" ref="typeFichierService" />
+    </bean>
     <bean id="catalogue" class="com.er.erproject.action.CatalogueAction">
         <property name="userService" ref="userService" />
         <property name="catalogueService" ref="catalogueService"/>
@@ -55,6 +58,9 @@
     
     
     <!--service class-->
+    <bean id="typeFichierService" class="com.er.erproject.service.TypeFichierService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
     <bean id="catalogueService" class="com.er.erproject.service.CatalogueService">
         <property name="hibernateDao" ref="hibernateDao" />
     </bean>

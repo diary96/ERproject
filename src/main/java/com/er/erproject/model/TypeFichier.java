@@ -5,6 +5,7 @@
  */
 package com.er.erproject.model;
 
+import com.er.erproject.data.Reference;
 import java.util.Date;
 
 /**
@@ -30,5 +31,7 @@ public class TypeFichier extends BaseModel{
     public void setDateajout(Date dateajout) {
         this.dateajout = dateajout;
     }
-    
+    public TypeFichier(){
+        this.setReference(Reference.TYPE_FICHIER);
+    }
 }

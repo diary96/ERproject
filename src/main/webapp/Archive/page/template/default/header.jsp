@@ -89,6 +89,7 @@
                                             <li><a href="listeCatalogue">Employee</a></li>
                                             <li><a href="listeCatalogue">Catalogue</a></li>
                                             <li><a href="listeHorsCatalogue">Hors Catalogue</a></li>
+                                            <li><a href="listeTypeFichier">Gestion Type d'archive</a></li>
                                             
 
                                         </ul>

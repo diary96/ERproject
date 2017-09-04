@@ -44,6 +44,7 @@ E:\Stage\ER\ERproject\src\main\java\com\er\erproject\action\ReflectAction.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\generator\FactureGenerator.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\TacheInitialCatalogue.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\TypeOffre.java
+E:\Stage\ER\ERproject\src\main\java\com\er\erproject\action\TypeFichierAction.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\Parametre.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\Photo.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\data\ReferenceType.java
@@ -56,6 +57,7 @@ E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\TacheTSHorsCatalogue.
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\service\CatalogueService.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\data\Reference.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\security\Cryptographie.java
+E:\Stage\ER\ERproject\src\main\java\com\er\erproject\service\ArchiveService.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\VentillationTS.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\service\MateriauxService.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\data\PathData.java
@@ -63,6 +65,7 @@ E:\Stage\ER\ERproject\src\main\java\com\er\erproject\service\SoumissionService.j
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\action\GestionTravauxAction.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\service\ServiceModel.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\data\StatuReference.java
+E:\Stage\ER\ERproject\src\main\java\com\er\erproject\service\TypeFichierService.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\action\UtilAction.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\dao\HibernateDao.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\TacheTSCatalogue.java

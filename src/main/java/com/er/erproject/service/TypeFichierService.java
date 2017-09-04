@@ -33,11 +33,12 @@ public class TypeFichierService extends ServiceModel {
     public List<TypeFichier> find() throws Exception {
         List<TypeFichier> reponse = null; 
         try{
-            reponse = (List<TypeFichier>)(Object)this.hibernateDao.findAll(new TypeFichier());
-            return reponse;
+            reponse = (List<TypeFichier>)(Object)this.hibernateDao.findAll(new TypeFichier());   
         }catch(Exception e){
+            e.printStackTrace();
             throw new Exception("impossible d'extraire la liste de tout les type de fichier cause "+e.getMessage());
         }
+        return reponse;
     }
     
     public void find(TypeFichier typeFichier)throws Exception{
@@ -45,7 +46,7 @@ public class TypeFichierService extends ServiceModel {
         try{
             this.hibernateDao.findById(typeFichier);    
         }catch(Exception e){
-            throw new Exception("impossibe d'initialiser le type de fichier cause "+e.getMessage());
+            throw new Exception("impossibe d'initialiser le type de fichier cause identifiant introuvable ");
         } 
     }
     

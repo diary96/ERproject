@@ -44,7 +44,7 @@ Contributor(s):
         <id name="id" type="long" column="idtype_fichier">
             <generator class="increment"/>
         </id>
-        <property name="nomType" column="nom_type" type="string"/>
+        <property name="nomType" column="nomtype" type="string"/>
         <property name="dateajout" column="dateajout" type="timestamp"/>
         
     </class>

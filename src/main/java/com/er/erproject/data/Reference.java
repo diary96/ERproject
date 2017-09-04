@@ -17,6 +17,7 @@ import com.er.erproject.model.TacheSoumissionCatalogue;
 import com.er.erproject.model.TacheSoumissionHorsCatalogue;
 import com.er.erproject.model.TacheTSCatalogue;
 import com.er.erproject.model.TacheTSHorsCatalogue;
+import com.er.erproject.model.TypeFichier;
 import com.er.erproject.model.Ventillation;
 import com.er.erproject.model.VentillationTS;
 import java.lang.reflect.Type;
@@ -42,6 +43,7 @@ public class Reference {
     public static final String BC = "BDC";
     public static final String VENTILATION = "VTL";
     public static final String VENTILATION_TS = "VTS";
+    public static final String TYPE_FICHIER = "TYF";
     
     public static Class getClass(String reference)throws Exception{
         if(reference.compareToIgnoreCase(Reference.CATALOGUE)==0)return Catalogue.class;
@@ -58,6 +60,7 @@ public class Reference {
         if(reference.compareToIgnoreCase(Reference.BC)==0)return BonCommande.class;
         if(reference.compareToIgnoreCase(Reference.VENTILATION)==0)return Ventillation.class;
         if(reference.compareToIgnoreCase(Reference.VENTILATION_TS)==0)return VentillationTS.class;
+        if(reference.compareToIgnoreCase(Reference.TYPE_FICHIER)==0)return TypeFichier.class;
         
         else throw new Exception("Desole, la reference n'est pas dans la base");
         
