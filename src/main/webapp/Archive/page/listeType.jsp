@@ -18,6 +18,9 @@
                             <tr>
                                 <th>#</th>
                                 <th>            
+                                    Reference                                
+                                </th>                       
+                                <th>            
                                     Nom du type d'archive                                   
                                 </th>                       
                                 <th>  
@@ -31,13 +34,27 @@
                                 <tr>
                                     <th scope="row"><s:property value="#catalogue.index+1"/></th>
 
+                                    <th><s:property value="getAllReference()"/></th>
                                     <th><s:property value="getNomType()"/></th>
                                     <td><s:property value="getDateajout()"/></td>                      
                                     <td><a href="gestionTypeFichier?idType=<s:property value="getId()"/>" class="btn btn-primary btn-xs">Modifier</a></td>                      
+                                    <td> <button id="<s:property value="getAllReference()" />" class="supprimer btn btn-danger btn-xs"  >Supprimer</button></td>
                                 </tr>
                             </s:iterator>
                         </tbody>
                     </table>
                 </div>                    
             </div>
+  <script>
+    jQuery(document).ready(function ()
+    {
+        $('.supprimer').on('click', function ()
+        {
+            if (confirm("Voulez-vous vraiment supprimer le type "+this.getAttribute('id')+"?")) {
+                window.location.replace("deleteReflect?reference="+this.getAttribute('id')+"&url=listeTypeFichier");
+                
+            }
+        });
+    });
+</script>
 <%@include file="template/default/footer.jsp" %>
