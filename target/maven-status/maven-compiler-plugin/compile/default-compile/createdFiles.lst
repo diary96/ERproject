@@ -58,6 +58,7 @@ com\er\erproject\service\ReflectService.class
 com\er\erproject\model\BonCommande.class
 com\er\erproject\dao\HibernateDao.class
 com\er\erproject\data\ReferenceType.class
+com\er\erproject\action\ArchiveAction.class
 com\er\erproject\action\FacturationAction.class
 com\er\erproject\model\CatalogueModel.class
 com\er\erproject\generator\FactureTSGenerator.class

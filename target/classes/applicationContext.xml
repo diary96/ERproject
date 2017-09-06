@@ -11,6 +11,10 @@
         
     <!--Action class-->
     
+    <bean id="archiveAction" class="com.er.erproject.action.ArchiveAction">
+        <property name="archiveService" ref="archiveService" />
+        <property name="offreService" ref="offreService" />
+    </bean>
     <bean id="typeFichierAction" class="com.er.erproject.action.TypeFichierAction">
         <property name="typeFichierService" ref="typeFichierService" />
     </bean>
@@ -58,6 +62,9 @@
     
     
     <!--service class-->
+    <bean id="archiveService" class="com.er.erproject.service.ArchiveService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
     <bean id="typeFichierService" class="com.er.erproject.service.TypeFichierService">
         <property name="hibernateDao" ref="hibernateDao" />
     </bean>

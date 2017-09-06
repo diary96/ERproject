@@ -5,9 +5,15 @@
  */
 package com.er.erproject.service;
 
+import com.er.erproject.model.Archive;
+import com.er.erproject.model.Offre;
 import com.er.erproject.model.TypeFichier;
 import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -39,6 +45,41 @@ public class TypeFichierService extends ServiceModel {
             throw new Exception("impossible d'extraire la liste de tout les type de fichier cause "+e.getMessage());
         }
         return reponse;
+    }
+    
+    public void find(Archive archive)throws Exception{
+        Session session = null;
+        try{
+            session = hibernateDao.getSessionFactory().openSession();
+            String sql = "select type from Archive archive join archive.typeFichier type where archive.id = :id"; 
+        
+            Query query = session.createQuery(sql); 
+            query.setParameter("id", archive.getId());
+            List<TypeFichier> typeFichier = query.list();
+            session.close();
+            if (!typeFichier.isEmpty()) {
+                archive.setTypeFichier(typeFichier.get(0));
+            }
+        }catch(Exception e){
+        
+        }finally{
+            if(session!=null)session.close();
+        }
+    }
+    public static void find(Archive archive, Session session)throws Exception{   
+        try{
+            String sql = "select type from Archive archive join archive.typeFichier type where archive.id = :id"; 
+        
+            Query query = session.createQuery(sql); 
+            query.setParameter("id", archive.getId());
+            List<TypeFichier> typeFichier = query.list();
+            session.close();
+            if (!typeFichier.isEmpty()) {
+                archive.setTypeFichier(typeFichier.get(0));
+            }
+        }catch(Exception e){
+            throw e;
+        }
     }
     
     public void find(TypeFichier typeFichier)throws Exception{

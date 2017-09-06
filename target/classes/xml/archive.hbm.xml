@@ -46,7 +46,7 @@ Contributor(s):
         </id>
         <property name="nom" column="nomarchive" type="string"/>
         <property name="path" column="patharchive" type="string"/>
-        <property name="dateajout" column="dateajout" type="timestamp"/>
+        <property name="dateajout" column="dataajout" type="timestamp"/>
         <many-to-one name="offre" class="com.er.erproject.model.Offre" fetch="select">
             <column name="idoffre" not-null="true" />
         </many-to-one>

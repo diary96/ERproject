@@ -309,7 +309,12 @@
             <result name="login" type="redirect">index</result> 
             <result name="none" type="redirect">accueil</result> 
         </action>
-        
+        <action name="listeArchive" class="com.er.erproject.action.ArchiveAction" method="listeArchive">
+            <result name="success">Archive/page/listeArchive.jsp</result> 
+            <result name="error">Archive/page/listeArchive.jsp</result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
         
 
     </package>

@@ -44,9 +44,9 @@ public class FileUtil {
         }
         return true;
     }
-    public static boolean saveArchive(File bc)throws Exception{
+    public static boolean saveArchive(File bc,String ext)throws Exception{
         try{
-            String myfilename = bc.getName() + ".pdf";
+            String myfilename = bc.getName() + "."+ext;
             File destFile = new File(PathData.PATH_ARCHIVE, myfilename); // Null pointer exception is thrown here
             FileUtils.copyFile(bc, destFile);
             return destFile.exists();
@@ -54,9 +54,7 @@ public class FileUtil {
             throw e;
         }
     }
-
     
-
     public static void deleteFile(String pathPhoto) throws Exception {
         File photo = null;
         String path = PathData.PATH_PHOTO_SIMPLE + "/" + pathPhoto;
@@ -75,5 +73,4 @@ public class FileUtil {
             throw new Exception("Impossible de supprimer la photo");
         }
     }
-
 }
