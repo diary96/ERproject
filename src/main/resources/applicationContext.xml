@@ -14,6 +14,7 @@
     <bean id="archiveAction" class="com.er.erproject.action.ArchiveAction">
         <property name="archiveService" ref="archiveService" />
         <property name="offreService" ref="offreService" />
+        <property name="typeFichierService" ref="typeFichierService" />
     </bean>
     <bean id="typeFichierAction" class="com.er.erproject.action.TypeFichierAction">
         <property name="typeFichierService" ref="typeFichierService" />

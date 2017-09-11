@@ -72,8 +72,7 @@ public class TypeFichierService extends ServiceModel {
         
             Query query = session.createQuery(sql); 
             query.setParameter("id", archive.getId());
-            List<TypeFichier> typeFichier = query.list();
-            session.close();
+            List<TypeFichier> typeFichier = query.list();      
             if (!typeFichier.isEmpty()) {
                 archive.setTypeFichier(typeFichier.get(0));
             }

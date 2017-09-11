@@ -5,15 +5,21 @@
  */
 package com.er.erproject.action;
 
+import com.er.erproject.data.PathData;
 import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
 import com.er.erproject.model.Archive;
 import com.er.erproject.model.Offre;
+import com.er.erproject.model.TypeFichier;
 import com.er.erproject.model.User;
 import com.er.erproject.service.ArchiveService;
 import com.er.erproject.service.OffreService;
+import com.er.erproject.service.ReflectService;
+import com.er.erproject.service.TypeFichierService;
+import com.er.erproject.util.FileUtil;
 import com.opensymphony.xwork2.Action;
 import java.io.File;
+import java.util.Calendar;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.apache.struts2.ServletActionContext;
@@ -25,13 +31,63 @@ import org.apache.struts2.ServletActionContext;
 public class ArchiveAction extends ActionModel{
     private long idOffre; 
     private List<Archive> archives;
-    private File myFile;
-    private String myFileContentType;
-    private String myFileFileName;
+    private File archiveF;
+    private String archiveFContentType;
+    private String archiveFFileName;
     private ArchiveService archiveService; 
+    private long idArchive=0;
+    private String reference;
     private OffreService offreService;
+    private TypeFichierService typeFichierService;
     private Offre offre;
+    private List<TypeFichier> typeFichier;
+    private long idType=0;
 
+    public long getIdType() {
+        return idType;
+    }
+
+    public void setIdType(long idType) {
+        this.idType = idType;
+    }
+
+    
+    public TypeFichierService getTypeFichierService() {
+        return typeFichierService;
+    }
+
+    public void setTypeFichierService(TypeFichierService typeFichierService) {
+        this.typeFichierService = typeFichierService;
+    }
+
+    
+    
+    public List<TypeFichier> getTypeFichier() {
+        return typeFichier;
+    }
+
+    public void setTypeFichier(List<TypeFichier> typeFichier) {
+        this.typeFichier = typeFichier;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    
+    public long getIdArchive() {
+        return idArchive;
+    }
+
+    public void setIdArchive(long idArchive) {
+        this.idArchive = idArchive;
+    }
+
+    
     public Offre getOffre() {
         return offre;
     }
@@ -68,29 +124,31 @@ public class ArchiveAction extends ActionModel{
         this.archives = archives;
     }
 
-    public File getMyFile() {
-        return myFile;
+    public File getArchiveF() {
+        return archiveF;
     }
 
-    public void setMyFile(File myFile) {
-        this.myFile = myFile;
+    public void setArchiveF(File archiveF) {
+        this.archiveF = archiveF;
     }
 
-    public String getMyFileContentType() {
-        return myFileContentType;
+    public String getArchiveFContentType() {
+        return archiveFContentType;
     }
 
-    public void setMyFileContentType(String myFileContentType) {
-        this.myFileContentType = myFileContentType;
+    public void setArchiveFContentType(String archiveFContentType) {
+        this.archiveFContentType = archiveFContentType;
     }
 
-    public String getMyFileFileName() {
-        return myFileFileName;
+    public String getArchiveFFileName() {
+        return archiveFFileName;
     }
 
-    public void setMyFileFileName(String myFileFileName) {
-        this.myFileFileName = myFileFileName;
+    public void setArchiveFFileName(String archiveFFileName) {
+        this.archiveFFileName = archiveFFileName;
     }
+
+    
 
     public ArchiveService getArchiveService() {
         return archiveService;
@@ -99,9 +157,7 @@ public class ArchiveAction extends ActionModel{
     public void setArchiveService(ArchiveService archiveService) {
         this.archiveService = archiveService;
     }
-    
-    
-    
+ 
     @Override
     public void setSessionUser(){
         HttpSession session = ServletActionContext.getRequest().getSession();
@@ -110,6 +166,7 @@ public class ArchiveAction extends ActionModel{
             this.setUser((User) object);
         }     
     } 
+    
     public String listeArchive(){
         this.setSessionUser();
         if (this.user == null) {
@@ -132,4 +189,104 @@ public class ArchiveAction extends ActionModel{
         return Action.SUCCESS;
     }
     
+    public String save(){
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        if(this.idOffre==0)return Action.NONE;
+        try{
+            this.offre = this.offreService.find(idOffre);
+        }catch(Exception e){
+            return Action.NONE;
+        }
+        try{
+            Archive archive=null;
+            TypeFichier typeFichier = new TypeFichier(); 
+            typeFichier.setId(idType);
+            if(!this.checkerData(this.reference))throw new Exception("veuillez remplir le champ de reference");
+            if(this.idType==0)throw new Exception("veuillez choisir un type de fichier");
+            if(this.idArchive==0){         
+                if(this.archiveF==null)throw new Exception("veuillez choisir un fichier");
+                FileUtil.saveArchive(archiveF, FileUtil.getEx(this.archiveFFileName));
+                archive = new Archive(); 
+                archive.setNom(this.getReference());
+                archive.setPath(PathData.PATH_ARCHIVE_SIMPLE+"/"+archiveF.getName()+"."+FileUtil.getEx(this.archiveFFileName));
+                archive.setDateajout(Calendar.getInstance().getTime());
+                archive.setTypeFichier(typeFichier);
+                archive.setOffre(offre);
+                this.archiveService.save(archive);
+            }else{
+                archive = new Archive(); 
+                archive.setId(this.idArchive);
+                this.archiveService.find(archive);
+                archive.setNom(this.getReference());
+                archive.setTypeFichier(typeFichier);
+                archive.setOffre(offre);
+                if(this.archiveF!=null){
+                    FileUtil.saveArchive(archiveF, FileUtil.getEx(this.archiveFFileName));
+                    archive.setPath(PathData.PATH_ARCHIVE_SIMPLE+"/"+archiveF.getName()+"."+FileUtil.getEx(this.archiveFFileName));                
+                }
+                this.archiveService.update(archive);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+    
+    public String delete(){
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        if(!this.checkerData(this.reference))return Action.NONE;
+        try{
+            Archive archive = null; 
+            try{
+                ReflectService reflectService = new ReflectService();
+                reflectService.setHibernateDao(this.archiveService.getHibernateDao());
+                archive = (Archive)reflectService.find(reference);
+            }catch(Exception e){
+                throw new Exception("la reference inseré n'est pas de type archive");
+            }
+            this.archiveService.delete(archive);
+        }catch(Exception e){
+            e.printStackTrace();
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
+        }
+       
+        
+        return Action.SUCCESS;
+    }
+    
+    public String gestionArchive(){
+        this.setSessionUser();
+        if(this.user==null)return Action.LOGIN;    
+        try{
+            this.offre = this.offreService.find(idOffre);
+        }catch(Exception e){
+            return Action.NONE;
+        }
+        try{
+            this.typeFichier = this.typeFichierService.find();
+            if(this.idArchive!=0){
+                Archive archive = new Archive();
+                archive.setId(this.getIdArchive());
+                this.archiveService.find(archive);
+                this.reference = archive.getNom();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
 }

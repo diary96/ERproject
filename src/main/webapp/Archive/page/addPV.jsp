@@ -16,6 +16,7 @@
         <div class="clearfix"></div>
     </div>
     <div class="" role="tabpanel" data-example-id="togglable-tabs">
+        <a href="listeArchive?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-primary">Gestion des fichiers</a>
         <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
             <%--<s:property value="@com.er.erproject.data.StatuReference@OFFRE"/>--%>
             <li role="presentation" class="active"><a href="#offre" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Offre Initial</a>

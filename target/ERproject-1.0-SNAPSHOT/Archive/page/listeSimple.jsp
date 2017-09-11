@@ -2,7 +2,7 @@
 <div class="x_panel">
   <%@include file="template/default/Erreur.jsp" %>
                   <div class="x_title">
-                      <h2>Liste des offres <small>D&eacute;partement</small></h2>
+                      <h2>Liste des offres</h2>
                     <ul class="nav navbar-right panel_toolbox">
 <!--                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>-->
                       </li>
@@ -47,6 +47,7 @@
                                 </s:else>
                                 
                                 <td><a href="http://localhost:8081/ERproject/Archive/page/historique.jsp" class="btn btn-primary btn-xs">Historique</a></td>
+                                <td> <a href="listeArchive?idOffre=<s:property value="getId()" />" class="btn btn-primary btn-xs"  >Gestion des fichiers</button></a>
                                 <td> <button id="<s:property value="getId()" />" class="supprimer btn btn-danger btn-xs"  >Supprimer</button></td>
 
                             </tr>

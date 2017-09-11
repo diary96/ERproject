@@ -10,6 +10,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -54,7 +55,13 @@ public class FileUtil {
             throw e;
         }
     }
-    
+    public static String getEx(String name)throws Exception{
+        String ext=null;
+        String[] data = name.split(Pattern.quote("."));
+        if(data.length>0)ext=data[data.length-1];
+        else throw new Exception("extension non valide");
+        return ext;
+    }
     public static void deleteFile(String pathPhoto) throws Exception {
         File photo = null;
         String path = PathData.PATH_PHOTO_SIMPLE + "/" + pathPhoto;

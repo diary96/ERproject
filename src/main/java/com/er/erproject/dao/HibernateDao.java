@@ -42,12 +42,8 @@ public class HibernateDao {
         }
     }
     public void save(BaseModel obj,Session session) throws Exception{
-        
-     
-        try{
-        
+        try{        
             session.save(obj);
-           
         }catch (Exception ex){         
             throw ex;
         }
@@ -63,6 +59,14 @@ public class HibernateDao {
         }finally {
             if(session!=null)
                 session.close();
+        }
+    }
+    public void findById(BaseModel obj,Session session) throws Exception{
+       
+        try{
+            session.load(obj,obj.getId());
+        }catch (Exception ex){
+            throw ex;
         }
     }
 
@@ -99,6 +103,14 @@ public class HibernateDao {
         }finally {
             if(session!=null)
                 session.close();
+        }   
+    }
+    public void update(BaseModel model,Session session) throws Exception {      
+        try{    
+            session.update(model);         
+        }catch (Exception ex){
+            
+            throw ex;
         }   
     }
 

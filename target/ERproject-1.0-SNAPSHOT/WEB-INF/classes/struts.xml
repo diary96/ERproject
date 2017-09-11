@@ -298,7 +298,7 @@
             <result name="none" type="redirect">accueil</result> 
         </action>
         
-        <action name="saveTypeFichier" class="com.er.erproject.action.TypeFichierAction" method="save">
+        <action name="saveTypeFichier" class="com.er.erproject.action.TypeFichierAction" method="save">    
             <result name="success" type="redirect">listeTypeFichier</result> 
             <result name="error" type="redirectAction">
                 <param name="actionName">gestionTypeFichier</param>
@@ -315,7 +315,47 @@
             <result name="login" type="redirect">index</result> 
             <result name="none" type="redirect">accueil</result> 
         </action>
-        
+        <action name="gestionArchive" class="com.er.erproject.action.ArchiveAction" method="gestionArchive">
+            <result name="success">Archive/page/newArchive.jsp</result> 
+            <result name="error" type="chain">
+                <param name="actionName">listeArchive</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="deleteArchive" class="com.er.erproject.action.ArchiveAction" method="delete">
+            <result name="success" type="redirectAction">
+                <param name="actionName">listeArchive</param>
+                <param name="idOffre">${idOffre}</param>
+            </result> 
+            <result name="error" type="chain">
+                <param name="actionName">listeArchive</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="saveArchive" class="com.er.erproject.action.ArchiveAction" method="save">
+           <interceptor-ref name="fileUpload"/> 
+            <interceptor-ref name="defaultStack"></interceptor-ref>     
+            <result name="success" type="redirectAction">
+                <param name="actionName">listeArchive</param>
+                <param name="idOffre">${idOffre}</param>
+            </result> 
+            <result name="error" type="chain">
+                <param name="actionName">gestionArchive</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
 
     </package>
    

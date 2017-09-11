@@ -11,6 +11,7 @@ package com.er.erproject.data;
  */
 public class PathData {
     public static final String PATH_ARCHIVE = "E:/Stage/ER/ERproject/src/main/webapp/Archive/data/archive"; 
+    public static final String PATH_ARCHIVE_SIMPLE = "Archive/data/archive";
     public static final String PATH_PHOTO = "E:/Stage/ER/ERproject/src/main/webapp/Archive/data/photo";
     public static final String PATH_BC = "E:/Stage/ER/ERproject/src/main/webapp/Archive/data/bc";
     public static final String PATH_PHOTO_SIMPLE = "E:/Stage/ER/ERproject/src/main/webapp";

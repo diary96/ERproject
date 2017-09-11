@@ -5,6 +5,7 @@
  */
 package com.er.erproject.data;
 
+import com.er.erproject.model.Archive;
 import com.er.erproject.model.BonCommande;
 import com.er.erproject.model.Catalogue;
 import com.er.erproject.model.HorsCatalogue;
@@ -44,6 +45,7 @@ public class Reference {
     public static final String VENTILATION = "VTL";
     public static final String VENTILATION_TS = "VTS";
     public static final String TYPE_FICHIER = "TYF";
+    public static final String ARCHIVE = "ARC";
     
     public static Class getClass(String reference)throws Exception{
         if(reference.compareToIgnoreCase(Reference.CATALOGUE)==0)return Catalogue.class;
@@ -61,6 +63,7 @@ public class Reference {
         if(reference.compareToIgnoreCase(Reference.VENTILATION)==0)return Ventillation.class;
         if(reference.compareToIgnoreCase(Reference.VENTILATION_TS)==0)return VentillationTS.class;
         if(reference.compareToIgnoreCase(Reference.TYPE_FICHIER)==0)return TypeFichier.class;
+        if(reference.compareToIgnoreCase(Reference.ARCHIVE)==0)return Archive.class;
         
         else throw new Exception("Desole, la reference n'est pas dans la base");
         
