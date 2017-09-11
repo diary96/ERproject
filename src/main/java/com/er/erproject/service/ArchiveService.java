@@ -40,7 +40,7 @@ public class ArchiveService extends ServiceModel{
             if(temp.getPath().compareTo(archive.getPath())!=0){
                 FileUtil.deleteFile(temp.getPath());
             }
-            this.hibernateDao.update(temp, session);
+            this.hibernateDao.update(archive, session);
             tr.commit();           
         }catch(Exception e){            
             if(tr!=null)tr.rollback();

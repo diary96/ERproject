@@ -42,7 +42,7 @@
                                     <th><s:property value="getNom()"/></th>           
                                     <td><s:property value="getDateajout()"/></td>                      
                                     <td><a href="<s:property value="getPath()"/>" class="btn btn-link btn-xs">Voir Fichier</a></td>                      
-                                    <td><a href="#" class="btn btn-primary btn-xs">Modifier</a></td>                      
+                                    <td><a href="gestionArchive?idOffre=<s:property value="getIdOffre()"/>&referenceInterieure=<s:property value="getAllReference()"/>" class="btn btn-primary btn-xs">Modifier</a></td>                      
                                     <td> <button id="<s:property value="getAllReference()" />" class="supprimer btn btn-danger btn-xs"  >Supprimer</button></td>
                                 </tr>
                             </s:iterator>

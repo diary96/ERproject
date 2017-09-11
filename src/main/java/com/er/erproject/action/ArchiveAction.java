@@ -42,7 +42,18 @@ public class ArchiveAction extends ActionModel{
     private Offre offre;
     private List<TypeFichier> typeFichier;
     private long idType=0;
+    private String referenceInterieure;
 
+    public String getReferenceInterieure() {
+        return referenceInterieure;
+    }
+
+    public void setReferenceInterieure(String referenceInterieure) {
+        this.referenceInterieure = referenceInterieure;
+    }
+    
+    
+    
     public long getIdType() {
         return idType;
     }
@@ -206,7 +217,7 @@ public class ArchiveAction extends ActionModel{
             typeFichier.setId(idType);
             if(!this.checkerData(this.reference))throw new Exception("veuillez remplir le champ de reference");
             if(this.idType==0)throw new Exception("veuillez choisir un type de fichier");
-            if(this.idArchive==0){         
+            if(!this.checkerData(this.referenceInterieure)){         
                 if(this.archiveF==null)throw new Exception("veuillez choisir un fichier");
                 FileUtil.saveArchive(archiveF, FileUtil.getEx(this.archiveFFileName));
                 archive = new Archive(); 
@@ -217,14 +228,19 @@ public class ArchiveAction extends ActionModel{
                 archive.setOffre(offre);
                 this.archiveService.save(archive);
             }else{
-                archive = new Archive(); 
-                archive.setId(this.idArchive);
-                this.archiveService.find(archive);
+                archive = null; 
+                ReflectService reflectService = new ReflectService();
+                reflectService.setHibernateDao(this.archiveService.getHibernateDao());
+                try{
+                    archive = (Archive)reflectService.find(this.getReferenceInterieure());
+                }catch(Exception e){
+                    throw new Exception("la reference inserer n'est pas de type archive");
+                }              
                 archive.setNom(this.getReference());
                 archive.setTypeFichier(typeFichier);
                 archive.setOffre(offre);
                 if(this.archiveF!=null){
-                    FileUtil.saveArchive(archiveF, FileUtil.getEx(this.archiveFFileName));
+                    FileUtil.saveArchive(archiveF, FileUtil.getEx(this.archiveFFileName));                   
                     archive.setPath(PathData.PATH_ARCHIVE_SIMPLE+"/"+archiveF.getName()+"."+FileUtil.getEx(this.archiveFFileName));                
                 }
                 this.archiveService.update(archive);
@@ -275,10 +291,15 @@ public class ArchiveAction extends ActionModel{
         }
         try{
             this.typeFichier = this.typeFichierService.find();
-            if(this.idArchive!=0){
+            if(this.checkerData(this.getReferenceInterieure())){
                 Archive archive = new Archive();
-                archive.setId(this.getIdArchive());
-                this.archiveService.find(archive);
+                ReflectService reflectService = new ReflectService();
+                reflectService.setHibernateDao(this.archiveService.getHibernateDao());
+                try{
+                    archive = (Archive)reflectService.find(this.getReferenceInterieure());
+                }catch(Exception e){
+                    throw new Exception("la reference inserer n'est pas de type archive");
+                }              
                 this.reference = archive.getNom();
             }
         }catch(Exception e){
