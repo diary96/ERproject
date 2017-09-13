@@ -356,7 +356,49 @@
             <result name="login" type="redirect">index</result> 
             <result name="none" type="redirect">accueil</result> 
         </action>
-
+         <action name="gestionBC" class="com.er.erproject.action.BonCommandeAction" method="gestionBonCommande">
+            <result name="success">Archive/page/newBC.jsp</result> 
+            <result name="error" type="chain">
+                <param name="actionName">detailOffre</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+         <action name="saveBC" class="com.er.erproject.action.BonCommandeAction" method="save">
+             <interceptor-ref name="fileUpload"> 
+                <param name="allowedTypes"> application/pdf</param>
+            </interceptor-ref> 
+            <interceptor-ref name="defaultStack"></interceptor-ref>         
+            <result name="success" type="redirectAction">
+                <param name="actionName">detailOffre</param>
+                <param name="idOffre">${idOffre}</param>
+            </result> 
+            
+            <result name="error" type="chain">
+                <param name="actionName">gestionBC</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="type">${type}</param>
+                <param name="service">${service}</param>
+                <param name="nif">${nif}</param>
+                <param name="stat">${stat}</param>
+                <param name="numero">${numero}</param>
+                <param name="referenceInterieure">${referenceInterieure}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result> 
+            <result name="input" type="redirectAction">
+                <param name="actionName">gestionBC</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="type">${type}</param>             
+                <param name="linkError">${block}</param>
+                <param name="messageError">importer que des fichiers PDF</param>
+            </result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
     </package>
    
 

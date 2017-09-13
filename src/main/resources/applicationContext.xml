@@ -11,6 +11,10 @@
         
     <!--Action class-->
     
+    <bean id="bonCommandeAction" class="com.er.erproject.action.BonCommandeAction">
+        <property name="bonCommandeService" ref="bonCommandeService" />
+        <property name="offreService" ref="offreService" />
+    </bean>
     <bean id="archiveAction" class="com.er.erproject.action.ArchiveAction">
         <property name="archiveService" ref="archiveService" />
         <property name="offreService" ref="offreService" />

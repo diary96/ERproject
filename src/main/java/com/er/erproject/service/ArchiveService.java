@@ -36,11 +36,12 @@ public class ArchiveService extends ServiceModel{
             session = this.hibernateDao.getSessionFactory().openSession(); 
             tr = session.beginTransaction();
             Archive temp =null;
-            temp = this.find(archive.getId(), session);
+            temp = this.find(archive.getId());
             if(temp.getPath().compareTo(archive.getPath())!=0){
                 FileUtil.deleteFile(temp.getPath());
             }
-            this.hibernateDao.update(archive, session);
+            temp = archive;
+            this.hibernateDao.update(temp, session);
             tr.commit();           
         }catch(Exception e){            
             if(tr!=null)tr.rollback();
@@ -55,6 +56,16 @@ public class ArchiveService extends ServiceModel{
         try{
             reponse.setId(idArchive);
             this.hibernateDao.findById(reponse,session);
+        }catch(Exception e){
+            throw new Exception("archive introuvable"); 
+        }
+        return reponse;
+    }
+    public Archive find(long idArchive)throws Exception{
+        Archive reponse= new Archive(); 
+        try{
+            reponse.setId(idArchive);
+            this.hibernateDao.findById(reponse);
         }catch(Exception e){
             throw new Exception("archive introuvable"); 
         }

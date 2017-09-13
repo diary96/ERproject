@@ -78,6 +78,9 @@
                     <s:if test="getOffre().getStatu()>@com.er.erproject.data.StatuReference@SOUMISSION">
                         <a href="download?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-primary"><i class="fa fa-download"></i> Telecharger devis</a>
                     </s:if>
+                    <s:if test="getOffre().getStatu()>@com.er.erproject.data.StatuReference@SOUMISSION">
+                        <a href="gestionBC?idOffre=<s:property value="getIdOffre()"/>&type=<s:property value="@com.er.erproject.data.VentilationData@SOUMISSION"/>" class="btn btn-primary"><i class="fa fa-folder-o"></i> Bon de commande</a>
+                    </s:if>
                     <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@SOUMISSION">
                         <a href="valider?idOffre=<s:property value="getIdOffre()"/>&nextLevel=<s:property value="@com.er.erproject.data.StatuReference@STRAVAUX"/>&url=detailOffre" class="btn btn-success"><i class="fa fa-check"></i> Valider </a>
                     </s:if>
@@ -135,6 +138,9 @@
                             </s:if>
                             <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@TRAVAUX">
                                 <a href="valider?idOffre=<s:property value="getIdOffre()"/>&nextLevel=<s:property value="@com.er.erproject.data.StatuReference@SPV"/>&url=detailOffre" class="btn btn-success"><i class="fa fa-check"></i> Valider </a>
+                            </s:if>
+                            <s:if test="getOffre().getStatu()>@com.er.erproject.data.StatuReference@TRAVAUX">
+                                <a href="gestionBC?idOffre=<s:property value="getIdOffre()"/>&type=<s:property value="@com.er.erproject.data.VentilationData@TS"/>" class="btn btn-primary"><i class="fa fa-folder-o"></i> Bon de commande</a>
                             </s:if>
                             <table cellspacing="1" class="table table-bordered">
                                 <tr>

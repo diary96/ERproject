@@ -301,6 +301,7 @@ public class ArchiveAction extends ActionModel{
                     throw new Exception("la reference inserer n'est pas de type archive");
                 }              
                 this.reference = archive.getNom();
+                this.idType = archive.getTypeFichier().getId();
             }
         }catch(Exception e){
             e.printStackTrace();

@@ -101,6 +101,27 @@ public class OffreService extends ServiceModel {
 
     }
 
+    public void populateSoumission(Offre offre)throws Exception{
+        SoumissionService soumissionService = new SoumissionService();
+        soumissionService.setHibernateDao(hibernateDao); 
+        try{
+            soumissionService.find(offre);
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception("impossible d'extraire la soumission de l'offre "+offre.getAllReference());
+        }
+    }
+    public void populateTS(Offre offre)throws Exception{
+        TravauxSupplementaireService travauxSupplementaireService = new TravauxSupplementaireService(); 
+        travauxSupplementaireService.setHibernateDao(hibernateDao);
+        try{
+        travauxSupplementaireService.find(offre);
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception("impossible d'extraire les travaux supplementaire de l'offre "+offre.getAllReference());
+        }
+    }
+    
     public void populateTravauxSupplementaire(Offre offre) throws Exception {
         if (offre.getId() == 0) {
             throw new Exception("L'offre que vous essayer de remplir n'est pas instancier ou n'existe pas");

@@ -5,6 +5,7 @@
  */
 package com.er.erproject.service;
 
+import com.er.erproject.data.ReferenceType;
 import com.er.erproject.data.VentilationData;
 import com.er.erproject.model.BonCommande;
 import com.er.erproject.model.Offre;
@@ -53,6 +54,13 @@ public class BonCommandeService extends ServiceModel {
                 travauxSupplementaireService.setHibernateDao(hibernateDao);
                 travauxSupplementaireService.find(offre);
             }
+            if(offre.getTacheSupplementaire()==null){
+               OffreService offreService = new OffreService(); 
+               offreService.setHibernateDao(hibernateDao);
+               offreService.populateTravauxSupplementaire(offre);
+               
+            }
+            if(offre.getTacheSupplementaire().getTravaux().isEmpty())throw new Exception("l'offre ne possède pas de travaux supplémentaire et aucun travaux supplementaire peut etre enregistré");
             TravauxSupplementaire temp = offre.getTravauxSupplementaire();
             tempBC = this.find(temp); 
             if(tempBC!=null){
@@ -64,7 +72,53 @@ public class BonCommandeService extends ServiceModel {
             this.hibernateDao.update(temp);
         }
     }
-
+    
+    public void update(BonCommande bonCommande)throws Exception{
+        try{
+            this.hibernateDao.update(bonCommande);
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception("impossible de mettre le bon de commande "+bonCommande.getNumeroBC()+" a jour");
+        }
+    }
+    
+    public BonCommande find(Offre offre, short type)throws Exception{
+        if(type==VentilationData.SOUMISSION){
+            if(offre.getSoumission()==null){
+                OffreService offreService = new OffreService(); 
+                offreService.setHibernateDao(hibernateDao);
+                offreService.populateSoumission(offre);
+                if(offre.getSoumission()==null)throw new Exception("la soumission n'est pas encore initialisé");
+            }
+            return this.find(offre.getSoumission());
+        }
+        if(type==VentilationData.TS){
+            OffreService offreService = new OffreService(); 
+            offreService.setHibernateDao(hibernateDao);
+            if(offre.getTravauxSupplementaire()==null){
+                offreService.populateTS(offre);
+                if(offre.getTravauxSupplementaire()==null)throw new Exception("le travaux supplementaire n'est pas initialiser"); 
+            }
+            if(offre.getTacheSupplementaire()==null){
+                offreService.populateTravauxSupplementaire(offre);               
+            }
+            if(offre.getTacheSupplementaire().getTravaux().isEmpty())throw new Exception("aucun tache n'est presente dans les travaux supplementaire et aucun bon de commande ne peut etre gestionné");
+            return this.find(offre.getTravauxSupplementaire());
+        }
+        throw new Exception("vueillez ne pas modifier les types de l'url manuellement");
+    }
+    
+    public BonCommande find(long id)throws Exception{
+        BonCommande reponse = new BonCommande(); 
+        reponse.setId(id);
+        try{
+            this.hibernateDao.findById(reponse);
+        }catch(Exception e){
+            throw new Exception("l'identifiant inserer n'est pas dans la base"); 
+        }
+        return reponse; 
+    }
+    
     public BonCommande find(Soumission soumission) throws Exception {
         BonCommande reponse = null;
         Session session = null;

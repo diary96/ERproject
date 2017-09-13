@@ -136,7 +136,12 @@ t<%--
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Type de paiement <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input id="typeP" type="text" required="required" class="form-control col-md-7 col-xs-12">
+                                    <select id="typeP" class="id_100 form-control">
+                                        <option value="Mvola">Mvola</option>
+                                        <option value="Chèque">Chèque</option>
+                                        <option value="Virement">Virement</option>
+                                    </select>
+                                    <!--<input id="typeP" type="text" required="required" class="form-control col-md-7 col-xs-12">-->
                                 </div>
                             </div>
                             <div class="form-group">
@@ -196,16 +201,16 @@ t<%--
         var nameP = document.getElementById('nameP');
         var data = document.getElementById('tags_1');
         if(pourcentage.value=="")pourcentage.value = "none";
-        if(typeP.value=="")typeP.value = "none";
+        
         if(date.value=="")date.value = "none";
         if(nameP.value=="")nameP.value = "none";
 
-        var newResult = pourcentage.value + "/" + date.value + "/" + typeP.value + "/" + nameP.value;
+        var newResult = pourcentage.value + "/" + date.value + "/" + typeP.options[typeP.selectedIndex].value + "/" + nameP.value;
         $('#tags_1').addTag(newResult);
 
 
         document.getElementById("pourcentage").value = "";
-        document.getElementById('typeP').value = "";
+        
         document.getElementById('nameP').value = "";
 
     }

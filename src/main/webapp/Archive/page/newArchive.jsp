@@ -82,9 +82,10 @@ t<%--
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
 
-                                        <select id="heard" name="idType"class="form-control" required="">
+                                        <select id="heard" name="idType" class="id_100 form-control" required="">
                                             <s:iterator value="getTypeFichier()">
-                                                <option value='<s:property value="getId()"/>'><s:property value="getNomType()"/></option>
+                                               
+                                                <option <s:if test="getId()==getIdType()">selected=""</s:if> value='<s:property value="getId()"/>'><s:property value="getNomType()"/></option>
                                             </s:iterator>
                                         </select>
 
@@ -125,35 +126,6 @@ t<%--
 
 <script src="Archive/assets/gentella/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
 
-<script>
-    check();
-    $("#reference").change(function () {
-        check();
-    });
-    function myFunction(val) {
-        alert("The input value has changed. The new value is: " + val);
-    }
-    function check() {
 
-        var value = document.getElementById("reference").value;
-        console.log(value);
-        if (value !== "") {
-            document.getElementById('designation').readOnly = true;
-            document.getElementById('designation').value = "";
-            document.getElementById('prixUnitaire').readOnly = true;
-            document.getElementById('prixUnitaire').value = "";
-            document.getElementById('unite').readOnly = true;
-            document.getElementById('unite').value = "";
-            document.getElementById('admin').style.display = "none";
-        } else {
-            document.getElementById('designation').readOnly = false;
-            document.getElementById('prixUnitaire').readOnly = false;
-            document.getElementById('unite').readOnly = false;
-            document.getElementById('admin').style.display = "block";
-        }
-
-    }
-
-</script>
 <script src="Archive/assets/js/bootstrap-toggle.min.js"></script>
 <%@include file="template/default/footer.jsp" %>
