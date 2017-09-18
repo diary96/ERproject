@@ -279,6 +279,7 @@ public class OffreAction extends ActionModel {
             return Action.NONE;
         }
         try {
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");                
             if(!this.checkerData(url))return Action.NONE;
             url = url+"?idOffre="+this.getIdOffre();
             if(!this.checkerData(er))throw new Exception("Vueillez remplir le champ du responsable de l'entreprise");
@@ -323,6 +324,7 @@ public class OffreAction extends ActionModel {
         }
         this.url = url + "?idOffre=" + this.idOffre;
         try {
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");              
             this.offreService.valider(offre, user, nextLevel);
  
         } catch (Exception e) {
@@ -334,7 +336,7 @@ public class OffreAction extends ActionModel {
         }
         return Action.SUCCESS;
     }
-
+    
     public String loadFiche() throws Exception {
         this.setSessionUser();
         if (this.user == null) {

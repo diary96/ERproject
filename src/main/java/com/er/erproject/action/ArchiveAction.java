@@ -212,6 +212,7 @@ public class ArchiveAction extends ActionModel{
             return Action.NONE;
         }
         try{
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié"); 
             Archive archive=null;
             TypeFichier typeFichier = new TypeFichier(); 
             typeFichier.setId(idType);
@@ -261,9 +262,10 @@ public class ArchiveAction extends ActionModel{
         }
         if(!this.checkerData(this.reference))return Action.NONE;
         try{
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
             Archive archive = null; 
             try{
-                ReflectService reflectService = new ReflectService();
+                 ReflectService reflectService = new ReflectService();
                 reflectService.setHibernateDao(this.archiveService.getHibernateDao());
                 archive = (Archive)reflectService.find(reference);
             }catch(Exception e){
@@ -275,9 +277,7 @@ public class ArchiveAction extends ActionModel{
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
             return Action.ERROR;
-        }
-       
-        
+        }   
         return Action.SUCCESS;
     }
     

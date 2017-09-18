@@ -297,8 +297,17 @@
                                 <td align="center"><s:property value="getEffectuer()"/></td>
                                 <td align="center"><a href="gestionPhoto?reference=<s:property value="getAllReference()"/>" target="_blank">Details photos</a></td>
                                 <s:if test="getTemp().getStatu()==@com.er.erproject.data.StatuReference@PV">
-                                    <td align="center"><a href="minusEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>" ><i class="fa fa-minus" aria-hidden="true"></i></a> <a href="plusEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>" ><i class="fa fa-plus" aria-hidden="true"></i></a> <a href="allEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>"><i class="fa fa-reply-all" aria-hidden="true"></i></a></td>
-                                        </s:if>
+                                    <td align="center">
+                                        <a href="minusEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>" ><i class="fa fa-minus" aria-hidden="true"></i></a> 
+                                        <a href="plusEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>" ><i class="fa fa-plus" aria-hidden="true"></i></a> 
+                                        <a href="allEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>"><i class="fa fa-reply-all" aria-hidden="true"></i></a>                             
+                                    </td>
+                                    <td align="center">
+                                        <input style="width:25%" id="input<s:property value="getAllReference()"/>">
+                                        <buton id='<s:property value="getAllReference()"/>' class="modifier btn btn-success">Modifier</buton>
+                                    </td>
+                                
+                                </s:if>
                             </tr>
                         </s:iterator>
                         <!-- This is our clonable table line -->

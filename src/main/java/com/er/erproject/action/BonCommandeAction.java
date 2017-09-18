@@ -6,15 +6,12 @@
 package com.er.erproject.action;
 
 import com.er.erproject.data.Reference;
-import com.er.erproject.data.ReferenceType;
 import com.er.erproject.data.SessionReference;
-import com.er.erproject.data.VentilationData;
 import com.er.erproject.model.BonCommande;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.User;
 import com.er.erproject.service.BonCommandeService;
 import com.er.erproject.service.OffreService;
-import com.er.erproject.service.UserService;
 import com.er.erproject.util.FileUtil;
 import com.opensymphony.xwork2.Action;
 import java.io.File;
@@ -198,6 +195,7 @@ public class BonCommandeAction extends ActionModel{
         }
         
         try{
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");              
             if (!this.checkerData(this.service))throw new Exception("Veuillez remplir le champ de service");
             if(!this.checkerData(this.nif))throw new Exception("Veuillez remplir le champ de nif");
             if(!this.checkerData(this.stat))throw new Exception("Veuillez remplir le champ de stats"); 

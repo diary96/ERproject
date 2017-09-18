@@ -7,7 +7,9 @@ package com.er.erproject.action;
 
 import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
+import com.er.erproject.model.Offre;
 import com.er.erproject.model.User;
+import com.er.erproject.service.OffreService;
 import com.er.erproject.service.ReflectService;
 import com.er.erproject.util.UtilConvert;
 import com.opensymphony.xwork2.Action;
@@ -72,8 +74,13 @@ public class ReflectAction extends ActionModel {
         if(this.user==null)return Action.LOGIN;
         if(this.reference==null||this.reference.compareToIgnoreCase("")==0) return Action.NONE;
         if(this.url==null||this.url.compareToIgnoreCase("")==0) return Action.NONE;
-        try{
+        Offre offre;
             
+        try{
+            OffreService offreService = new OffreService();
+            offreService.setHibernateDao(this.reflectService.getHibernateDao());
+            offre = offreService.find(idOffre);
+            if(offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié"); 
             this.url=url+"?idOffre="+this.idOffre;
           
             this.reflectService.delete(reference);

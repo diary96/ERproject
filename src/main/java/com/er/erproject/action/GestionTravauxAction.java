@@ -13,7 +13,6 @@ import com.er.erproject.data.StatuReference;
 import com.er.erproject.generator.XlsGenerator;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.Photo;
-import com.er.erproject.model.Travaux;
 import com.er.erproject.model.User;
 import com.er.erproject.service.MateriauxService;
 import com.er.erproject.service.OffreService;
@@ -366,6 +365,7 @@ public class GestionTravauxAction extends ActionModel {
             return Action.NONE;
         }
         try {
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
             this.travauxService.delete(reference);
         } catch (Exception e) {
             this.url = url + "&linkError=block&messageError=" + UtilConvert.toUrlPath("impossible de supprimer cette tache");
@@ -422,6 +422,7 @@ public class GestionTravauxAction extends ActionModel {
         try {
             this.cheker();
             this.offre = this.offreService.find(idOffre);
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
             travauxService.save(reference, designation, prixUnitaire, unite, quantite, type, this.offre.getAllReference(), this.admin);
         } catch (Exception e) {
             this.setLinkError(Reference.VISIBIBLE);
@@ -550,8 +551,14 @@ public class GestionTravauxAction extends ActionModel {
         if (this.idOffre == 0) {
             return Action.NONE;
         }
+        try{
+            this.offre = this.offreService.find(idOffre);
+        }catch(Exception e){
+            return Action.NONE;
+        }
         this.url = url + "?idOffre=" + this.idOffre;
         try {
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
             this.travauxService.plusDone(reference);
         } catch (Exception e) {
             this.setLinkError(Reference.VISIBIBLE);
@@ -575,8 +582,14 @@ public class GestionTravauxAction extends ActionModel {
         if (this.idOffre == 0) {
             return Action.NONE;
         }
+        try{
+            this.offre = this.offreService.find(idOffre);
+        }catch(Exception e){
+            return Action.NONE;
+        }
         this.url = url + "?idOffre=" + this.idOffre;
         try {
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");              
             this.travauxService.minusDone(reference);
         } catch (Exception e) {
             this.setLinkError(Reference.VISIBIBLE);
@@ -600,8 +613,14 @@ public class GestionTravauxAction extends ActionModel {
         if (this.idOffre == 0) {
             return Action.NONE;
         }
+        try{
+            this.offre = this.offreService.find(idOffre);          
+        }catch(Exception e){
+            return Action.NONE;
+        }
         this.url = url + "?idOffre=" + this.idOffre;
         try {
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");             
             if(this.effectuer==null)return Action.NONE;
             this.travauxService.manualDone(reference,NumberUtil.toInt(effectuer));
         } catch (Exception e) {
@@ -626,8 +645,14 @@ public class GestionTravauxAction extends ActionModel {
         if (this.idOffre == 0) {
             return Action.NONE;
         }
+        try{
+            this.offre = this.offreService.find(idOffre);
+        }catch(Exception e){
+            return Action.NONE;
+        }
         this.url = url + "?idOffre=" + this.idOffre;
         try {
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");              
             this.travauxService.allDone(reference);
         } catch (Exception e) {
             this.setLinkError(Reference.VISIBIBLE);
@@ -659,6 +684,8 @@ public class GestionTravauxAction extends ActionModel {
         this.url = url + "?idOffre=" + this.idOffre;
 
         try {
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié"); 
+               
             if (this.offre.getStatu() == StatuReference.PV) {
                 MateriauxService materiauxService = new MateriauxService(this.travauxService.getHibernateDao());
                 materiauxService.changeStatu(reference);

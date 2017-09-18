@@ -66,6 +66,17 @@ public class FacturationAction extends ActionModel {
     
     private String url;
     private String dateNow;
+    private String date; 
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+    
+    
 
     public String getDateNow() {
         return dateNow;
@@ -329,6 +340,7 @@ public class FacturationAction extends ActionModel {
         this.dateToday = DateUtil.convert(temp);
         BonCommande bonCommande = null;
         try {
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
             if(!this.checkerData(this.ventillation))throw new Exception("Aucun ventilation inseré");
             this.ventillationService.save(this.getVentillation(),this.getOffre(), this.getType());
             this.url = "detailOffre?idOffre="+this.getIdOffre();
@@ -413,6 +425,44 @@ public class FacturationAction extends ActionModel {
             this.ventillationsData = (List<Ventillation>)(Object)this.ventillationService.find(offre, VentilationData.SOUMISSION);
             this.ventillationsTsData = (List<VentillationTS>)(Object)this.ventillationService.find(offre, VentilationData.TS);
         }catch(Exception e){
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+    
+    public String payePaiement()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        if (this.idOffre == 0) {
+            return Action.NONE;
+        }
+        try{
+           this.offre = this.offreService.find(idOffre);          
+        }catch(Exception e){
+            return Action.NONE;
+        }
+        try{
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié"); 
+               
+            if(!this.checkerData(this.referenceVentilation))throw new Exception("Veuillez inserer une reference de ventilation");
+            if(!this.checkerData(this.date))throw new Exception("Veuillez inserer une date de ventilation");
+           
+            VentillationModel ventillation;           
+            ventillation = this.ventillationService.find(this.referenceVentilation);
+            Date date;
+            try{
+                date = DateUtil.convert(this.date);
+            }catch(Exception e){
+                throw new Exception("la date inserée n'est pas valide");
+            }
+            if(ventillation.getDatepaiement()!=null)throw new Exception("cette ventilation a déjà été payé");           
+            this.ventillationService.payer(ventillation, date);           
+        }catch(Exception e){
+            e.printStackTrace(); 
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
             return Action.ERROR;

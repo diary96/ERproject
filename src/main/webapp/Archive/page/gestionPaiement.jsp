@@ -87,7 +87,7 @@
                                                     <td><s:property value="getPayementName()"/></td>
                                                     <td><s:property value="getDate()"/></td>
                                                     <s:if test="isPayer()==true">
-                                                        <td><button class="btn btn-success btn-xs">PAYER</button></td>
+                                                        <td><button class="btn btn-success btn-xs">PAY&Eacute;</button></td>
                                                     </s:if>
                                                     <s:if test="isPayer()==false">
                                                         <td><button class="btn btn-danger btn-xs">NON PAYER</button></td>
@@ -95,7 +95,7 @@
                                                     
                                                     <s:if test="isPayer()==false">
                                                         <td align="left">
-                                                            <input style="width:100 height: 50%" id="input<s:property value="getAllReference()"/>" type="date" value="<s:property value="getDateNow()"/>">
+                                                            <input style="width:100%; height:50%" id="input<s:property value="getAllReference()"/>" type="date" value="<s:property value="getDateNow()"/>">
                                                         </td>
                                                         <td align="left">
                                                             <buton id='<s:property value="getAllReference()"/>' class="modifier btn btn-success btn-xs">Payer</buton>
@@ -140,7 +140,7 @@
                                                     <td><s:property value="getPayementName()"/></td>
                                                     <td><s:property value="getDate()"/></td>
                                                     <s:if test="isPayer()==true">
-                                                        <td><button class="btn btn-success btn-xs">PAYER</button></td>
+                                                        <td><button class="btn btn-success btn-xs">PAY&Eacute;</button></td>
                                                     </s:if>
                                                     <s:if test="isPayer()==false">
                                                         <td><button class="btn btn-danger btn-xs">NON PAYER</button></td>
@@ -213,7 +213,7 @@
             console.log("click");
             console.log("input"+this.getAttribute('id'));
             if(document.getElementById("input"+this.getAttribute('id')).value!=""){
-                window.location.replace("manualEffect?reference="+this.getAttribute('id')+"&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>&effectuer="+document.getElementById("input"+this.getAttribute('id')).value);
+                window.location.replace("payePaiement?referenceVentilation="+this.getAttribute('id')+"&idOffre=<s:property value="getIdOffre()"/>&date="+document.getElementById("input"+this.getAttribute('id')).value);
             }
         });
     });

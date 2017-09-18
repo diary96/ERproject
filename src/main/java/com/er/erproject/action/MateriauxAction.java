@@ -147,6 +147,7 @@ public class MateriauxAction extends ActionModel{
         if(this.idOffre==0)return Action.NONE;
         try{
             this.offre = this.offreService.find(idOffre);
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");              
             Materiaux materiaux = new Materiaux();
             materiaux.setOffre(offre);
             materiaux.setQuantite(quantite);

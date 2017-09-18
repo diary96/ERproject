@@ -43,5 +43,6 @@
     <mapping resource="xml/boncommande.hbm.xml"/>
     <mapping resource="xml/archive.hbm.xml"/>
     <mapping resource="xml/typefichier.hbm.xml"/>
+    <mapping resource="xml/historique.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>
