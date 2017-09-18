@@ -250,7 +250,7 @@ public class FactureTSGenerator {
         c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.addCell(c1);
         
-        if(offre.getSoumission().getRemise()!=0){
+        if(offre.getTravauxSupplementaire().getRemise()!=0){
             c1 = new PdfPCell();
             c1.setHorizontalAlignment(Element.ALIGN_LEFT);
             c1.setPadding(5);
@@ -294,7 +294,7 @@ public class FactureTSGenerator {
             c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
             table.addCell(c1);
 
-            c1 = new PdfPCell(new Phrase(UtilConvert.toMoney(offre.getStatTS().getTotalEffectuer() - offre.getStatInitial().getValeurRemise()), smallFont));
+            c1 = new PdfPCell(new Phrase(UtilConvert.toMoney(offre.getStatTS().getTotalEffectuer() - offre.getStatTS().getValeurRemise()), smallFont));
             c1.setHorizontalAlignment(Element.ALIGN_RIGHT);
             c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
             table.addCell(c1);

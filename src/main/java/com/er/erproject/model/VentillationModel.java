@@ -19,6 +19,21 @@ public class VentillationModel extends BaseModel {
     protected double pourcentage;
     protected String typeDescription;
     protected String payementName;
+    protected Date datepaiement;
+
+    public boolean isPayer(){
+        if(this.datepaiement==null)return false; 
+        return true;
+    }
+    public Date getDatepaiement() {
+        return datepaiement;
+    }
+
+    public void setDatepaiement(Date datepaiement) {
+        this.datepaiement = datepaiement;
+    }
+    
+    
 
     public String getPayementName() {
         return payementName;

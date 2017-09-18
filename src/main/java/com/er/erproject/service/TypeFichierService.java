@@ -6,13 +6,11 @@
 package com.er.erproject.service;
 
 import com.er.erproject.model.Archive;
-import com.er.erproject.model.Offre;
 import com.er.erproject.model.TypeFichier;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -65,6 +63,40 @@ public class TypeFichierService extends ServiceModel {
         }finally{
             if(session!=null)session.close();
         }
+    }
+    public TypeFichier find(String name)throws Exception{
+        Session session = null; 
+        TypeFichier typeFichier = null; 
+        try{
+            session = this.hibernateDao.getSessionFactory().openSession(); 
+            Criteria criteria = session.createCriteria(TypeFichier.class, "typeFichier");
+            criteria.add(Restrictions.ilike("typeFichier.nomType", name));
+            List<TypeFichier> reponse = criteria.list();
+            if(!reponse.isEmpty()){
+                typeFichier = reponse.get(0);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception("impossible d'extraire le type de fichier dans la base");
+        }finally{
+            if(session!=null)session.close();
+        }
+        return typeFichier;
+    }
+    public TypeFichier find(String name,Session session)throws Exception{       
+        TypeFichier typeFichier = null; 
+        try{ 
+            Criteria criteria = session.createCriteria(TypeFichier.class, "typeFichier");
+            criteria.add(Restrictions.ilike("typeFichier.nomType", name));
+            List<TypeFichier> reponse = criteria.list();
+            if(!reponse.isEmpty()){
+                typeFichier = reponse.get(0);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception("impossible d'extraire le type de fichier dans la base");
+        }
+        return typeFichier;
     }
     public static void find(Archive archive, Session session)throws Exception{   
         try{

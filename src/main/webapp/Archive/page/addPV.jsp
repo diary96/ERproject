@@ -17,6 +17,9 @@
     </div>
     <div class="" role="tabpanel" data-example-id="togglable-tabs">
         <a href="listeArchive?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-primary">Gestion des fichiers</a>
+        <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@FACTURATION">
+                <a href="gestionPaiement?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-dark">Gestion des paiements</a>
+        </s:if>
         <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
             <%--<s:property value="@com.er.erproject.data.StatuReference@OFFRE"/>--%>
             <li role="presentation" class="active"><a href="#offre" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Offre Initial</a>
@@ -242,7 +245,7 @@
               
                     </s:if>
                     <s:else>
-                         <a href="#" class="btn btn-success">Facturation des T.S</a>
+                         <a href="facturationTS?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-success">Facturation des T.S</a>
               
                     </s:else>
                 </s:if>

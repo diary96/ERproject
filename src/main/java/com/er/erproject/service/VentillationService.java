@@ -14,6 +14,8 @@ import com.er.erproject.model.Ventillation;
 import com.er.erproject.model.VentillationModel;
 import com.er.erproject.model.VentillationTS;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -31,6 +33,24 @@ public class VentillationService extends ServiceModel {
 
     public void save(VentillationModel vantillation, Session session) throws Exception {
         this.hibernateDao.save(vantillation, session);
+    }
+    public void payer(VentillationModel ventilation)throws Exception{
+        if(ventilation.getDatepaiement()!=null)throw new Exception(ventilation.getAllReference()+" a déjà été");
+        ventilation.setDatepaiement(Calendar.getInstance().getTime());
+        try{
+            this.hibernateDao.update(ventilation);
+        }catch(Exception e){
+            throw new Exception("impossible de mettre à jour "+ventilation.getReference());
+        }
+    }
+    public void payer(VentillationModel ventilation,Date date) throws Exception{
+        if(ventilation.getDatepaiement()!=null)throw new Exception(ventilation.getAllReference()+" a déjà été");
+        ventilation.setDatepaiement(date);
+        try{
+            this.hibernateDao.update(ventilation);
+        }catch(Exception e){
+            throw new Exception("impossible de mettre à jour "+ventilation.getReference());
+        }    
     }
 
     public static List<VentillationModel> spliter(String data, short type) throws Exception {
@@ -72,23 +92,28 @@ public class VentillationService extends ServiceModel {
         }
         return ventillations;
     }
-
-    public void save(String ventillationData, BonCommande bonCommande, Offre offre, short type) throws Exception {
+    
+    public void save(String ventillationData, Offre offre, short type) throws Exception {
         List<VentillationModel> ventillations = VentillationService.spliter(ventillationData, type);
         Session session = null;
         Transaction tr = null;
-        try {
+        try {           
             session = hibernateDao.getSessionFactory().openSession();
             tr = session.beginTransaction();
-            if (this.ventillationSoumissionExist(offre)) {
-                throw new Exception("cette offre possede deja des ventilations");
+            if(type==VentilationData.SOUMISSION){
+                if (this.ventillationSoumissionExist(offre)) {
+                    throw new Exception("cette offre possede deja des ventilations");
+                }
+            }
+            else{
+                if(this.ventillationTSExist(offre)){
+                    throw new Exception("cette offre possède déjâ des ventilations pour les travaux supplémentaires");
+                }
             }
             for (int i = 0; i < ventillations.size(); i++) {
                 this.save(ventillations.get(i), offre, type, session);
             }
-            BonCommandeService bonCommandeService = new BonCommandeService();
-            bonCommandeService.setHibernateDao(hibernateDao);
-            bonCommandeService.save(bonCommande, offre, type);
+            
             tr.commit();
 
         } catch (Exception e) {
@@ -103,7 +128,7 @@ public class VentillationService extends ServiceModel {
             }
         }
     }
-
+       
     public List<VentillationModel> find(Offre offre, short type) throws Exception {
         Session session = null;
         if (type == VentilationData.SOUMISSION) {
@@ -120,6 +145,7 @@ public class VentillationService extends ServiceModel {
                 List<VentillationModel> ventillations = query.list();
                 return ventillations;
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new Exception("Impossible de tester l'existance de la ventillation de l'offre :" + offre.getAllReference());
             } finally {
                 if (session != null) {
@@ -129,7 +155,7 @@ public class VentillationService extends ServiceModel {
             }
         }
         if (type == VentilationData.TS) {
-            if (offre.getSoumission() == null) {
+            if (offre.getTravauxSupplementaire() == null) {
                 TravauxSupplementaireService travauxSupplementaireService = new TravauxSupplementaireService();
                 travauxSupplementaireService.setHibernateDao(hibernateDao);
                 travauxSupplementaireService.find(offre);
@@ -144,6 +170,7 @@ public class VentillationService extends ServiceModel {
                 return ventillations; 
 
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new Exception("Impossible de tester l'existance de la ventillation de l'offre :" + offre.getAllReference());
             } finally {
                 if (session != null) {

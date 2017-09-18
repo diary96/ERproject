@@ -9,6 +9,7 @@
         <property name="pourcentage" column="pourcentage" type="double"/>
         <property name="typeDescription" column="typedescription" type="string"/>
         <property name="payementName" column="payementname" type="string"/>
+        <property name="datepaiement" column="datepaiement" type="timestamp"/>
         <many-to-one name="soumission" class="com.er.erproject.model.Soumission" fetch="select">
             <column name="idsoumission" not-null="true" />
         </many-to-one>

@@ -5,6 +5,7 @@
  */
 package com.er.erproject.model;
 
+import com.er.erproject.data.Reference;
 import java.util.Date;
 
 /**
@@ -75,6 +76,7 @@ public class BonCommande extends BaseModel{
     public void setPath(String path) {
         this.path = path;
     }
-    
-    
+    public BonCommande(){
+        this.setReference(Reference.BC);
+    }   
 }

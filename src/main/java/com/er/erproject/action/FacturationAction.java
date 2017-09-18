@@ -14,7 +14,9 @@ import com.er.erproject.generator.FactureTSGenerator;
 import com.er.erproject.model.BonCommande;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.User;
+import com.er.erproject.model.Ventillation;
 import com.er.erproject.model.VentillationModel;
+import com.er.erproject.model.VentillationTS;
 import com.er.erproject.service.BonCommandeService;
 import com.er.erproject.service.OffreService;
 import com.er.erproject.service.UserService;
@@ -59,8 +61,39 @@ public class FacturationAction extends ActionModel {
     private InputStream fileInputStream;
     private String fileName;
     
+    private List<Ventillation> ventillationsData; 
+    private List<VentillationTS> ventillationsTsData; 
+    
     private String url;
+    private String dateNow;
 
+    public String getDateNow() {
+        return dateNow;
+    }
+
+    public void setDateNow(String dateNow) {
+        this.dateNow = dateNow;
+    }
+    
+    
+    public List<Ventillation> getVentillationsData() {
+        return ventillationsData;
+    }
+
+    public void setVentillationsData(List<Ventillation> ventillationsData) {
+        this.ventillationsData = ventillationsData;
+    }
+
+    public List<VentillationTS> getVentillationsTsData() {
+        return ventillationsTsData;
+    }
+
+    public void setVentillationsTsData(List<VentillationTS> ventillationsTsData) {
+        this.ventillationsTsData = ventillationsTsData;
+    }
+
+    
+    
     public String getUrl() {
         return url;
     }
@@ -257,9 +290,19 @@ public class FacturationAction extends ActionModel {
             return Action.NONE;
         }
         try {
-            this.offre = this.offreService.find(idOffre);
+            this.offre = this.offreService.find(idOffre);          
         } catch (Exception e) {
             return Action.NONE;
+        }
+        try{
+            if(this.type==VentilationData.TS){
+                offreService.checkerTSEmpty(offre);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
         }
         Date temp = Calendar.getInstance().getTime();
         this.dateToday = DateUtil.convert(temp);
@@ -286,24 +329,8 @@ public class FacturationAction extends ActionModel {
         this.dateToday = DateUtil.convert(temp);
         BonCommande bonCommande = null;
         try {
-            if (!this.checkerData(this.service))throw new Exception("Veuillez remplir le champ de service");
-            if(!this.checkerData(this.nif))throw new Exception("Veuillez remplir le champ de nif");
-            if(!this.checkerData(this.stat))throw new Exception("Veuillez remplir le champ de stats"); 
-            if(!this.checkerData(this.numero))throw new Exception("Veuillez remplir le champ du numero de bon de commande"); 
-            if(!this.checkerData(this.referenceInterieure))throw new Exception("Veuillez remplir le champ du reference interieur");
             if(!this.checkerData(this.ventillation))throw new Exception("Aucun ventilation inseré");
-            if(this.bc==null)throw new Exception("Aucun bon de commande inserer");
-            FileUtil.saveBC(bc,"pdf");
-            bonCommande = new BonCommande(); 
-            bonCommande.setService(this.getService()); 
-            bonCommande.setNif(this.getNif());
-            bonCommande.setStats(this.getStat());
-            bonCommande.setNumeroBC(this.getNumero());
-            bonCommande.setReferenceInterieur(this.getReferenceInterieure());
-            bonCommande.setDateajout(Calendar.getInstance().getTime());
-            bonCommande.setPath("Archive/data/bc/"+bc.getName()+".pdf");
-            
-            this.ventillationService.save(this.getVentillation(), bonCommande, this.getOffre(), this.getType());
+            this.ventillationService.save(this.getVentillation(),this.getOffre(), this.getType());
             this.url = "detailOffre?idOffre="+this.getIdOffre();
         }catch(Exception e){
             e.printStackTrace();
@@ -367,6 +394,32 @@ public class FacturationAction extends ActionModel {
         return Action.SUCCESS;
     }
     
+    public String loadGestionPaiement()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        if (this.idOffre == 0) {
+            return Action.NONE;
+        }
+        try{
+           this.offre = this.offreService.find(idOffre);
+           
+        }catch(Exception e){
+            return Action.NONE;
+        }
+        try{
+            this.dateNow = DateUtil.convert(Calendar.getInstance().getTime());
+            this.ventillationsData = (List<Ventillation>)(Object)this.ventillationService.find(offre, VentilationData.SOUMISSION);
+            this.ventillationsTsData = (List<VentillationTS>)(Object)this.ventillationService.find(offre, VentilationData.TS);
+        }catch(Exception e){
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+    
     public String downloadFacture()throws Exception{
         this.setSessionUser();
         if (this.user == null) {
@@ -387,6 +440,7 @@ public class FacturationAction extends ActionModel {
             bonCommandeService.setHibernateDao(this.offreService.getHibernateDao());
             
             BonCommande bc = bonCommandeService.find(offre.getSoumission());
+            if(bc==null)throw new Exception("aucun bon de commande enregistré, veuillez enregistrer un bon de commande pour les travaux initiaux");
             this.condition = VentillationModel.getConditionWithoutDate(ventillations);
             
             FactureGenerator pv = new FactureGenerator(offre,ventillationData,bc,this.condition);
@@ -418,15 +472,17 @@ public class FacturationAction extends ActionModel {
         }
         try {
             this.offre = this.offreService.find(idOffre);
-            this.offreService.populateStatistiqueInitial(offre);
-            this.offreService.popoluteTacheSoumission(offre);
+            this.offreService.populateStatistiqueTS(offre);
+            this.offreService.populateTravauxSupplementaire(offre);
             if(this.offre.getStatu()<StatuReference.FACTURATION)return Action.NONE;
-            this.ventillations = this.ventillationService.find(offre,VentilationData.SOUMISSION);
+            this.ventillations = this.ventillationService.find(offre,VentilationData.TS);
             VentillationModel ventillationData = this.ventillationService.find(this.referenceVentilation);
             BonCommandeService bonCommandeService = new BonCommandeService();
             bonCommandeService.setHibernateDao(this.offreService.getHibernateDao());
             
-            BonCommande bc = bonCommandeService.find(offre.getSoumission());
+            BonCommande bc = bonCommandeService.find(offre.getTravauxSupplementaire());
+            if(bc==null)throw new Exception("aucun bon de commande enregistré, veuillez enregistrer un bon de commande pour les travaux supplementaire");
+           
             this.condition = VentillationModel.getConditionWithoutDate(ventillations);
             
             FactureTSGenerator pv = new FactureTSGenerator(offre,ventillationData,bc,this.condition);

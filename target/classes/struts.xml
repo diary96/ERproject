@@ -63,26 +63,23 @@
             <result name="none" type="redirect">accueil</result> 
         </action>
         <action name="loadVentilation" class="com.er.erproject.action.FacturationAction" method="loadVentillation">
+            <result name="error" type="chain">
+                <param name="actionName">detailOffre</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result> 
             <result name="success">Archive/page/ventillation.jsp</result> 
             <result name="login" type="redirect">index</result> 
             <!--            <result name="error">Archive/page/addPV.jsp</result> -->
             <result name="none" type="redirect">accueil</result> 
         </action>
-        <action name="saveVentilation" class="com.er.erproject.action.FacturationAction" method="saveVentillation">                        
-            <interceptor-ref name="fileUpload"> 
-                <param name="allowedTypes"> application/pdf</param>
-            </interceptor-ref> 
-            <interceptor-ref name="defaultStack"></interceptor-ref>             
+        <action name="saveVentilation" class="com.er.erproject.action.FacturationAction" method="saveVentillation">                                   
             <result name="login" type="redirect">index</result> 
             <result name="input" type="redirectAction">
                 <param name="actionName">loadVentilation</param>
                 <param name="idOffre">${idOffre}</param>
                 <param name="type">${type}</param>
-                <param name="service">${service}</param>
-                <param name="nif">${nif}</param>
-                <param name="stat">${stat}</param>
-                <param name="numero">${numero}</param>
-                <param name="referenceInterieure">${referenceInterieure}</param>
                 <param name="ventillation">${ventillation}</param>
                 <param name="linkError">${block}</param>
                 <param name="messageError">importer que des fichiers PDF</param>
@@ -126,6 +123,17 @@
             <result name="none" type="redirect">accueil</result> 
         </action>
         <action name="downloadFacture" class="com.er.erproject.action.FacturationAction" method="downloadFacture">
+            <result name="success" type="stream">
+                <param name="contentDisposition">attachment;filename=${fileName}</param>
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">fileInputStream</param>
+                <param name="bufferSize">1024</param>
+            </result>
+            <result name="login" type="redirect">index</result> 
+            <result name="error" type="redirect">${url}</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="downloadFactureTS" class="com.er.erproject.action.FacturationAction" method="downloadFactureTs">
             <result name="success" type="stream">
                 <param name="contentDisposition">attachment;filename=${fileName}</param>
                 <param name="contentType">application/vnd.ms-excel</param>
@@ -395,6 +403,17 @@
                 <param name="type">${type}</param>             
                 <param name="linkError">${block}</param>
                 <param name="messageError">importer que des fichiers PDF</param>
+            </result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="gestionPaiement" class="com.er.erproject.action.FacturationAction" method="loadGestionPaiement">
+            <result name="success">Archive/page/gestionPaiement.jsp</result> 
+            <result name="error" type="chain">
+                <param name="actionName">detailOffre</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
             </result> 
             <result name="login" type="redirect">index</result> 
             <result name="none" type="redirect">accueil</result> 

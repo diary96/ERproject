@@ -225,11 +225,10 @@ public class BonCommandeAction extends ActionModel{
                 bonCommande.setNumeroBC(this.getNumero());
                 bonCommande.setReferenceInterieur(this.getReferenceInterieure());
                 if(this.bc!=null){
-                    FileUtil.saveBC(bc,FileUtil.getEx(this.bcFileName));
-                    FileUtil.deleteFile(bonCommande.getPath());
+                    FileUtil.saveBC(bc,FileUtil.getEx(this.bcFileName));                   
                     bonCommande.setPath("Archive/data/bc/"+bc.getName()+"."+FileUtil.getEx(this.bcFileName));                   
                 }
-                bonCommandeService.update(bonCommande);
+                bonCommandeService.update(bonCommande,offre);
             }
         }catch(Exception e){
             this.setLinkError(Reference.VISIBIBLE);

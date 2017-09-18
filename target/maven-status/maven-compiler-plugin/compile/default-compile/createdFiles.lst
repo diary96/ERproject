@@ -25,6 +25,7 @@ com\er\erproject\generator\XlsGenerator.class
 com\er\erproject\util\UtilConvert.class
 com\er\erproject\service\PhotoService.class
 com\er\erproject\data\PathData.class
+com\er\erproject\action\BonCommandeAction.class
 com\er\erproject\service\TravauxSupplementaireService.class
 com\er\erproject\util\FileUtil.class
 com\er\erproject\model\Archive.class

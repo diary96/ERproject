@@ -38,7 +38,21 @@ public class OffreService extends ServiceModel {
         }
         return offres;
     }
-
+    public void checkerTSEmpty(Offre offre)throws Exception{     
+        
+        if (offre.getTravauxSupplementaire() == null) {
+            this.populateTS(offre);
+            if (offre.getTravauxSupplementaire() == null) {
+                throw new Exception("le travaux supplementaire n'est pas initialiser");
+            }
+        }
+        if (offre.getTacheSupplementaire() == null) {
+            this.populateTravauxSupplementaire(offre);
+        }
+        if (offre.getTacheSupplementaire().getTravaux().isEmpty()) {
+            throw new Exception("aucun tache n'est presente dans les travaux supplementaire");
+        }
+    }
     public Offre find(long idOffre) throws Exception {
         Offre offre = new Offre();
         offre.setId(idOffre);
@@ -77,7 +91,7 @@ public class OffreService extends ServiceModel {
             this.populateTravauxSupplementaire(offre);
         }
 
-        Statistique statistique = new Statistique(offre.getTacheSupplementaire().getTravaux(), offre.getSoumission().getTva(), offre.getSoumission().getRemise());
+        Statistique statistique = new Statistique(offre.getTacheSupplementaire().getTravaux(), offre.getTravauxSupplementaire().getTva(), offre.getTravauxSupplementaire().getRemise());
         offre.setStatTS(statistique);
     }
 
