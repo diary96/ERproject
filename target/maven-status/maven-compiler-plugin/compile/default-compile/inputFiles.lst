@@ -2,6 +2,7 @@ E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\Ventillation.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\Statistique.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\Pagination.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\BonCommande.java
+E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\Historique.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\util\ReferenceUtil.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\action\AccueilAction.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\data\SessionReference.java
@@ -79,6 +80,7 @@ E:\Stage\ER\ERproject\src\main\java\com\er\erproject\util\StringUtilsData.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\model\Travaux.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\action\ActionModel.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\action\OffreAction.java
+E:\Stage\ER\ERproject\src\main\java\com\er\erproject\service\HistoriqueService.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\util\FileUtil.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\util\NumberUtil.java
 E:\Stage\ER\ERproject\src\main\java\com\er\erproject\service\VentillationService.java

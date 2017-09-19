@@ -14,11 +14,13 @@
     <bean id="bonCommandeAction" class="com.er.erproject.action.BonCommandeAction">
         <property name="bonCommandeService" ref="bonCommandeService" />
         <property name="offreService" ref="offreService" />
+        <property name="historiqueService" ref="historiqueService" />
     </bean>
     <bean id="archiveAction" class="com.er.erproject.action.ArchiveAction">
         <property name="archiveService" ref="archiveService" />
         <property name="offreService" ref="offreService" />
         <property name="typeFichierService" ref="typeFichierService" />
+        <property name="historiqueService" ref="historiqueService" />   
     </bean>
     <bean id="typeFichierAction" class="com.er.erproject.action.TypeFichierAction">
         <property name="typeFichierService" ref="typeFichierService" />
@@ -36,37 +38,46 @@
     <bean id="new" class="com.er.erproject.action.AddAction">
         <property name="offreService" ref="offreService" />
         <property name="typeOffreService" ref="typeOffreService" />
+        <property name="historiqueService" ref="historiqueService" />
        
     </bean>
     <bean id="offreAction" class="com.er.erproject.action.OffreAction">
         <property name="userService" ref="userService" />
         <property name="offreService" ref="offreService" />
-        <property name="travauxService" ref="travauxService" />       
+        <property name="travauxService" ref="travauxService" />    
+        <property name="historiqueService" ref="historiqueService" />   
     </bean>
     <bean id="gestionTravaux" class="com.er.erproject.action.GestionTravauxAction">       
         <property name="offreService" ref="offreService" />
-        <property name="travauxService" ref="travauxService" />       
+        <property name="travauxService" ref="travauxService" />     
+        <property name="historiqueService" ref="historiqueService" />   
     </bean>
     <bean id="gestionPhoto" class="com.er.erproject.action.PhotoAction">       
         <property name="travauxService" ref="travauxService" />       
     </bean>
     <bean id="gestionMateriel" class="com.er.erproject.action.MateriauxAction">      
         <property name="offreService" ref="offreService" />
-        <property name="materiauxService" ref="materiauxService" />  
+        <property name="materiauxService" ref="materiauxService" /> 
+        <property name="historiqueService" ref="historiqueService" />    
     </bean>
     <bean id="refelectAction" class="com.er.erproject.action.ReflectAction">       
-        <property name="reflectService" ref="reflectService" />       
+        <property name="reflectService" ref="reflectService" />
+        <property name="historiqueService" ref="historiqueService" />         
     </bean>
     <bean id="facturationAction" class="com.er.erproject.action.FacturationAction">       
         <property name="userService" ref="userService" />     
         <property name="offreService" ref="offreService" />     
         <property name="ventillationService" ref="ventillationService" />     
-        <property name="bonCommandeService" ref="bonCommandeService" />     
+        <property name="bonCommandeService" ref="bonCommandeService" />   
+        <property name="historiqueService" ref="historiqueService" />  
     </bean>
     
     
     
     <!--service class-->
+    <bean id="historiqueService" class="com.er.erproject.service.HistoriqueService">
+        <property name="hibernateDao" ref="hibernateDao" />
+    </bean>
     <bean id="archiveService" class="com.er.erproject.service.ArchiveService">
         <property name="hibernateDao" ref="hibernateDao" />
     </bean>

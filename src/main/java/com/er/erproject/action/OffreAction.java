@@ -9,6 +9,7 @@ import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
 import com.er.erproject.data.StatuReference;
 import com.er.erproject.generator.PVGenerator;
+import com.er.erproject.model.Historique;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.Parametre;
 import com.er.erproject.model.User;
@@ -254,8 +255,22 @@ public class OffreAction extends ActionModel {
             File fileToDownload = new File("E:/Stage/ER/ERproject/src/main/webapp/Archive/data/PDF/pv_generate.pdf");
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("pv generé");
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
             
         } catch (Exception e) {
+            
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("tentative de génération de pv");
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
             this.url = "loadPv?idOffre=" + this.idOffre + "&linkError=" + this.getLinkError() + "&messageError=" + UtilConvert.toUrlPath(this.getMessageError());
@@ -326,8 +341,24 @@ public class OffreAction extends ActionModel {
         try {
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");              
             this.offreService.valider(offre, user, nextLevel);
+            
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("validation de "+StatuReference.getString(offre.getStatu()-1));
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
  
         } catch (Exception e) {
+            
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("tentative de validation de "+StatuReference.getString(offre.getStatu()-1));
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
 

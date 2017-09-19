@@ -5,7 +5,9 @@
  */
 package com.er.erproject.action;
 
+import com.er.erproject.model.Historique;
 import com.er.erproject.model.User;
+import com.er.erproject.service.HistoriqueService;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -13,11 +15,40 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author diary
  */
 public class ActionModel extends ActionSupport{
+    protected HistoriqueService historiqueService;
+    protected Historique historique;
     public String titre;
     private String linkError ="none";
     private String messageError;
     protected User user;
 
+    public Historique getHistorique() {
+        return historique;
+    }
+
+    public void setHistorique(Historique historique) {
+        this.historique = historique;
+    }
+
+    
+    
+    public HistoriqueService getHistoriqueService() {
+        return historiqueService;
+    }
+
+    public void setHistoriqueService(HistoriqueService historiqueService) {
+        this.historiqueService = historiqueService;
+    }
+
+    public String getTitre() {
+        return titre;
+    }
+
+    public void setTitre(String titre) {
+        this.titre = titre;
+    }
+
+    
     public String getLinkError() {
         return linkError;
     }

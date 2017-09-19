@@ -11,8 +11,10 @@ import com.er.erproject.data.ReferenceType;
 import com.er.erproject.data.SessionReference;
 import com.er.erproject.data.StatuReference;
 import com.er.erproject.generator.XlsGenerator;
+import com.er.erproject.model.Historique;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.Photo;
+import com.er.erproject.model.TacheModel;
 import com.er.erproject.model.User;
 import com.er.erproject.service.MateriauxService;
 import com.er.erproject.service.OffreService;
@@ -26,6 +28,7 @@ import com.opensymphony.xwork2.Action;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpSession;
@@ -367,7 +370,24 @@ public class GestionTravauxAction extends ActionModel {
         try {
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
             this.travauxService.delete(reference);
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("suppression de la tache n° "+reference);
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
         } catch (Exception e) {
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("tentative de suppression de la tache n° "+reference);
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
+            e.printStackTrace();
             this.url = url + "&linkError=block&messageError=" + UtilConvert.toUrlPath("impossible de supprimer cette tache");
             return Action.ERROR;
         }
@@ -419,12 +439,30 @@ public class GestionTravauxAction extends ActionModel {
         if (this.idOffre == 0) {
             return Action.NONE;
         }
+        TacheModel tacheModel= new TacheModel();
         try {
             this.cheker();
             this.offre = this.offreService.find(idOffre);
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
-            travauxService.save(reference, designation, prixUnitaire, unite, quantite, type, this.offre.getAllReference(), this.admin);
+            tacheModel =  travauxService.save(reference, designation, prixUnitaire, unite, quantite, type, this.offre.getAllReference(), this.admin);
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("ajout de la tache n° "+tacheModel.getAllReference());
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+        
         } catch (Exception e) {
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("tentative d'ajout de la tache n° "+tacheModel.getAllReference());
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
+            e.printStackTrace();
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
             this.url = "newTache?idOffre=" + this.idOffre + "&url=" + url + "&linkError=" + this.getLinkError() + "&messageError=" + UtilConvert.toUrlPath(this.getMessageError()) + "&type=" + this.type;
@@ -560,6 +598,13 @@ public class GestionTravauxAction extends ActionModel {
         try {
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
             this.travauxService.plusDone(reference);
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("augmentation de total effectuer  de la tache n° "+reference);
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
         } catch (Exception e) {
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
@@ -591,6 +636,14 @@ public class GestionTravauxAction extends ActionModel {
         try {
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");              
             this.travauxService.minusDone(reference);
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("diminution de total effectuer  de la tache n° "+reference);
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
         } catch (Exception e) {
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
@@ -623,6 +676,14 @@ public class GestionTravauxAction extends ActionModel {
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");             
             if(this.effectuer==null)return Action.NONE;
             this.travauxService.manualDone(reference,NumberUtil.toInt(effectuer));
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("modificaton manuel de total effectuer de la tache n° "+reference);
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
         } catch (Exception e) {
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
@@ -654,6 +715,14 @@ public class GestionTravauxAction extends ActionModel {
         try {
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");              
             this.travauxService.allDone(reference);
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("tout effectuer les tache du travaux n° "+reference);
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
         } catch (Exception e) {
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
@@ -689,6 +758,14 @@ public class GestionTravauxAction extends ActionModel {
             if (this.offre.getStatu() == StatuReference.PV) {
                 MateriauxService materiauxService = new MateriauxService(this.travauxService.getHibernateDao());
                 materiauxService.changeStatu(reference);
+                
+                historique =new Historique();
+                historique.setUser(user);
+                historique.setDescription("changement de l'etat du materiel recu n° "+reference);
+                historique.setDate(Calendar.getInstance().getTime());
+                historique.setReferenceExterieur(offre.getAllReference());
+                this.historiqueService.save(historique);
+                
             }
         } catch (Exception e) {
             this.setLinkError(Reference.VISIBIBLE);

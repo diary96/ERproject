@@ -46,6 +46,9 @@ Contributor(s):
         </id>
         <property name="description" column="description" type="string"/>
         <property name="date" column="dateexecute" type="timestamp"/>
-        <property name="reference" column="reference" type="string"/>
+        <property name="referenceExterieur" column="reference" type="string"/>
+        <many-to-one name="user" class="com.er.erproject.model.Offre" fetch="select">
+            <column name="iduser" not-null="true" />
+        </many-to-one>
     </class>
 </hibernate-mapping>

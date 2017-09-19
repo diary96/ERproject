@@ -8,7 +8,9 @@ package com.er.erproject.action;
 import com.er.erproject.data.PathData;
 import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
+import com.er.erproject.data.StatuReference;
 import com.er.erproject.model.Archive;
+import com.er.erproject.model.Historique;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.TypeFichier;
 import com.er.erproject.model.User;
@@ -228,6 +230,14 @@ public class ArchiveAction extends ActionModel{
                 archive.setTypeFichier(typeFichier);
                 archive.setOffre(offre);
                 this.archiveService.save(archive);
+                
+                historique = new Historique();
+                historique.setUser(user);
+                historique.setDescription("ajout de l'archive "+archive.getAllReference());
+                historique.setDate(Calendar.getInstance().getTime());
+                historique.setReferenceExterieur(offre.getAllReference());
+                this.historiqueService.save(historique);
+                
             }else{
                 archive = null; 
                 ReflectService reflectService = new ReflectService();
@@ -245,6 +255,14 @@ public class ArchiveAction extends ActionModel{
                     archive.setPath(PathData.PATH_ARCHIVE_SIMPLE+"/"+archiveF.getName()+"."+FileUtil.getEx(this.archiveFFileName));                
                 }
                 this.archiveService.update(archive);
+                
+                historique = new Historique();
+                historique.setUser(user);
+                historique.setDescription("modification de l'archive "+archive.getAllReference());
+                historique.setDate(Calendar.getInstance().getTime());
+                historique.setReferenceExterieur(offre.getAllReference());
+                this.historiqueService.save(historique);
+                
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -255,15 +273,15 @@ public class ArchiveAction extends ActionModel{
         return Action.SUCCESS;
     }
     
-    public String delete(){
+    public String delete() throws Exception{
         this.setSessionUser();
         if (this.user == null) {
             return Action.LOGIN;
         }
         if(!this.checkerData(this.reference))return Action.NONE;
+        Archive archive = null; 
         try{
-            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
-            Archive archive = null; 
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");                          
             try{
                  ReflectService reflectService = new ReflectService();
                 reflectService.setHibernateDao(this.archiveService.getHibernateDao());
@@ -272,7 +290,24 @@ public class ArchiveAction extends ActionModel{
                 throw new Exception("la reference inseré n'est pas de type archive");
             }
             this.archiveService.delete(archive);
+            
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("suppression de l'archive "+archive.getAllReference());
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+                
         }catch(Exception e){
+            
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription(" tentative de suppression de l'archive "+archive.getAllReference());
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+                
+            
             e.printStackTrace();
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());

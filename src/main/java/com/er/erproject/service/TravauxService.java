@@ -67,7 +67,7 @@ public class TravauxService extends ServiceModel {
         }
     }
 
-    public void save(String catalogueReference, String designation, String prixUnitaire, String Unite, String quantite, String type, String refRelation, String admin) throws Exception {
+    public  TacheModel save(String catalogueReference, String designation, String prixUnitaire, String Unite, String quantite, String type, String refRelation, String admin) throws Exception {
         if (type == null || type.compareToIgnoreCase("") == 0) {
             throw new Exception("Pas de type");
         }
@@ -88,6 +88,7 @@ public class TravauxService extends ServiceModel {
                     tic.setQuantite(UtilConvert.toEntier(quantite));
                     tic.setEffectuer(0);
                     this.save(tic);
+                    return tic;
                 }
                 if (type.compareToIgnoreCase(ReferenceType.SOUMISSION) == 0) {
                     TacheSoumissionCatalogue tic = new TacheSoumissionCatalogue();
@@ -98,6 +99,7 @@ public class TravauxService extends ServiceModel {
                     tic.setQuantite(UtilConvert.toEntier(quantite));
                     tic.setEffectuer(0);
                     this.save(tic);
+                    return tic;
                 }
                 if (type.compareToIgnoreCase(ReferenceType.TAVAUX_SUPPLEMENTAIRE) == 0) {
                     TacheTSCatalogue tuc = new TacheTSCatalogue();
@@ -108,6 +110,7 @@ public class TravauxService extends ServiceModel {
                     tuc.setQuantite(UtilConvert.toEntier(quantite));
                     tuc.setEffectuer(0);
                     this.save(tuc);
+                    return tuc;
                 }
             }
             if (test.getSimpleName().compareToIgnoreCase(HorsCatalogue.class.getSimpleName()) == 0) {
@@ -122,6 +125,7 @@ public class TravauxService extends ServiceModel {
                         tic.setEffectuer(0);
                     }
                     this.save(tic);
+                    return tic;
                 }
                 if (type.compareToIgnoreCase(ReferenceType.SOUMISSION) == 0) {
                     TacheSoumissionHorsCatalogue tic = new TacheSoumissionHorsCatalogue();
@@ -136,6 +140,7 @@ public class TravauxService extends ServiceModel {
                         tic.setEffectuer(0);
                     }
                     this.save(tic);
+                    return tic;
                 }
                 if (type.compareToIgnoreCase(ReferenceType.TAVAUX_SUPPLEMENTAIRE) == 0) {
                     TacheTSHorsCatalogue tuc = new TacheTSHorsCatalogue();
@@ -150,6 +155,7 @@ public class TravauxService extends ServiceModel {
                         tuc.setEffectuer(0);
                     }
                     this.save(tuc);
+                    return tuc;
                 }
             }
         } else {
@@ -178,6 +184,7 @@ public class TravauxService extends ServiceModel {
                 throw new Exception("Impossible de sauvegarder les donnees du catalogue");
             }
         }
+        return null;
     }
 
     public void save(TacheModel travaux) throws Exception {

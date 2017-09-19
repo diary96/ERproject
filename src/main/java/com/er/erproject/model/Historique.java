@@ -15,7 +15,7 @@ public class Historique extends BaseModel{
     private User user;
     private String description; 
     private Date date; 
-    private String reference; 
+    private String referenceExterieur; 
 
     public User getUser() {
         return user;
@@ -41,12 +41,14 @@ public class Historique extends BaseModel{
         this.date = date;
     }
 
-    public String getReference() {
-        return reference;
+    public String getReferenceExterieur() {
+        return referenceExterieur;
     }
 
-    public void setReference(String reference) {
-        this.reference = reference;
+    public void setReferenceExterieur(String referenceExterieur) {
+        this.referenceExterieur = referenceExterieur;
     }
+
+    
     
 }

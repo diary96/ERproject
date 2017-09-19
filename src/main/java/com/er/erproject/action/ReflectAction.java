@@ -7,12 +7,14 @@ package com.er.erproject.action;
 
 import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
+import com.er.erproject.model.Historique;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.User;
 import com.er.erproject.service.OffreService;
 import com.er.erproject.service.ReflectService;
 import com.er.erproject.util.UtilConvert;
 import com.opensymphony.xwork2.Action;
+import java.util.Calendar;
 import javax.servlet.http.HttpSession;
 import org.apache.struts2.ServletActionContext;
 
@@ -69,7 +71,7 @@ public class ReflectAction extends ActionModel {
             this.setUser((User) object);
         }     
     }
-    public String delete(){
+    public String delete() throws Exception{
         this.setSessionUser();
         if(this.user==null)return Action.LOGIN;
         if(this.reference==null||this.reference.compareToIgnoreCase("")==0) return Action.NONE;
@@ -79,13 +81,31 @@ public class ReflectAction extends ActionModel {
         try{
             OffreService offreService = new OffreService();
             offreService.setHibernateDao(this.reflectService.getHibernateDao());
-            offre = offreService.find(idOffre);
-            if(offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié"); 
-            this.url=url+"?idOffre="+this.idOffre;
+            if(idOffre!=0){
+                offre = offreService.find(idOffre);
+                if(offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié"); 
+           
+            }
+             this.url=url+"?idOffre="+this.idOffre;
           
             this.reflectService.delete(reference);
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("suppression de l'objet n° "+reference);
+            historique.setDate(Calendar.getInstance().getTime());
+            if(idOffre==0)historique.setReferenceExterieur(reference);
+            else historique.setReferenceExterieur(Reference.OFFRE+idOffre);
+            this.historiqueService.save(historique);
            
         }catch(Exception e){
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("tentative de suppression de l'objet n° "+reference);
+            historique.setDate(Calendar.getInstance().getTime());
+            if(idOffre==0)historique.setReferenceExterieur(reference);
+            else historique.setReferenceExterieur(Reference.OFFRE+idOffre);
+            this.historiqueService.save(historique);
+            e.printStackTrace();
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
             this.url = url+"&linkError="+this.getLinkError()+"&messageError="+UtilConvert.toUrlPath(this.getMessageError());

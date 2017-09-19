@@ -1,6 +1,7 @@
 com\er\erproject\util\ReferenceUtil.class
 com\er\erproject\action\ReflectAction.class
 com\er\erproject\model\Materiaux.class
+com\er\erproject\model\Historique.class
 com\er\erproject\service\ParametreService.class
 com\er\erproject\service\BonCommandeService.class
 com\er\erproject\generator\Main.class
@@ -20,6 +21,7 @@ com\er\erproject\action\GestionTravauxAction.class
 com\er\erproject\model\TacheModel.class
 com\er\erproject\action\UtilAction.class
 com\er\erproject\action\MateriauxAction.class
+com\er\erproject\service\HistoriqueService.class
 com\er\erproject\model\TravauxSupplementaire.class
 com\er\erproject\generator\XlsGenerator.class
 com\er\erproject\util\UtilConvert.class

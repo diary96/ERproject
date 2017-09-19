@@ -8,6 +8,7 @@ package com.er.erproject.action;
 import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
 import com.er.erproject.data.StatuReference;
+import com.er.erproject.model.Historique;
 import com.er.erproject.model.Materiaux;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.User;
@@ -15,6 +16,7 @@ import com.er.erproject.service.MateriauxService;
 import com.er.erproject.service.OffreService;
 import com.er.erproject.util.UtilConvert;
 import com.opensymphony.xwork2.Action;
+import java.util.Calendar;
 import javax.servlet.http.HttpSession;
 import org.apache.struts2.ServletActionContext;
 
@@ -159,7 +161,22 @@ public class MateriauxAction extends ActionModel{
                 materiaux.setEtat(StatuReference.RECU);
             }
             this.materiauxService.save(materiaux);
-        }catch(Exception e){
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("ajout d'un materiel n° "+materiaux.getAllReference());
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
+        }catch(Exception e){     
+            e.printStackTrace();
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("tentative d'ajout d'un materiel");
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
             this.url = "gestionMateriel?idOffre=" + this.idOffre + "&url=" + url + "&linkError=" + this.getLinkError() + "&messageError=" + UtilConvert.toUrlPath(this.getMessageError());

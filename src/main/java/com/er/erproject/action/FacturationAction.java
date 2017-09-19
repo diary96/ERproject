@@ -12,6 +12,7 @@ import com.er.erproject.data.VentilationData;
 import com.er.erproject.generator.FactureGenerator;
 import com.er.erproject.generator.FactureTSGenerator;
 import com.er.erproject.model.BonCommande;
+import com.er.erproject.model.Historique;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.User;
 import com.er.erproject.model.Ventillation;
@@ -344,7 +345,23 @@ public class FacturationAction extends ActionModel {
             if(!this.checkerData(this.ventillation))throw new Exception("Aucun ventilation inseré");
             this.ventillationService.save(this.getVentillation(),this.getOffre(), this.getType());
             this.url = "detailOffre?idOffre="+this.getIdOffre();
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("ajout des modes de paiements");
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
         }catch(Exception e){
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("tentaive d'ajout des modes de paiements");
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
             e.printStackTrace();
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
@@ -445,13 +462,14 @@ public class FacturationAction extends ActionModel {
         }catch(Exception e){
             return Action.NONE;
         }
+        VentillationModel ventillation=null;    
         try{
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié"); 
                
             if(!this.checkerData(this.referenceVentilation))throw new Exception("Veuillez inserer une reference de ventilation");
             if(!this.checkerData(this.date))throw new Exception("Veuillez inserer une date de ventilation");
            
-            VentillationModel ventillation;           
+                  
             ventillation = this.ventillationService.find(this.referenceVentilation);
             Date date;
             try{
@@ -460,8 +478,23 @@ public class FacturationAction extends ActionModel {
                 throw new Exception("la date inserée n'est pas valide");
             }
             if(ventillation.getDatepaiement()!=null)throw new Exception("cette ventilation a déjà été payé");           
-            this.ventillationService.payer(ventillation, date);           
+            this.ventillationService.payer(ventillation, date);       
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("paiement de facture n° "+ventillation.getAllReference());
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
         }catch(Exception e){
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("tentative de paiement de facture n° "+ventillation.getAllReference());
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
             e.printStackTrace(); 
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
@@ -497,6 +530,13 @@ public class FacturationAction extends ActionModel {
             File fileToDownload = new File("E:/Stage/ER/ERproject/src/main/webapp/Archive/data/PDF/facture_generate.pdf");
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("telechargement de la facture n° "+ventillationData.getAllReference());
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
             
             
             
@@ -540,7 +580,12 @@ public class FacturationAction extends ActionModel {
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);
             
-            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("telechargement de la facture n° "+ventillationData.getAllReference());
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
             
 
         } catch (Exception ex) {

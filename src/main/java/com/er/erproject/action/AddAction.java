@@ -7,6 +7,7 @@ package com.er.erproject.action;
 
 import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
+import com.er.erproject.model.Historique;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.TypeOffre;
 import com.er.erproject.model.User;
@@ -173,9 +174,19 @@ public class AddAction extends ActionModel{
             if(this.isValide(this.dateTravaux))offre.setDatetravauxprevu(UtilConvert.convertToSQLDate(this.dateTravaux));
             
             this.offreService.save(offre);
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("ajout d'une nouvelle offre");
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+        }catch(Exception e){
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("Tentative d'ajout d'une nouvelle offre");
+            historique.setDate(Calendar.getInstance().getTime());
+            this.historiqueService.save(historique);
             
-           
-        }catch(Exception e){      
             this.titre = "Nouvelle Offre | Erreur";
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());

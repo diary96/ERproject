@@ -7,7 +7,9 @@ package com.er.erproject.action;
 
 import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
+import com.er.erproject.data.VentilationData;
 import com.er.erproject.model.BonCommande;
+import com.er.erproject.model.Historique;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.User;
 import com.er.erproject.service.BonCommandeService;
@@ -182,6 +184,7 @@ public class BonCommandeAction extends ActionModel{
         }
         return Action.SUCCESS; 
     }
+    
     public String save(){
         this.setSessionUser();
         if (this.user == null) {
@@ -215,6 +218,15 @@ public class BonCommandeAction extends ActionModel{
                 bonCommande.setDateajout(Calendar.getInstance().getTime());
                 bonCommande.setPath("Archive/data/bc/"+bc.getName()+"."+FileUtil.getEx(this.bcFileName));
                 this.bonCommandeService.save(bonCommande, offre, type);
+                
+                historique = new Historique();
+                historique.setUser(user);
+                if(type==VentilationData.SOUMISSION) historique.setDescription("ajout d'un bon commande pour les travaux initiaux");
+                else historique.setDescription("ajout d'un bon commande pour les travaux supplémentaire");
+                historique.setDate(Calendar.getInstance().getTime());
+                historique.setReferenceExterieur(offre.getAllReference());
+                this.historiqueService.save(historique);
+                
             }else{
                 bonCommande = this.bonCommandeService.find(offre, type);
                 bonCommande.setService(this.getService()); 
@@ -227,6 +239,14 @@ public class BonCommandeAction extends ActionModel{
                     bonCommande.setPath("Archive/data/bc/"+bc.getName()+"."+FileUtil.getEx(this.bcFileName));                   
                 }
                 bonCommandeService.update(bonCommande,offre);
+                
+                historique = new Historique();
+                historique.setUser(user);
+                if(type==VentilationData.SOUMISSION) historique.setDescription("modification du bon commande pour les travaux initiaux");
+                else historique.setDescription("modification du bon commande pour les travaux supplémentaire");
+                historique.setDate(Calendar.getInstance().getTime());
+                historique.setReferenceExterieur(offre.getAllReference());
+                this.historiqueService.save(historique);
             }
         }catch(Exception e){
             this.setLinkError(Reference.VISIBIBLE);
