@@ -278,12 +278,17 @@ public class ArchiveAction extends ActionModel{
         if (this.user == null) {
             return Action.LOGIN;
         }
+        try{
+            this.offre = this.offreService.find(idOffre);
+        }catch(Exception e){
+            return Action.NONE;
+        }
         if(!this.checkerData(this.reference))return Action.NONE;
         Archive archive = null; 
         try{
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");                          
             try{
-                 ReflectService reflectService = new ReflectService();
+                ReflectService reflectService = new ReflectService();
                 reflectService.setHibernateDao(this.archiveService.getHibernateDao());
                 archive = (Archive)reflectService.find(reference);
             }catch(Exception e){

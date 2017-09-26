@@ -24,6 +24,7 @@ public class ActionModel extends ActionSupport{
 
     public Historique getHistorique() {
         return historique;
+        
     }
 
     public void setHistorique(Historique historique) {

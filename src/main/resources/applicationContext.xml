@@ -11,6 +11,12 @@
         
     <!--Action class-->
     
+    <bean id="historiqueAction" class="com.er.erproject.action.HistoriqueAction">
+        <property name="offreService" ref="offreService" />
+        <property name="historiqueService" ref="historiqueService" />  
+        
+        
+    </bean>
     <bean id="bonCommandeAction" class="com.er.erproject.action.BonCommandeAction">
         <property name="bonCommandeService" ref="bonCommandeService" />
         <property name="offreService" ref="offreService" />

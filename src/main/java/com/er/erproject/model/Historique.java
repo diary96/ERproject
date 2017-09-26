@@ -5,6 +5,7 @@
  */
 package com.er.erproject.model;
 
+import com.er.erproject.data.Reference;
 import java.util.Date;
 
 /**
@@ -47,6 +48,10 @@ public class Historique extends BaseModel{
 
     public void setReferenceExterieur(String referenceExterieur) {
         this.referenceExterieur = referenceExterieur;
+    }
+    
+    public Historique(){
+        this.setReference(Reference.HISTORIQUE);
     }
 
     

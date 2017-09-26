@@ -29,6 +29,22 @@ public class UserService extends ServiceModel {
         if(list.size()>0)return list.get(0);
         else throw new Exception("L'email ou le mot de passe est incorrect");
     }
+    public void find(User user)throws Exception{
+        try{
+            this.hibernateDao.findById(user);
+        }catch(Exception e){
+            throw new Exception("impossible d'extraire l'utilisateur"); 
+        
+        }
+    }
+    public void find(User user,Session session)throws Exception{
+        try{
+            this.hibernateDao.findById(user,session);
+        }catch(Exception e){
+            throw new Exception("impossible d'extraire l'utilisateur"); 
+        
+        }
+    }
     
     
 }

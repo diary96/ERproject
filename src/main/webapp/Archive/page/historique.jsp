@@ -1,22 +1,8 @@
-<%@include file="template/test/header.jsp" %>
+<%@include file="template/default/header.jsp" %>
 <div class="x_panel">
     <div class="x_title">
-        <h2>E/SE R Ambatoroka, Ticket numero : 20160522-0004 <small>Departement : DSCI-TANA</small> </h2>
-        <ul class="nav navbar-right panel_toolbox">
-            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-            </li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Settings 1</a>
-                    </li>
-                    <li><a href="#">Settings 2</a>
-                    </li>
-                </ul>
-            </li>
-            <li><a class="close-link"><i class="fa fa-close"></i></a>
-            </li>
-        </ul>
+        <h2><a href="detailOffre?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-default"><i class="fa fa-arrow-left"></i>  </a> <s:property value="getOffre().getNomProjet()"/> , Ticket numero : <s:property value="getOffre().getTicket()"/> </h2>
+        
         <div class="clearfix"></div>
     </div>
     <div class="x_content">
@@ -25,68 +11,27 @@
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Reference</th>
                     <th>Date et Heure</th>
-                    <th>Date limite</th>
-                    <th>Non de l'action</th>
-                    <th>Etat</th>
+                    <th>Action</th>
+                    <th>Reference de l'offre</th>
+                    <th>Utilisateur</th>
 
                 </tr>
             </thead>
             <tbody>
-                <tr height='7'>
-                    <th style="padding: 2px;" scope="row">1</th>
-                    <td style="padding: 2px;">12/06 &agrave; 8h</td>
-                    <td style="padding: 2px;" >12/06 &agrave; 12h</td>
-                    <td style="padding: 2px;" >Appel d'offre</td>
-                    <td style="padding: 2px;"  ><button type="button" class="btn btn-success btn-xs" >OK</button></td>
-                    <td style="padding: 2px;" ><button type="button" class="btn btn-dark btn-xs" >voir les fichiers correspondants</button></td>
-                </tr>
-                <tr  height='25px'>
-                    <th style="padding: 2px;" scope="row">2</th>
-                    <td style="padding: 2px;" >12/06 &agrave; 14h</td>
-                    <td style="padding: 2px;" >12/06 &agrave; 17h</td>
-                    <td style="padding: 2px;" >Soumission d'offre</td>
-                    <td style="padding: 2px;" ><button type="button" class="btn btn-danger btn-xs">En cours</button></td>
-                    <td style="padding: 2px;" ><button type="button" class="btn btn-dark btn-xs">voir les fichiers correspondants</button></td>
-
-                </tr>
-                <tr  height='25px'>
-                    <th style="padding: 2px;" scope="row">3</th>
-                    <td style="padding: 2px;" >12/06 &agrave; 14h</td>
-                    <td style="padding: 2px;" >12/06 &agrave; 17h</td>
-                    <td style="padding: 2px;" >Soumission d'offre</td>
-                    <td style="padding: 2px;" ><button type="button" class="btn btn-danger btn-xs">En cours</button></td>
-                    <td style="padding: 2px;" ><button type="button" class="btn btn-dark btn-xs">voir les fichiers correspondants</button></td>
-
-                </tr>
-                <tr  height='25px'>
-                    <th style="padding: 2px;" scope="row">4</th>
-                    <td style="padding: 2px;" >12/06 &agrave; 14h</td>
-                    <td style="padding: 2px;" >12/06 &agrave; 17h</td>
-                    <td style="padding: 2px;" >Soumission d'offre</td>
-                    <td style="padding: 2px;" ><button type="button" class="btn btn-danger btn-xs">En cours</button></td>
-                    <td style="padding: 2px;" ><button type="button" class="btn btn-dark btn-xs">voir les fichiers correspondants</button></td>
-
-                </tr>
-                <tr  height='25px'>
-                    <th style="padding: 2px;" scope="row">5</th>
-                    <td style="padding: 2px;" >12/06 &agrave; 14h</td>
-                    <td style="padding: 2px;" >12/06 &agrave; 17h</td>
-                    <td style="padding: 2px;" >Soumission d'offre</td>
-                    <td style="padding: 2px;" ><button type="button" class="btn btn-danger btn-xs">En cours</button></td>
-                    <td style="padding: 2px;" ><button type="button" class="btn btn-dark btn-xs">voir les fichiers correspondants</button></td>
-
-                </tr>
-                <tr  height='25px'>
-                    <th style="padding: 2px;" scope="row">6</th>
-                    <td style="padding: 2px;" >12/06 &agrave; 14h</td>
-                    <td style="padding: 2px;" >12/06 &agrave; 17h</td>
-                    <td style="padding: 2px;" >Soumission d'offre</td>
-                    <td style="padding: 2px;" ><button type="button" class="btn btn-danger btn-xs">En cours</button></td>
-                    <td style="padding: 2px;" ><button type="button" class="btn btn-dark btn-xs">voir les fichiers correspondants</button></td>
-
-                </tr>
-
+                <s:iterator value="historiques" status="historique">
+                    <tr  height='25px'>
+                        <th style="padding: 2px;" scope="row"><s:property value="#historique.index+1"/></th>
+                        <td style="padding: 2px;" ><s:property value="getAllReference()"/></td>
+                        <td style="padding: 2px;" ><s:property value="getDate()"/></td>
+                        <td style="padding: 2px;" ><s:property value="getDescription()"/></td>
+                        <td style="padding: 2px;" ><s:property value="getReferenceExterieur()"/></td>
+                        <td style="padding: 2px;" ><s:property value="getUser().getPrenom()"/> <s:property value="getUser().getNom()"/></td>
+                        
+                    </tr>
+                </s:iterator>
+                
 
             </tbody>
         </table>
@@ -100,4 +45,4 @@
 
     </div>
 </div>
-<%@include file="template/test/footer.jsp" %>
+<%@include file="template/default/footer.jsp" %>

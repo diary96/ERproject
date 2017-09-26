@@ -168,11 +168,14 @@ public class AddAction extends ActionModel{
             offre.setUser(user);
             offre.setLocalisation(localisation);
             if(this.isValide(this.deadLine)){
-                if(this.time==null)time="00:00";
+                if(!this.checkerData(this.time))time="00:00";
                 offre.setDeadline(UtilConvert.convertToSQLDate(this.deadLine,this.time));
             }
             if(this.isValide(this.dateTravaux))offre.setDatetravauxprevu(UtilConvert.convertToSQLDate(this.dateTravaux));
-            
+            Offre offreTemp = this.offreService.find(ticket);
+            if(offreTemp!=null){
+                throw new Exception("impossible d'enregistrer cette offre, une offre possède le même ticket");
+            }
             this.offreService.save(offre);
             historique = new Historique();
             historique.setUser(user);

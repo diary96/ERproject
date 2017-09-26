@@ -315,6 +315,14 @@ public class GestionTravauxAction extends ActionModel {
             File fileToDownload = new File(PathData.PATH_XLS_DEVIS);
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("telechargement du devis");
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
         } catch (Exception e) {
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError("Impossible de generer le devis");
@@ -457,7 +465,7 @@ public class GestionTravauxAction extends ActionModel {
             
             historique =new Historique();
             historique.setUser(user);
-            historique.setDescription("tentative d'ajout de la tache n° "+tacheModel.getAllReference());
+            historique.setDescription("tentative d'ajout d'une nouvelle tache n° ");
             historique.setDate(Calendar.getInstance().getTime());
             historique.setReferenceExterieur(offre.getAllReference());
             this.historiqueService.save(historique);

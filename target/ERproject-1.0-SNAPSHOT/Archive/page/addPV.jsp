@@ -17,6 +17,7 @@
     </div>
     <div class="" role="tabpanel" data-example-id="togglable-tabs">
         <a href="listeArchive?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-primary">Gestion des fichiers</a>
+        <a href="gestionHistorique?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-dark">Historique</a>
         <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@FACTURATION">
                 <a href="gestionPaiement?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-dark">Gestion des paiements</a>
         </s:if>

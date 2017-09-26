@@ -46,7 +46,7 @@
                                     <td><button type="button" class="btn btn-success btn-xs"><s:property value="getStatuString()"/></button></td>
                                 </s:else>
                                 
-                                <td><a href="http://localhost:8081/ERproject/Archive/page/historique.jsp" class="btn btn-primary btn-xs">Historique</a></td>
+                                <td><a href="gestionHistorique?idOffre=<s:property value="getId()" />" class="btn btn-primary btn-xs">Historique</a></td>
                                 <td> <a href="listeArchive?idOffre=<s:property value="getId()" />" class="btn btn-primary btn-xs"  >Gestion des fichiers</button></a>
                                 <td> <button id="<s:property value="getId()" />" class="supprimer btn btn-danger btn-xs"  >Supprimer</button></td>
 

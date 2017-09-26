@@ -12,24 +12,18 @@ import com.er.erproject.model.Offre;
 import com.er.erproject.model.Photo;
 import com.er.erproject.model.TacheModel;
 import com.er.erproject.util.DateUtil;
-import com.itextpdf.text.Anchor;
+import com.er.erproject.util.ServiceUtil;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chapter;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
-import com.itextpdf.text.ExceptionConverter;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.List;
-import com.itextpdf.text.ListItem;
-import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.Section;
 import com.itextpdf.text.html.WebColors;
 import com.itextpdf.text.pdf.GrayColor;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -39,11 +33,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.VerticalPositionMark;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jxl.HeaderFooter;
 
 /**
  *
@@ -430,16 +422,40 @@ public class PVGenerator {
                 information = new Paragraph();
                 information.add(new Phrase(tache.getCatalogue().getDesignation(), boldFont));
                 addEmptyLine(information, 1);
-                for (int si = 0; si < tache.getPhotos().size(); si++) {
+                int si = 0 ;
+                while ( si < tache.getPhotos().size()) {
+                    Chunk glue = new Chunk(new VerticalPositionMark());
                     Photo photo = tache.getPhotos().get(si);
+                    Photo photo2 = null;
                     addEmptyLine(information, 1);
                     Image img = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo.getPathPhoto());
-                    information.add(img);
+                    img.scaleAbsolute(220, ServiceUtil.resizeHeight(img.getWidth(), img.getHeight()));
+                    information.add(new Chunk(img, 0, 0, true));
+                    int limit = tache.getPhotos().size()-1;
+                    if(si<limit){
+                        information.add(new Chunk(glue));
+                        photo2 = tache.getPhotos().get(si+1);
+                        Image img2 = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo2.getPathPhoto());
+                        img2.scaleAbsolute(220, ServiceUtil.resizeHeight(img2.getWidth(), img2.getHeight()));
+                        information.add(new Chunk(img2, 0, 0, true));
+                       
+                    }
+                    addEmptyLine(information,1);
                     information.add(new Phrase(photo.getLatitude() + " " + photo.getLongitude(), normalFont));
+                    
+                    if(si<limit){
+                        
+                        information.add(new Chunk(glue));
+                        information.add(new Phrase(photo2.getLatitude() + " " + photo2.getLongitude(), normalFont));
+                    }
                     addEmptyLine(information, 1);
-                    document.add(information);
-
+                    
+                    if(si<limit){
+                        si++;
+                    }
+                    si++;
                 }
+                document.add(information);
             }
         }
         for (int i = 0; i < offre.getTacheSoumission().getTravaux().size(); i++) {
@@ -448,16 +464,41 @@ public class PVGenerator {
                 information = new Paragraph();
                 information.add(new Phrase(tache.getCatalogue().getDesignation(), boldFont));
                 addEmptyLine(information, 1);
-                for (int si = 0; si < tache.getPhotos().size(); si++) {
+                int si = 0 ;
+                while ( si < tache.getPhotos().size()) {
+                    Chunk glue = new Chunk(new VerticalPositionMark());
                     Photo photo = tache.getPhotos().get(si);
+                    Photo photo2 = null;
                     addEmptyLine(information, 1);
                     Image img = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo.getPathPhoto());
-                    information.add(img);
+                    img.scaleAbsolute(220,ServiceUtil.resizeHeight(img.getWidth(), img.getHeight()));
+                    information.add(new Chunk(img, 0, 0, true));
+                    int limit = tache.getPhotos().size()-1;
+                    if(si<limit){
+                        information.add(new Chunk(glue));
+                        photo2 = tache.getPhotos().get(si+1);
+                        Image img2 = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo2.getPathPhoto());
+                        img2.scaleAbsolute(220, ServiceUtil.resizeHeight(img2.getWidth(), img2.getHeight()));
+                        
+                        information.add(new Chunk(img2, 0, 0, true));
+                       
+                    }
+                    addEmptyLine(information,1);
                     information.add(new Phrase(photo.getLatitude() + " " + photo.getLongitude(), normalFont));
+                    
+                    if(si<limit){
+                        
+                        information.add(new Chunk(glue));
+                        information.add(new Phrase(photo2.getLatitude() + " " + photo2.getLongitude(), normalFont));
+                    }
                     addEmptyLine(information, 1);
-                    document.add(information);
-
+                    
+                    if(si<limit){
+                        si++;
+                    }
+                    si++;
                 }
+                document.add(information);
             }
         }
         for (int i = 0; i < offre.getTacheSupplementaire().getTravaux().size(); i++) {
@@ -466,16 +507,41 @@ public class PVGenerator {
                 information = new Paragraph();
                 information.add(new Phrase(tache.getCatalogue().getDesignation(), boldFont));
                 addEmptyLine(information, 1);
-                for (int si = 0; si < tache.getPhotos().size(); si++) {
+                int si = 0 ;
+                while ( si < tache.getPhotos().size()) {
+                    Chunk glue = new Chunk(new VerticalPositionMark());
                     Photo photo = tache.getPhotos().get(si);
+                    Photo photo2 = null;
                     addEmptyLine(information, 1);
                     Image img = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo.getPathPhoto());
-                    information.add(img);
+                    img.scaleAbsolute(220,ServiceUtil.resizeHeight(img.getWidth(), img.getHeight()));
+                    information.add(new Chunk(img, 0, 0, true));
+                    int limit = tache.getPhotos().size()-1;
+                    if(si<limit){
+                        information.add(new Chunk(glue));
+                        photo2 = tache.getPhotos().get(si+1);
+                        Image img2 = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo2.getPathPhoto());
+                        img2.scaleAbsolute(220, ServiceUtil.resizeHeight(img2.getWidth(), img2.getHeight()));
+                        
+                        information.add(new Chunk(img2, 0, 0, true));
+                       
+                    }
+                    addEmptyLine(information,1);
                     information.add(new Phrase(photo.getLatitude() + " " + photo.getLongitude(), normalFont));
+                    
+                    if(si<limit){
+                        
+                        information.add(new Chunk(glue));
+                        information.add(new Phrase(photo2.getLatitude() + " " + photo2.getLongitude(), normalFont));
+                    }
                     addEmptyLine(information, 1);
-                    document.add(information);
-
+                    
+                    if(si<limit){
+                        si++;
+                    }
+                    si++;
                 }
+                document.add(information);
             }
         }
 

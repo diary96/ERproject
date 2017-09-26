@@ -16,8 +16,11 @@ import com.er.erproject.model.TypeOffre;
 import com.er.erproject.model.User;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -195,7 +198,24 @@ public class OffreService extends ServiceModel {
             throw new Exception("Impossible de sauvegarder l'offre, cause : " + e.getMessage());
         }
     }
-
+    public Offre find(String ticket)throws Exception{
+        Offre offre = null;
+        Session session = null; 
+        try{
+            session = this.hibernateDao.getSessionFactory().openSession();
+            Criteria criteria = session.createCriteria(Offre.class,"offre");
+            criteria.add(Restrictions.like("offre.ticket", ticket));
+            criteria.addOrder(Order.asc("offre.id"));
+            if(!criteria.list().isEmpty()){
+                offre = (Offre) criteria.list().get(0);
+            }
+        }catch(Exception e){
+            throw new Exception("impossible d'extraire l'offre "+ticket); 
+        }finally{
+            if(session!=null)session.close();
+        }
+        return offre;
+    }
     private void toSoumission(Offre offre, User user) throws Exception {
         if (offre.getTacheinitials().getTravaux().isEmpty()) {
             throw new Exception("L'offre n'a pas de tache initialiser et ne peut pas etre enregistrer");

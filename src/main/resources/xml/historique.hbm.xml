@@ -47,7 +47,7 @@ Contributor(s):
         <property name="description" column="description" type="string"/>
         <property name="date" column="dateexecute" type="timestamp"/>
         <property name="referenceExterieur" column="reference" type="string"/>
-        <many-to-one name="user" class="com.er.erproject.model.Offre" fetch="select">
+        <many-to-one name="user" class="com.er.erproject.model.User" fetch="select">
             <column name="iduser" not-null="true" />
         </many-to-one>
     </class>
