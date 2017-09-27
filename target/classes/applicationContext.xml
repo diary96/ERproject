@@ -39,6 +39,7 @@
         <property name="userService" ref="userService" />
     </bean>
     <bean id="accueil" class="com.er.erproject.action.AccueilAction">
+        <property name="typeOffreService" ref="typeOffreService" />
         <property name="offreService" ref="offreService" />
     </bean>
     <bean id="new" class="com.er.erproject.action.AddAction">

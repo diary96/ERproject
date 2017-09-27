@@ -106,7 +106,7 @@
                         </tbody>
                     </table>
                 </div>
-                            <div class="col-md-12 text-center">
+                    <div class="col-md-12 text-center">
                         <ul  class="pagination pagination-lg pager">
 
 

@@ -383,6 +383,7 @@ public class OffreAction extends ActionModel {
             this.offreService.popoluteTacheSoumission(offre);
             this.offreService.populateTravauxSupplementaire(offre);
             this.offreService.populateMateriaux(offre);
+            this.offreService.populatePhoto(offre);
             
             VentillationService ventillationService = new VentillationService(); 
             ventillationService.setHibernateDao(this.travauxService.getHibernateDao());

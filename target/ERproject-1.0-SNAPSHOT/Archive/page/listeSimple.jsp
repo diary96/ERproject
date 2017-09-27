@@ -16,6 +16,79 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
+                      <form action="accueil" id="demo-form2" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="" methode="GET">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Reference : <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input name="reference" value="<s:property value="getReference()"/>" type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Libell&eacute; de l'archive : <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input name="nomProjet" value="<s:property value="getNomProjet()"/>" type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                          
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Num&eacute;ro du ticket : <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                               <input name="ticket" value="<s:property value="getTicket()"/>"type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="type">Nom du departement <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="heard" name="nomType"class="form-control" required="">
+                                    <option value="">Tout</option>
+                                    <s:iterator value="typeOffres">            
+                                        <option value="<s:property value="getId()"/>"><s:property value="getNom()"/></option>
+                                    </s:iterator>
+                                    <
+                                </select>
+
+                            </div>
+                        </div>  
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Etape : <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select name="statu" class="form-control">
+                                    <option value="none" <s:if test="getStatu()==none">selected="true"</s:if>>Tout</option>
+                                    <option value="0" <s:if test="getStatu()==0">selected="true"</s:if>>Appel d'offre</option>
+                                    <option value="1" <s:if test="getStatu()==1">selected="true"</s:if>>Soumission</option>
+                                    <option value="2" <s:if test="getStatu()==2">selected="true"</s:if>>Travaux</option>
+                                    <option value="3" <s:if test="getStatu()==3">selected="true"</s:if>>Proces Verbal</option>
+                                    <option value="4" <s:if test="getStatu()==4">selected="true"</s:if>>Facturation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Etat : <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select name="isClose" class="form-control">
+                                    <option value="">Tout</option>
+                                    <option value="true">Cloturé</option>
+                                    <option value="false">Ouvert</option>                  
+                                </select>
+                            </div>
+                        </div>
+
+                        <input value="1" name="pagination" type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" style="display:none">
+                          
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                <button type="submit" class="btn btn-success">Recherche</button>
+                            </div>
+                        </div>
+
+                    </form>
                     <table class="table table-hover">
                       <thead>
                         <tr>
@@ -38,16 +111,32 @@
                                 <td><s:property value="getNomProjet()"/></td>
                                 <td><s:property value="getTypeOffre().getNom()"/></td>                              
                                 <td><s:property value="getTicket()"/></td>                        
-                                <!--<td><button type="button" class="btn btn-dark btn-xs"><s:property value="getStatuString()"/></button></td>-->
+                                <!--<td><buttons type="button" class="btn btn-dark btn-xs"><s:property value="getStatuString()"/></button></td>-->             
+                                <s:if test="getStatu()==0" >
+                                    <td><button type="button" class="btn btn-default btn-xs"><s:property value="getStatuString()"/></button></td>
+                                </s:if>
+                                <s:if test="getStatu()==1" >
+                                    <td><button type="button" class="btn btn-primary btn-xs"><s:property value="getStatuString()"/></button></td>
+                                </s:if>
+                                <s:if test="getStatu()==2" >
+                                    <td><button type="button" class="btn btn-info btn-xs"><s:property value="getStatuString()"/></button></td>
+                                </s:if>
+                                <s:if test="getStatu()==3" >
+                                    <td><button type="button" class="btn btn-warning btn-xs"><s:property value="getStatuString()"/></button></td>
+                                </s:if>
+                                <s:if test="getStatu()==4" >
+                                    <td><button type="button" class="btn btn-success btn-xs"><s:property value="getStatuString()"/></button></td>
+                                </s:if>
+                                
                                 <s:if test="getClose()==true">
-                                    <td><button type="button" class="btn btn-danger btn-xs"><s:property value="getStatuString()"/></button></td>
+                                    <td><button type="button" class="btn btn-danger btn-xs">Clotur&eacute;</button></td>
                                 </s:if>
                                 <s:else>
-                                    <td><button type="button" class="btn btn-success btn-xs"><s:property value="getStatuString()"/></button></td>
+                                    <td><button type="button" class="btn btn-success btn-xs">Ouvert</button></td>
                                 </s:else>
                                 
                                 <td><a href="gestionHistorique?idOffre=<s:property value="getId()" />" class="btn btn-primary btn-xs">Historique</a></td>
-                                <td> <a href="listeArchive?idOffre=<s:property value="getId()" />" class="btn btn-primary btn-xs"  >Gestion des fichiers</button></a>
+                                <td> <a href="listeArchive?idOffre=<s:property value="getId()" />" class="btn btn-dark btn-xs"  >Gestion des fichiers</button></a>
                                 <td> <button id="<s:property value="getId()" />" class="supprimer btn btn-danger btn-xs"  >Supprimer</button></td>
 
                             </tr>

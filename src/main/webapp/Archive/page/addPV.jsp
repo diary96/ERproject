@@ -263,6 +263,7 @@
                             <th>Total fait</th>
 
                             <th>Photos</th>
+                            <th>Nombre de photo</th>
                             <th>Action</th>
 
                         </tr>
@@ -274,6 +275,7 @@
                                 <td align="center"><s:property value="getQuantite()"/></td>
                                 <td align="center"><s:property value="getEffectuer()"/></td>
                                 <td align="center"><a href="gestionPhoto?reference=<s:property value="getAllReference()"/>" target="_blank">Details photos</a></td>
+                                <td align="center"><s:property value="getPhotos().size()"/></td>
                                 <s:if test="getTemp().getStatu()==@com.er.erproject.data.StatuReference@PV">
                                     <td align="center">
                                         <a href="minusEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>" ><i class="fa fa-minus" aria-hidden="true"></i></a> 
@@ -297,6 +299,7 @@
                                 <!--<td align="center"><s:property value="getEffectuer()"/></td>-->
                                 <td align="center"><s:property value="getEffectuer()"/></td>
                                 <td align="center"><a href="gestionPhoto?reference=<s:property value="getAllReference()"/>" target="_blank">Details photos</a></td>
+                                <td align="center"><s:property value="getPhotos().size()"/></td>
                                 <s:if test="getTemp().getStatu()==@com.er.erproject.data.StatuReference@PV">
                                     <td align="center">
                                         <a href="minusEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>" ><i class="fa fa-minus" aria-hidden="true"></i></a> 
@@ -327,8 +330,7 @@
                             <th>Designation</th>
                             <th>Unite</th>
                             <th>Quantite</th>
-
-
+                            <th>Nombre de photo</th>
                             <th>Photos</th>
 
                         </tr>
@@ -339,6 +341,7 @@
                                 <td><s:property value="getCatalogue().getDesignation()"/></td>
                                 <td align="center"><s:property value="getCatalogue().getUnite()"/></td>
                                 <td align="center"><s:property value="getQuantite()"/></td>
+                                <td align="center"><s:property value="getPhotos().size()"/></td>
                                 <td align="center"><a href="gestionPhoto?reference=<s:property value="getAllReference()"/>" target="_blank">Details photos</a></td>
                             </tr>
                         </s:iterator>

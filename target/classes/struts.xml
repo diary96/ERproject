@@ -17,8 +17,9 @@
             <result name="success" type="redirect">accueil</result>
         </action>
         <action name="accueil" class="com.er.erproject.action.AccueilAction" method="load">
-            <result name="error" type="redirect">index</result>
+            <result name="login" type="redirect">index</result>
             <result name="success">Archive/page/listeSimple.jsp</result>
+            <result name="error"> Archive/page/listeSimple.jsp</result>
         </action>
         <action name="deconnexion" class="com.er.erproject.action.UtilAction" method="logout">
             <result name="success" type="redirect">index</result> 

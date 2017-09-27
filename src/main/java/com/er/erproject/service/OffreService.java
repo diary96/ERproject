@@ -6,7 +6,9 @@
 package com.er.erproject.service;
 
 import com.er.erproject.data.StatuReference;
+import com.er.erproject.model.Catalogue;
 import com.er.erproject.model.Offre;
+import com.er.erproject.model.Pagination;
 import com.er.erproject.model.Soumission;
 import com.er.erproject.model.Statistique;
 import com.er.erproject.model.TacheModel;
@@ -14,12 +16,14 @@ import com.er.erproject.model.Travaux;
 import com.er.erproject.model.TravauxSupplementaire;
 import com.er.erproject.model.TypeOffre;
 import com.er.erproject.model.User;
+import com.er.erproject.util.UtilConvert;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -28,6 +32,124 @@ import org.hibernate.criterion.Restrictions;
  */
 public class OffreService extends ServiceModel {
 
+    private int getSizeRow(List<String[]> arg,Class classe,Session session) throws Exception {       
+        try {
+            Criteria criteria = session.createCriteria(classe, "offre");
+            for (int i = 0; i < arg.size(); i++) {
+                String[] temp = arg.get(i);
+                if (temp.length == 2) {   
+                    try{
+                        if(temp[0].contains(".id")){
+                            criteria.add(Restrictions.eq(temp[0], Long.valueOf(temp[1])));
+                        }else{
+                            criteria.add(Restrictions.eq(temp[0], Integer.valueOf(temp[1])));
+                        }
+                    }catch(Exception e){
+                        if(temp[0].contains(".close")){
+                            if(temp[1].compareTo("true")==0){
+                                criteria.add(Restrictions.eq(temp[0],true));
+                            }
+                            else{
+                                criteria.add(Restrictions.eq(temp[0],false));
+                            }
+                            
+                        }
+                        else{
+                            criteria.add(Restrictions.ilike(temp[0], "%" + temp[1] + "%"));
+                        }
+                    }
+                    
+                }
+                if (temp.length == 3) {
+                    try {
+                        criteria.add(Restrictions.between(temp[0], UtilConvert.convertToSQLDate(temp[1]), UtilConvert.convertToSQLDate(temp[2])));
+
+                    } catch (Exception e) {
+                        criteria.add(Restrictions.between(temp[0], Double.valueOf(temp[1]), Double.valueOf(temp[2])));
+                    }
+                }
+            }
+            criteria.setProjection(Projections.rowCount());
+            String value = String.valueOf((long) criteria.uniqueResult());
+            int count = Integer.valueOf(value);
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("erreur d'extraction de catalogue");
+        } 
+    }
+    public List<Offre> find(List<String[]> arg, String order, Pagination pagination) throws Exception {
+        Session session = null;
+        try{
+            session = hibernateDao.getSessionFactory().openSession();
+            int page = this.getSizeRow(arg,Offre.class,session);
+            int realTotal = 0;
+            if (page != 0) {
+                realTotal = page / pagination.getTaillePage();
+            }
+            if (page % pagination.getTaillePage() != 0) {
+                realTotal += 1;
+            }
+            pagination.setMax(realTotal);
+            Criteria criteria = session.createCriteria(Offre.class, "offre");
+            criteria.createAlias("offre.typeOffre", "type");
+            
+            if (order != null && order.compareTo("") != 0) {
+                criteria.addOrder(Order.asc(order));
+            }
+            criteria.setFirstResult((pagination.getPage() - 1) * pagination.getTaillePage());
+
+            criteria.setMaxResults(pagination.getTaillePage());
+            for (int i = 0; i < arg.size(); i++) {
+                String[] temp = arg.get(i);
+
+                if (temp.length == 2) {   
+                    try{
+                        if(temp[0].contains(".id")){
+                            criteria.add(Restrictions.eq(temp[0], Long.valueOf(temp[1])));
+                        }else{
+                            criteria.add(Restrictions.eq(temp[0], Integer.valueOf(temp[1])));
+                        }
+                    }catch(Exception e){
+                        if(temp[0].contains(".close")){
+                            if(temp[1].compareTo("true")==0){
+                                criteria.add(Restrictions.eq(temp[0],true));
+                            }
+                            else{
+                                criteria.add(Restrictions.eq(temp[0],false));
+                            }
+                            
+                        }
+                        else{
+                            criteria.add(Restrictions.ilike(temp[0], "%" + temp[1] + "%"));
+                        }
+                    }
+                    
+                }
+                if (temp.length == 3) {
+                    try {
+                        criteria.add(Restrictions.between(temp[0], UtilConvert.convertToSQLDate(temp[1]), UtilConvert.convertToSQLDate(temp[2])));
+
+                    } catch (Exception e) {
+                        criteria.add(Restrictions.between(temp[0], Double.valueOf(temp[1]), Double.valueOf(temp[2])));
+
+                    }
+                }
+            }
+            List<Offre> list = criteria.list();
+            for (int i = 0; i < list.size(); i++) {
+                Offre tempOffre = list.get(i);
+                tempOffre.setTypeOffre(this.findTypeOffre(tempOffre));
+            }
+            return list;
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception("impossible d'extraire la requete");
+        }finally{
+            if(session!=null)session.close();
+        }
+    }
+    
     public List<Offre> findAll() throws Exception {
         return (List<Offre>) (Object) hibernateDao.findAll(new Offre());
     }
