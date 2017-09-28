@@ -12,6 +12,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -75,6 +76,7 @@ public class HistoriqueService extends ServiceModel {
             session = this.hibernateDao.getSessionFactory().openSession();
             Criteria criteria = session.createCriteria(Historique.class,"historique");
             criteria.add(Restrictions.like("historique.referenceExterieur", offre.getAllReference()));
+            criteria.addOrder(Order.desc("date"));
             reponse = criteria.list();
             for(int i=0;i<reponse.size();i++){
                 this.instanceUser(reponse.get(i), session);

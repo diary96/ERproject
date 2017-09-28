@@ -108,8 +108,6 @@
                 </div>
                     <div class="col-md-12 text-center">
                         <ul  class="pagination pagination-lg pager">
-
-
                             <s:iterator begin="1" end="%{parameter.getMax()}" status="statu">
                                 <s:if test="%{#statu.index == parameter.getPage()-1}">
                                     <%@include file="template/default/pagination/catalogue/pagenumberActive.jsp" %>
@@ -119,8 +117,6 @@
                                 </s:else>
 
                             </s:iterator>
-
-
                         </ul>
                     </div>
             </div>

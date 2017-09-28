@@ -45,11 +45,11 @@
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <select id="heard" name="nomType"class="form-control" required="">
-                                    <option value="">Tout</option>
+                                    <option value="none" <s:if test="getNomType()==none">selected="true"</s:if>>Tout</option>
                                     <s:iterator value="typeOffres">            
-                                        <option value="<s:property value="getId()"/>"><s:property value="getNom()"/></option>
+                                        <option value="<s:property value="getId()"/>" <s:if test="getNomType()==getId()">selected="true"</s:if>><s:property value="getNom()"/></option>
                                     </s:iterator>
-                                    <
+                                    
                                 </select>
 
                             </div>
@@ -59,7 +59,7 @@
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <select name="statu" class="form-control">
-                                    <option value="none" <s:if test="getStatu()==none">selected="true"</s:if>>Tout</option>
+                                    <option value="none" <s:if test="getStatu().equalsIgnoreCase(none)||getStatu().equalsIgnoreCase('')">selected="true"</s:if>>Tout</option>
                                     <option value="0" <s:if test="getStatu()==0">selected="true"</s:if>>Appel d'offre</option>
                                     <option value="1" <s:if test="getStatu()==1">selected="true"</s:if>>Soumission</option>
                                     <option value="2" <s:if test="getStatu()==2">selected="true"</s:if>>Travaux</option>
@@ -72,10 +72,11 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Etat : <span class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select name="isClose" class="form-control">
-                                    <option value="">Tout</option>
-                                    <option value="true">Cloturé</option>
-                                    <option value="false">Ouvert</option>                  
+                            
+                                <select name="close" class="form-control">
+                                    <option value="none" <s:if test="getClose()==none">selected="true"</s:if> >Tout</option>
+                                    <option value="true" <s:if test="getClose().equalsIgnoreCase(true)">selected="true"</s:if>>Cloturé</option>
+                                    <option value="false" <s:if test="getClose().equalsIgnoreCase(false)">selected="true"</s:if>>Ouvert</option>                  
                                 </select>
                             </div>
                         </div>
@@ -92,13 +93,42 @@
                     <table class="table table-hover">
                       <thead>
                         <tr>
-                          <th>#</th>
-                          <th>Reference</th>                       
-                          <th>Libell&eacute; de l'archive</th>
-                          <th>Nom du departement</th>
-                          <th>Numero du ticket </th>                         
-                          <th>Etape </th>                         
-                          <th>Etat </th>
+                            <th>#</th>
+                            <th>
+                                <a href="?order=id&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                    Reference
+                                </a>
+                            </th>                       
+                            <th>
+                                <a href="?order=nomProjet&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                    Libell&eacute; de l'archive
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?order=typeOffre&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                    Nom du departement
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?order=ticket&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                    Numero du ticket 
+                                </a>
+                            </th>                         
+                            <th>
+                                <a href="?order=dateAjout&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                    Date d'ajout 
+                                </a>
+                            </th>                         
+                            <th>
+                                <a href="?order=statu&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                   Etape 
+                                </a>
+                            </th>                         
+                            <th> 
+                                <a href="?order=close&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                   Etat 
+                                </a>
+                            </th>
                           
                         </tr>
                       </thead>
@@ -111,6 +141,7 @@
                                 <td><s:property value="getNomProjet()"/></td>
                                 <td><s:property value="getTypeOffre().getNom()"/></td>                              
                                 <td><s:property value="getTicket()"/></td>                        
+                                <td><s:property value="getDateAjout()"/></td>                        
                                 <!--<td><buttons type="button" class="btn btn-dark btn-xs"><s:property value="getStatuString()"/></button></td>-->             
                                 <s:if test="getStatu()==0" >
                                     <td><button type="button" class="btn btn-default btn-xs"><s:property value="getStatuString()"/></button></td>
@@ -145,7 +176,23 @@
                       </tbody>
                     </table>
 
-                  </div>
+                    </div>
+                    <div class="col-md-12 text-center">
+                        <ul  class="pagination pagination-lg pager">
+
+                            <s:iterator begin="1" end="%{parameter.getMax()}" status="statu">
+                                <s:if test="%{#statu.index == parameter.getPage()-1}">
+                                    <%@include file="template/default/pagination/offre/pagenumberActive.jsp" %>
+                                </s:if>
+                                <s:else>
+                                    <%@include file="template/default/pagination/offre/pagenumber.jsp" %>
+                                </s:else>
+
+                            </s:iterator>
+
+
+                        </ul>
+                    </div>
                 </div>
 
 <script>

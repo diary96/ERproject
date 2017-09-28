@@ -222,7 +222,49 @@ public class OffreAction extends ActionModel {
         return Action.SUCCESS;
 
     }
-
+    
+    public String closeOffre()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        if (this.idOffre == 0) {
+            return Action.NONE;
+        }
+        try {
+            this.offre = this.offreService.find(idOffre);
+            
+            
+            
+        } catch (Exception e) {
+            return Action.NONE;
+        }
+        try{
+            this.offreService.close(offre);
+            
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("cloturation de l'offre");
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
+        }catch(Exception e){
+            
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("tentative de cloturation de l'offre");
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+    
     public String genererPV() throws Exception {
         this.setSessionUser();
         if (this.user == null) {
@@ -280,6 +322,7 @@ public class OffreAction extends ActionModel {
 
         return Action.SUCCESS;
     }
+    
     public String saveParametre()throws Exception{
         this.setSessionUser();
         if (this.user == null) {
@@ -315,6 +358,7 @@ public class OffreAction extends ActionModel {
         }
         return Action.SUCCESS;
     }
+    
     public String valider() throws Exception {
         this.setSessionUser();
         if (this.user == null) {
@@ -376,8 +420,9 @@ public class OffreAction extends ActionModel {
         if (this.idOffre == 0) {
             return Action.NONE;
         }
-        try {
+        try {           
             this.offre = this.offreService.find(idOffre);
+            this.titre = "Fiche de l'offre "+offre.getAllReference();
             this.temp = this.offre;
             this.offreService.popoluteTacheInitial(offre);
             this.offreService.popoluteTacheSoumission(offre);

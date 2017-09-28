@@ -34,9 +34,18 @@ public class AccueilAction extends ActionModel{
     private String nomType;
     private String ticket;
     private String statu;
-    private String isClose; 
+    private String close; 
     private int pagination;
+    private String order;
     private List<Offre> offres;
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
 
     public TypeOffreService getTypeOffreService() {
         return typeOffreService;
@@ -45,8 +54,7 @@ public class AccueilAction extends ActionModel{
     public void setTypeOffreService(TypeOffreService typeOffreService) {
         this.typeOffreService = typeOffreService;
     }
-
-    
+ 
     public List<TypeOffre> getTypeOffres() {
         return typeOffres;
     }
@@ -55,7 +63,6 @@ public class AccueilAction extends ActionModel{
         this.typeOffres = typeOffres;
     }
 
-    
     public int getPagination() {
         return pagination;
     }
@@ -64,7 +71,6 @@ public class AccueilAction extends ActionModel{
         this.pagination = pagination;
     }
 
-    
     private String[] initTabStrign(int size) {
         String[] temp;
         temp = new String[size];
@@ -114,10 +120,10 @@ public class AccueilAction extends ActionModel{
             temp[1] = this.getStatu();
             reponse.add(temp);
         }
-        if (this.isClose != null && this.isClose.compareToIgnoreCase("") != 0) {
+        if (this.close != null && this.close.compareToIgnoreCase("") != 0 && this.close.compareToIgnoreCase("none") != 0) {
             temp = this.initTabStrign(2);
             temp[0] = "offre.close";
-            temp[1] = this.getIsClose();
+            temp[1] = this.getClose();
             reponse.add(temp);
         }
         return reponse;
@@ -171,15 +177,13 @@ public class AccueilAction extends ActionModel{
         this.statu = statu;
     }
 
-    public String getIsClose() {
-        return isClose;
+    public String getClose() {
+        return close;
     }
 
-    public void setIsClose(String isClose) {
-        this.isClose = isClose;
+    public void setClose(String isClose) {
+        this.close = isClose;
     }
-    
-    
     
     public OffreService getOffreService() {
         return offreService;
@@ -196,6 +200,7 @@ public class AccueilAction extends ActionModel{
     public void setOffres(List<Offre> offres) {
         this.offres = offres;
     }
+    
     @Override
     public void setSessionUser(){
         HttpSession session = ServletActionContext.getRequest().getSession();
@@ -204,6 +209,7 @@ public class AccueilAction extends ActionModel{
             this.setUser((User) object);
         }     
     }
+    
     public String load() throws Exception{
         this.setSessionUser();
         if (this.user == null) {
@@ -220,7 +226,7 @@ public class AccueilAction extends ActionModel{
             } else {
                 this.parameter.setPage(this.pagination);
             }
-            this.offres = this.offreService.find(arg,"", parameter);
+            this.offres = this.offreService.find(arg,order, parameter);
         }catch(Exception e){
             e.printStackTrace();
             this.setLinkError(Reference.VISIBIBLE);

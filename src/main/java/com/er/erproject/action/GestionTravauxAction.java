@@ -263,6 +263,7 @@ public class GestionTravauxAction extends ActionModel {
         this.url = "gestionInitial";
         try {
             this.offre = this.offreService.find(idOffre);
+            titre = "Gestion des taches initaux de l'offre "+offre.getAllReference();
         } catch (Exception e) {
             return Action.NONE;
         }
@@ -285,6 +286,7 @@ public class GestionTravauxAction extends ActionModel {
         this.url = "gestionSoumission";
         try {
             this.offre = this.offreService.find(idOffre);
+            titre = "Gestion des taches de soumission de l'offre "+offre.getAllReference();
         } catch (Exception e) {
             return Action.NONE;
         }

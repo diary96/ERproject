@@ -192,6 +192,7 @@ public class ArchiveAction extends ActionModel{
             return Action.NONE;
         }
         try{
+            this.titre = "Archive "+offre.getAllReference();
             this.archives = this.archiveService.find(offre);
         }catch(Exception e){
             e.printStackTrace();

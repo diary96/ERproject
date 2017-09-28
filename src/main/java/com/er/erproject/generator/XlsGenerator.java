@@ -256,6 +256,10 @@ public class XlsGenerator {
         depart++;
         denominations.add(new Label(1, depart, "Remise de "+offre.getSoumission().getRemise()+"%", extraFormat));
         depart++;
+        
+        denominations.add(new Label(1, depart, "Total après remise", extraFormat));
+        depart++;
+        
         denominations.add(new Label(1, depart, "TVA de "+offre.getSoumission().getTva()+"%", extraFormat));
         depart++;
         
@@ -318,6 +322,8 @@ public class XlsGenerator {
         montant.add(new Number(5, depart, offre.getSoumission().getTotal(), extraBorderFormat));
         depart++;  
         montant.add(new Number(5, depart, offre.getSoumission().getValeurRemise(), extraBorderFormat));
+        depart++;
+        montant.add(new Number(5, depart, offre.getSoumission().getTotal()-offre.getSoumission().getValeurRemise(), extraBorderFormat));
         depart++;
         montant.add(new Number(5, depart, offre.getSoumission().getValeurTVA(), extraBorderFormat));
         depart++;

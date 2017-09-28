@@ -13,6 +13,7 @@ import com.er.erproject.model.TypeOffre;
 import com.er.erproject.model.User;
 import com.er.erproject.service.OffreService;
 import com.er.erproject.service.TypeOffreService;
+import com.er.erproject.util.DateUtil;
 import com.er.erproject.util.UtilConvert;
 import com.opensymphony.xwork2.Action;
 import java.util.Calendar;
@@ -36,8 +37,18 @@ public class AddAction extends ActionModel{
     private String deadLine;
     private String dateTravaux;
     private String time;
+    private String dateAjout;
     private long type;   
 
+    public String getDateAjout() {
+        return dateAjout;
+    }
+
+    public void setDateAjout(String dataAjout) {
+        this.dateAjout = dataAjout;
+    }
+
+    
     public String getTime() {
         return time;
     }
@@ -134,8 +145,10 @@ public class AddAction extends ActionModel{
         if(!this.isValide(this.getTicket())) throw new Exception("Veuillez remplir le champs du ticket");
         if(!this.isValide(this.getProjet())) throw new Exception("Veuillez remplir le champs du nom de projet");
         if(this.isValide(this.deadLine)){
-            if(!this.isValide(this.time)) throw new Exception("Vueillez remplir le champs de l'heure du deadline");
+            if(!this.isValide(this.time)) this.time = "00:00";
         }
+        if(this.isValide(dateAjout))throw new Exception("Veuillez mettre une date d'entrée de l'offre");
+        
     }
     private boolean checkerUser(){
         return this.user != null;
@@ -148,6 +161,8 @@ public class AddAction extends ActionModel{
         this.setSessionUser();
         if(!this.checkerUser()) return Action.NONE;
         this.populate();
+        this.dateAjout = DateUtil.convert(Calendar.getInstance().getTime());
+        this.time = "00:00";
         return Action.SUCCESS;
     }
     public String saveOffre() throws Exception{
@@ -167,9 +182,11 @@ public class AddAction extends ActionModel{
             offre.setTypeOffre(typeOffre);
             offre.setUser(user);
             offre.setLocalisation(localisation);
+            Date temp = DateUtil.convert(this.dateAjout);
             if(this.isValide(this.deadLine)){
-                if(!this.checkerData(this.time))time="00:00";
-                offre.setDeadline(UtilConvert.convertToSQLDate(this.deadLine,this.time));
+                Date deadLineDate = UtilConvert.convertToSQLDate(this.deadLine,this.time);
+                if(temp.before(deadLineDate))throw new Exception("la deadline ne peut pas se situer avant la date d'ajout");
+                offre.setDeadline(deadLineDate);
             }
             if(this.isValide(this.dateTravaux))offre.setDatetravauxprevu(UtilConvert.convertToSQLDate(this.dateTravaux));
             Offre offreTemp = this.offreService.find(ticket);
@@ -180,7 +197,9 @@ public class AddAction extends ActionModel{
             historique = new Historique();
             historique.setUser(user);
             historique.setDescription("ajout d'une nouvelle offre");
-            historique.setDate(Calendar.getInstance().getTime());
+            
+            if(Calendar.getInstance().getTime().after(temp))throw new Exception("Veuillez choisir une date inferieur a celui d'aujourd'hui"); 
+            historique.setDate(temp);
             historique.setReferenceExterieur(offre.getAllReference());
             this.historiqueService.save(historique);
         }catch(Exception e){

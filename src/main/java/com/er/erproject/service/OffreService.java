@@ -78,6 +78,7 @@ public class OffreService extends ServiceModel {
             throw new Exception("erreur d'extraction de catalogue");
         } 
     }
+    
     public List<Offre> find(List<String[]> arg, String order, Pagination pagination) throws Exception {
         Session session = null;
         try{
@@ -163,6 +164,7 @@ public class OffreService extends ServiceModel {
         }
         return offres;
     }
+    
     public void checkerTSEmpty(Offre offre)throws Exception{     
         
         if (offre.getTravauxSupplementaire() == null) {
@@ -178,6 +180,7 @@ public class OffreService extends ServiceModel {
             throw new Exception("aucun tache n'est presente dans les travaux supplementaire");
         }
     }
+    
     public Offre find(long idOffre) throws Exception {
         Offre offre = new Offre();
         offre.setId(idOffre);
@@ -250,6 +253,7 @@ public class OffreService extends ServiceModel {
             throw new Exception("impossible d'extraire la soumission de l'offre "+offre.getAllReference());
         }
     }
+    
     public void populateTS(Offre offre)throws Exception{
         TravauxSupplementaireService travauxSupplementaireService = new TravauxSupplementaireService(); 
         travauxSupplementaireService.setHibernateDao(hibernateDao);
@@ -320,6 +324,7 @@ public class OffreService extends ServiceModel {
             throw new Exception("Impossible de sauvegarder l'offre, cause : " + e.getMessage());
         }
     }
+    
     public Offre find(String ticket)throws Exception{
         Offre offre = null;
         Session session = null; 
@@ -338,6 +343,7 @@ public class OffreService extends ServiceModel {
         }
         return offre;
     }
+    
     private void toSoumission(Offre offre, User user) throws Exception {
         if (offre.getTacheinitials().getTravaux().isEmpty()) {
             throw new Exception("L'offre n'a pas de tache initialiser et ne peut pas etre enregistrer");
@@ -434,6 +440,16 @@ public class OffreService extends ServiceModel {
         }
         if (level == StatuReference.FACTURATION) {
             this.toFacturation(offre);
+        }
+    }
+
+    public void close(Offre offre)throws Exception{
+        if(offre.getClose()==true)throw new Exception("l'offre est déjà fermé");
+        offre.setClose(true);
+        try{
+            this.hibernateDao.update(offre);
+        }catch(Exception e){
+            throw new Exception("impossible de cloturé l'offre "+e.getMessage());
         }
     }
 }
