@@ -25,7 +25,7 @@ public class Photo extends BaseModel{
     }
 
     public void setLongitude(String longitude)throws Exception {
-        if(longitude==null||longitude.compareTo("")==0)throw new Exception("le champ de la longitude est vide, veuillez le remplir");
+        if(longitude==null)throw new Exception("le champ de la longitude est vide, veuillez le remplir");
         this.longitude = longitude;
     }
 
@@ -35,7 +35,7 @@ public class Photo extends BaseModel{
     }
 
     public void setLatitude(String latitude)throws Exception {
-        if(latitude==null||latitude.compareTo("")==0)throw new Exception("le champ de la longitude est vide, veuillez le remplir");
+        if(latitude==null)throw new Exception("le champ de la longitude est vide, veuillez le remplir");
         this.latitude = latitude;
     }
 
@@ -80,15 +80,26 @@ public class Photo extends BaseModel{
     }
     
     public void populateCoordonnee() throws Exception{
-        if(this.latitude==null||this.latitude.compareToIgnoreCase("")==0)throw new Exception("Veuillez remplir la latitude de la photo "+this.getAllReference());
-        if(this.longitude==null||this.longitude.compareToIgnoreCase("")==0)throw new Exception("Veuillez remplir la longitude "+this.getAllReference());
-        this.coordonnee=this.latitude+"-"+this.longitude;
+        if(this.latitude==null)throw new Exception("Veuillez remplir la latitude de la photo "+this.getAllReference());
+        if(this.longitude==null)throw new Exception("Veuillez remplir la longitude "+this.getAllReference());
+        if(this.latitude.compareTo("")==0||this.longitude.compareTo("")==0){
+            this.coordonnee="";
+        }else{
+            this.coordonnee=this.latitude+"-"+this.longitude;
+        }
+        
     }
     public void populateLL()throws Exception{
-        if(this.coordonnee==null||this.coordonnee.compareToIgnoreCase("")==0)throw new Exception("Les coordonnees de la photo "+this.getAllReference()+" n'est pas instancier");
+        if(this.coordonnee==null)throw new Exception("Les coordonnees de la photo "+this.getAllReference()+" n'est pas instancier");
         String[] temp = this.coordonnee.split("-"); 
-        this.latitude = temp[0];
-        this.longitude = temp[1];
+        if(temp.length!=2){
+            this.latitude="";
+            this.longitude="";
+        }else{
+            this.latitude = temp[0];
+            this.longitude = temp[1];
+        }
+       
     }
     
     public void setReferenceTravaux(String referenceTravaux) throws Exception {

@@ -14,6 +14,7 @@ import com.er.erproject.generator.FactureTSGenerator;
 import com.er.erproject.model.BonCommande;
 import com.er.erproject.model.Historique;
 import com.er.erproject.model.Offre;
+import com.er.erproject.model.Pagination;
 import com.er.erproject.model.User;
 import com.er.erproject.model.Ventillation;
 import com.er.erproject.model.VentillationModel;
@@ -24,10 +25,12 @@ import com.er.erproject.service.UserService;
 import com.er.erproject.service.VentillationService;
 import com.er.erproject.util.DateUtil;
 import com.er.erproject.util.FileUtil;
+import com.er.erproject.util.ReferenceUtil;
 import com.opensymphony.xwork2.Action;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +61,17 @@ public class FacturationAction extends ActionModel {
     private String dateToday;
     private String condition;
     private String referenceVentilation;
+    private String order;
+    private String responsable;
+
+    public String getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
+    }
+    
     
     private InputStream fileInputStream;
     private String fileName;
@@ -69,6 +83,123 @@ public class FacturationAction extends ActionModel {
     private String dateNow;
     private String date; 
 
+    private String reference; 
+    private String referenceOffre; 
+    private String nomPaiement; 
+    private String typePaiement; 
+    private String datePrevu; 
+    private String datePaiement; 
+    private String paye; 
+    private String retard;
+    private String orderOld;
+    private String orderPage;
+    private Pagination parameter;
+    private int pagination;
+
+    public String getOrderOld() {
+        return orderOld;
+    }
+
+    public void setOrderOld(String orderOld) {
+        this.orderOld = orderOld;
+    }
+
+    public String getOrderPage() {
+        return orderPage;
+    }
+
+    public void setOrderPage(String orderPage) {
+        this.orderPage = orderPage;
+    }
+   
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    public String getReferenceOffre() {
+        return referenceOffre;
+    }
+
+    public void setReferenceOffre(String referenceOffre) {
+        this.referenceOffre = referenceOffre;
+    }
+
+    public String getNomPaiement() {
+        return nomPaiement;
+    }
+
+    public void setNomPaiement(String nomPaiement) {
+        this.nomPaiement = nomPaiement;
+    }
+
+    public String getTypePaiement() {
+        return typePaiement;
+    }
+
+    public void setTypePaiement(String typePaiement) {
+        this.typePaiement = typePaiement;
+    }
+
+    public String getDatePrevu() {
+        return datePrevu;
+    }
+
+    public void setDatePrevu(String datePrevu) {
+        this.datePrevu = datePrevu;
+    }
+
+    public String getDatePaiement() {
+        return datePaiement;
+    }
+
+    public void setDatePaiement(String datePaiement) {
+        this.datePaiement = datePaiement;
+    }
+
+    public String getPaye() {
+        return paye;
+    }
+
+    public void setPaye(String paye) {
+        this.paye = paye;
+    }
+
+    public String getRetard() {
+        return retard;
+    }
+
+    public void setRetard(String retard) {
+        this.retard = retard;
+    }
+
+    public Pagination getParameter() {
+        return parameter;
+    }
+
+    public void setParameter(Pagination parameter) {
+        this.parameter = parameter;
+    }
+
+    public int getPagination() {
+        return pagination;
+    }
+
+    public void setPagination(int pagination) {
+        this.pagination = pagination;
+    }
+    
     public String getDate() {
         return date;
     }
@@ -77,8 +208,6 @@ public class FacturationAction extends ActionModel {
         this.date = date;
     }
     
-    
-
     public String getDateNow() {
         return dateNow;
     }
@@ -86,7 +215,6 @@ public class FacturationAction extends ActionModel {
     public void setDateNow(String dateNow) {
         this.dateNow = dateNow;
     }
-    
     
     public List<Ventillation> getVentillationsData() {
         return ventillationsData;
@@ -103,9 +231,7 @@ public class FacturationAction extends ActionModel {
     public void setVentillationsTsData(List<VentillationTS> ventillationsTsData) {
         this.ventillationsTsData = ventillationsTsData;
     }
-
-    
-    
+ 
     public String getUrl() {
         return url;
     }
@@ -114,7 +240,6 @@ public class FacturationAction extends ActionModel {
         this.url = url;
     }
 
-    
     public InputStream getFileInputStream() {
         return fileInputStream;
     }
@@ -139,7 +264,6 @@ public class FacturationAction extends ActionModel {
         this.referenceVentilation = referenceVentilation;
     }
     
-    
     private List<VentillationModel> ventillations;
 
     public String getCondition() {
@@ -158,7 +282,6 @@ public class FacturationAction extends ActionModel {
         this.ventillations = ventillations;
     }
 
-    
     public String getDateToday() {
         return dateToday;
     }
@@ -167,7 +290,6 @@ public class FacturationAction extends ActionModel {
         this.dateToday = dateToday;
     }
 
-    
     public short getType() {
         return type;
     }
@@ -280,7 +402,6 @@ public class FacturationAction extends ActionModel {
         this.offre = offre;
     }
     
-
     @Override
     public void setSessionUser() {
         HttpSession session = ServletActionContext.getRequest().getSession();
@@ -385,6 +506,7 @@ public class FacturationAction extends ActionModel {
             if(this.offre.getStatu()<StatuReference.FACTURATION)return Action.NONE;
             this.ventillations = this.ventillationService.find(offre,VentilationData.SOUMISSION);
             this.condition = VentillationModel.getCondition(ventillations);
+            if(!this.checkerData(this.responsable)) this.setResponsable("RAKOTONIRINA Beby");
             
 
         } catch (Exception ex) {
@@ -411,7 +533,7 @@ public class FacturationAction extends ActionModel {
             if(this.offre.getStatu()<StatuReference.FACTURATION)return Action.NONE;
             this.ventillations = this.ventillationService.find(offre,VentilationData.TS);
             this.condition = VentillationModel.getCondition(ventillations);
-            
+            if(!this.checkerData(this.responsable)) this.setResponsable("RAKOTONIRINA Beby");
 
         } catch (Exception ex) {
             this.setLinkError(Reference.VISIBIBLE);
@@ -437,6 +559,7 @@ public class FacturationAction extends ActionModel {
         }catch(Exception e){
             return Action.NONE;
         }
+        if(this.user.getNiveau()<4)return Action.NONE;
         try{
             this.dateNow = DateUtil.convert(Calendar.getInstance().getTime());
             this.ventillationsData = (List<Ventillation>)(Object)this.ventillationService.find(offre, VentilationData.SOUMISSION);
@@ -457,6 +580,7 @@ public class FacturationAction extends ActionModel {
         if (this.idOffre == 0) {
             return Action.NONE;
         }
+        if(this.user.getNiveau()<4)return Action.NONE;
         try{
            this.offre = this.offreService.find(idOffre);          
         }catch(Exception e){
@@ -525,8 +649,8 @@ public class FacturationAction extends ActionModel {
             BonCommande bc = bonCommandeService.find(offre.getSoumission());
             if(bc==null)throw new Exception("aucun bon de commande enregistré, veuillez enregistrer un bon de commande pour les travaux initiaux");
             this.condition = VentillationModel.getConditionWithoutDate(ventillations);
-            
-            FactureGenerator pv = new FactureGenerator(offre,ventillationData,bc,this.condition);
+            if(!this.checkerData(this.responsable))this.responsable = "RAKOTONIRINA Beby";
+            FactureGenerator pv = new FactureGenerator(offre,ventillationData,bc,this.condition,responsable);
             File fileToDownload = new File("E:/Stage/ER/ERproject/src/main/webapp/Archive/data/PDF/facture_generate.pdf");
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);
@@ -537,10 +661,6 @@ public class FacturationAction extends ActionModel {
             historique.setDate(Calendar.getInstance().getTime());
             historique.setReferenceExterieur(offre.getAllReference());
             this.historiqueService.save(historique);
-            
-            
-            
-
         } catch (Exception ex) {
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(ex.getMessage());
@@ -574,8 +694,8 @@ public class FacturationAction extends ActionModel {
             if(bc==null)throw new Exception("aucun bon de commande enregistré, veuillez enregistrer un bon de commande pour les travaux supplementaire");
            
             this.condition = VentillationModel.getConditionWithoutDate(ventillations);
-            
-            FactureTSGenerator pv = new FactureTSGenerator(offre,ventillationData,bc,this.condition);
+            if(!this.checkerData(this.responsable))this.responsable = "RAKOTONIRINA Beby";
+            FactureTSGenerator pv = new FactureTSGenerator(offre,ventillationData,bc,this.condition,responsable);
             File fileToDownload = new File("E:/Stage/ER/ERproject/src/main/webapp/Archive/data/PDF/facture_generate.pdf");
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);
@@ -594,6 +714,187 @@ public class FacturationAction extends ActionModel {
             ex.printStackTrace();
 //            throw ex;
             return Action.NONE;
+        }
+        return Action.SUCCESS;
+    }
+    
+    private String[] initTabStrign(int size) {
+        String[] temp;
+        temp = new String[size];
+        for (int i = 0; i < size; i++) {
+            temp[i] = new String();
+        }
+        return temp;
+
+    }
+    
+    private List<String[]> getArgVentillation() throws Exception {
+        List<String[]> reponse = new ArrayList<>();
+        String[] temp = null;
+        if (this.reference != null && this.reference.compareTo("") != 0) {
+            temp = this.initTabStrign(2);
+            Ventillation ventilation = null;
+            try {
+                ventilation = (Ventillation) ReferenceUtil.toBaseModel(reference);
+            } catch (Exception e) {
+                throw new Exception("La reference inserer n'est pas une reference de type ventilation");
+            }
+            temp[0] = "ventilation.id";
+            temp[1] = String.valueOf(ventilation.getId());
+            reponse.add(temp);
+        }
+        if (this.referenceOffre != null && this.referenceOffre.compareTo("") != 0) {
+            temp = this.initTabStrign(2);
+            Offre offre = null;
+            try {
+                offre = (Offre) ReferenceUtil.toBaseModel(referenceOffre);
+            } catch (Exception e) {
+                throw new Exception("La reference inserer n'est pas une reference de type offre");
+            }
+            temp[0] = "offre.id";
+            temp[1] = String.valueOf(offre.getId());
+            reponse.add(temp);
+        }
+        if (this.nomPaiement != null && this.nomPaiement.compareToIgnoreCase("") != 0) {
+            temp = this.initTabStrign(2);
+            temp[0] = "ventilation.payementName";
+            temp[1] = this.nomPaiement;
+            reponse.add(temp);
+        }
+        if (this.typePaiement != null && this.typePaiement.compareToIgnoreCase("") != 0) {
+            temp = this.initTabStrign(2);
+            temp[0] = "ventilation.typeDescription";
+            temp[1] = this.typePaiement;
+            reponse.add(temp);
+        }
+        
+        return reponse;
+    }
+    
+    private List<String[]> getArgVentillationTs() throws Exception {
+        List<String[]> reponse = new ArrayList<>();
+        String[] temp = null;
+        if (this.reference != null && this.reference.compareTo("") != 0) {
+            temp = this.initTabStrign(2);
+            VentillationTS ventilation = null;
+            try {
+                ventilation = (VentillationTS) ReferenceUtil.toBaseModel(reference);
+            } catch (Exception e) {
+                throw new Exception("La reference inserer n'est pas une reference de type ventilation");
+            }
+            temp[0] = "ventilation.id";
+            temp[1] = String.valueOf(ventilation.getId());
+            reponse.add(temp);
+        }
+        if (this.referenceOffre != null && this.referenceOffre.compareTo("") != 0) {
+            temp = this.initTabStrign(2);
+            Offre offre = null;
+            try {
+                offre = (Offre) ReferenceUtil.toBaseModel(referenceOffre);
+            } catch (Exception e) {
+                throw new Exception("La reference inserer n'est pas une reference de type offre");
+            }
+            temp[0] = "offre.id";
+            temp[1] = String.valueOf(offre.getId());
+            reponse.add(temp);
+        }
+        if (this.nomPaiement != null && this.nomPaiement.compareToIgnoreCase("") != 0) {
+            temp = this.initTabStrign(2);
+            temp[0] = "ventilation.payementName";
+            temp[1] = this.nomPaiement;
+            reponse.add(temp);
+        }
+        if (this.typePaiement != null && this.typePaiement.compareToIgnoreCase("") != 0) {
+            temp = this.initTabStrign(2);
+            temp[0] = "ventilation.typeDescription";
+            temp[1] = this.typePaiement;
+            reponse.add(temp);
+        }
+        
+        return reponse;
+    }
+    
+    public String listeFactureInit()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        if(user.getNiveau()<4)return Action.NONE;
+        try{
+            List<String[]> arg = new ArrayList();
+            this.parameter = new Pagination();
+            this.parameter.setTaillePage(10);
+            if (this.pagination == 0) {
+                this.parameter.setPage(1);
+            } else {
+                this.parameter.setPage(this.pagination);
+            }
+           
+            if(pagination==0){
+                this.setOrderPage(this.orderOld);
+            }
+            if(pagination>1){
+                this.setOrderOld(this.orderPage);
+            }
+            
+            this.ventillationsData = this.ventillationService.findPopulateVentillation(getArgVentillation(),paye, retard, order,orderOld, parameter);
+            
+            if(!this.checkerData(this.getOrderOld())&&pagination==0){
+                this.setOrderOld(this.getOrder());
+            }else if(this.checkerData(this.getOrderOld())==true&&this.getOrderOld().compareTo(this.getOrder())==0&&pagination==0){
+                this.setOrderOld("");
+            }else if(this.checkerData(this.getOrderOld())==true&&this.getOrderOld().compareTo(this.getOrder())!=0&&pagination==0){
+                this.setOrderOld(this.getOrder());
+            }
+            this.titre = "Liste des factures initiaux";
+        
+        }catch(Exception e){
+            e.printStackTrace();
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+    
+    public String listeFactureTs()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        if(user.getNiveau()<4)return Action.NONE;
+        try{
+            this.parameter = new Pagination();
+            this.parameter.setTaillePage(10);
+            if (this.pagination == 0) {
+                this.parameter.setPage(1);
+            } else {
+                this.parameter.setPage(this.pagination);
+            }
+           
+            if(pagination==0){
+                this.setOrderPage(this.orderOld);
+            }
+            if(pagination>1){
+                this.setOrderOld(this.orderPage);
+            }
+            
+            this.ventillationsTsData = this.ventillationService.findPopulateVentillationTs(getArgVentillationTs(),paye, retard, order,orderOld, parameter);
+            
+            if(!this.checkerData(this.getOrderOld())&&pagination==0){
+                this.setOrderOld(this.getOrder());
+            }else if(this.checkerData(this.getOrderOld())==true&&this.getOrderOld().compareTo(this.getOrder())==0&&pagination==0){
+                this.setOrderOld("");
+            }else if(this.checkerData(this.getOrderOld())==true&&this.getOrderOld().compareTo(this.getOrder())!=0&&pagination==0){
+                this.setOrderOld(this.getOrder());
+            }
+            this.titre = "Liste des factures des travaux supplémentaires";
+        
+        }catch(Exception e){
+            e.printStackTrace();
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
         }
         return Action.SUCCESS;
     }

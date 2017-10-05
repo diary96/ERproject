@@ -460,6 +460,83 @@
             <result name="login" type="redirect">index</result> 
             <result name="none" type="redirect">accueil</result> 
         </action>
+        <action name="openOffre" class="com.er.erproject.action.OffreAction" method="openOffre">
+            <result name="success" type="redirectAction">
+                <param name="actionName">detailOffre</param>
+                <param name="idOffre">${idOffre}</param>
+            </result> 
+            <result name="error" type="chain">
+                <param name="actionName">detailOffre</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="saveDowngrade" class="com.er.erproject.action.OffreAction" method="saveDowngrade">
+            <result name="success" type="redirectAction">
+                <param name="actionName">detailOffre</param>
+                <param name="idOffre">${idOffre}</param>
+            </result> 
+            <result name="error" type="chain">
+                <param name="actionName">loadDowngrade</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="loadDowngrade" class="com.er.erproject.action.OffreAction" method="loadDowngrade">
+            <result name="success">Archive/page/downgrade.jsp</result> 
+            <result name="login" type="redirect">index</result> 
+            <!--            <result name="error">Archive/page/addPV.jsp</result> -->
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="listeUser" class="com.er.erproject.action.UserAction" method="loadList">
+            <result name="success">Archive/page/listeUser.jsp</result> 
+            <result name="error">Archive/page/listeUser.jsp</result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="newUser" class="com.er.erproject.action.UserAction" method="newUser">
+            <result name="success">Archive/page/newUser.jsp</result>
+            <result name="none" type="redirect">accueil</result>  
+            <result name="login" type="redirect">index</result> 
+        </action>
+        <action name="saveUser" class="com.er.erproject.action.UserAction" method="saveUser">
+            <result name="success" type="redirectAction">
+                <param name="actionName">listeUser</param>
+            </result> 
+            <result name="error" type="chain">
+                <param name="actionName">newUser</param>
+                <param name="idUser">${idUser}</param>
+                <param name="nom">${nom}</param>
+                <param name="prenom">${prenom}</param>
+                <param name="CIN">${CIN}</param>
+                <param name="dateNaissance">${dateNaissance}</param>
+                <param name="dateEmbauche">${dateEmbauche}</param>
+                <param name="niveau">${niveau}</param>
+                <param name="matricule">${matricule}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="listeFacturation" class="com.er.erproject.action.FacturationAction" method="listeFactureInit">
+            <result name="success">Archive/page/listeFacture.jsp</result> 
+            <result name="error">Archive/page/listeFacture.jsp</result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="listeFacturationTs" class="com.er.erproject.action.FacturationAction" method="listeFactureTs">
+            <result name="success">Archive/page/listeFactureTs.jsp</result> 
+            <result name="error">Archive/page/listeFactureTs.jsp</result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
     </package>
    
 

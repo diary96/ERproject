@@ -147,7 +147,7 @@ public class AddAction extends ActionModel{
         if(this.isValide(this.deadLine)){
             if(!this.isValide(this.time)) this.time = "00:00";
         }
-        if(this.isValide(dateAjout))throw new Exception("Veuillez mettre une date d'entrée de l'offre");
+        if(!this.isValide(dateAjout))throw new Exception("Veuillez mettre une date d'entrée de l'offre");
         
     }
     private boolean checkerUser(){
@@ -182,10 +182,12 @@ public class AddAction extends ActionModel{
             offre.setTypeOffre(typeOffre);
             offre.setUser(user);
             offre.setLocalisation(localisation);
+            
             Date temp = DateUtil.convert(this.dateAjout);
+            offre.setDateAjout(temp);
             if(this.isValide(this.deadLine)){
                 Date deadLineDate = UtilConvert.convertToSQLDate(this.deadLine,this.time);
-                if(temp.before(deadLineDate))throw new Exception("la deadline ne peut pas se situer avant la date d'ajout");
+                if(temp.after(deadLineDate))throw new Exception("la deadline ne peut pas se situer avant la date d'ajout");
                 offre.setDeadline(deadLineDate);
             }
             if(this.isValide(this.dateTravaux))offre.setDatetravauxprevu(UtilConvert.convertToSQLDate(this.dateTravaux));
@@ -198,7 +200,7 @@ public class AddAction extends ActionModel{
             historique.setUser(user);
             historique.setDescription("ajout d'une nouvelle offre");
             
-            if(Calendar.getInstance().getTime().after(temp))throw new Exception("Veuillez choisir une date inferieur a celui d'aujourd'hui"); 
+            if(Calendar.getInstance().getTime().before(temp))throw new Exception("Veuillez choisir une date inferieur a celui d'aujourd'hui"); 
             historique.setDate(temp);
             historique.setReferenceExterieur(offre.getAllReference());
             this.historiqueService.save(historique);

@@ -20,6 +20,7 @@ import com.er.erproject.model.TacheSoumissionHorsCatalogue;
 import com.er.erproject.model.TacheTSCatalogue;
 import com.er.erproject.model.TacheTSHorsCatalogue;
 import com.er.erproject.model.TypeFichier;
+import com.er.erproject.model.User;
 import com.er.erproject.model.Ventillation;
 import com.er.erproject.model.VentillationTS;
 import java.lang.reflect.Type;
@@ -48,6 +49,7 @@ public class Reference {
     public static final String TYPE_FICHIER = "TYF";
     public static final String ARCHIVE = "ARC";
     public static final String HISTORIQUE = "HIS";
+    public static final String USER = "USE";
     
     public static Class getClass(String reference)throws Exception{
         if(reference.compareToIgnoreCase(Reference.CATALOGUE)==0)return Catalogue.class;
@@ -67,7 +69,7 @@ public class Reference {
         if(reference.compareToIgnoreCase(Reference.TYPE_FICHIER)==0)return TypeFichier.class;
         if(reference.compareToIgnoreCase(Reference.ARCHIVE)==0)return Archive.class;
         if(reference.compareToIgnoreCase(Reference.HISTORIQUE)==0)return Historique.class;
-        
+        if(reference.compareToIgnoreCase(Reference.USER)==0)return User.class;
         else throw new Exception("Desole, la reference n'est pas dans la base");
         
     }

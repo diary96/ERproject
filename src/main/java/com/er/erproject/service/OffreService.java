@@ -6,6 +6,8 @@
 package com.er.erproject.service;
 
 import com.er.erproject.data.StatuReference;
+import com.er.erproject.data.VentilationData;
+import com.er.erproject.model.BonCommande;
 import com.er.erproject.model.Catalogue;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.Pagination;
@@ -79,7 +81,60 @@ public class OffreService extends ServiceModel {
         } 
     }
     
-    public List<Offre> find(List<String[]> arg, String order, Pagination pagination) throws Exception {
+    public List<Offre> filtreBC(List<Offre> offres, boolean test){
+        BonCommandeService bonCommandeService = new BonCommandeService();
+        bonCommandeService.setHibernateDao(hibernateDao);
+        List<Offre> reponse = new ArrayList();
+        if(test==true){
+            for(int i=0;i<offres.size();i++){
+                try{
+                    BonCommande bonCommande = bonCommandeService.find(offres.get(i),VentilationData.SOUMISSION );
+                    
+                    if(bonCommande!=null)reponse.add(offres.get(i));
+                }catch(Exception e){
+                    
+                }
+            }
+        }else{
+            for(int i=0;i<offres.size();i++){
+                try{
+                    BonCommande bonCommande = bonCommandeService.find(offres.get(i),VentilationData.SOUMISSION );
+                    if(bonCommande==null)reponse.add(offres.get(i));
+                }catch(Exception e){
+                    reponse.add(offres.get(i));
+                }
+            }
+        }
+        return reponse;
+    }
+    public List<Offre> filtreBCTS(List<Offre> offres, boolean test){
+        BonCommandeService bonCommandeService = new BonCommandeService();
+        bonCommandeService.setHibernateDao(hibernateDao);
+        List<Offre> reponse = new ArrayList();
+        if(test==true){
+            for(int i=0;i<offres.size();i++){
+                try{
+                    BonCommande bonCommande = bonCommandeService.find(offres.get(i),VentilationData.TS );
+                    
+                    if(bonCommande!=null)reponse.add(offres.get(i));
+                }catch(Exception e){
+                    
+                }
+            }
+        }else{
+            for(int i=0;i<offres.size();i++){
+                try{
+                    BonCommande bonCommande = bonCommandeService.find(offres.get(i),VentilationData.TS );
+                    if(bonCommande==null)reponse.add(offres.get(i));
+                }catch(Exception e){
+                    reponse.add(offres.get(i));
+                }
+            }
+        }
+        return reponse;
+    }
+    
+    public List<Offre> find(List<String[]> arg, String order,String orderOld, Pagination pagination,String bc,String bcTs) throws Exception {
         Session session = null;
         try{
             session = hibernateDao.getSessionFactory().openSession();
@@ -96,7 +151,14 @@ public class OffreService extends ServiceModel {
             criteria.createAlias("offre.typeOffre", "type");
             
             if (order != null && order.compareTo("") != 0) {
-                criteria.addOrder(Order.asc(order));
+                if(orderOld.compareTo(order)==0){
+                    criteria.addOrder(Order.desc(order));
+                }else{
+                    criteria.addOrder(Order.asc(order));
+                }
+                
+            }else{
+                criteria.addOrder(Order.desc("offre.id"));
             }
             criteria.setFirstResult((pagination.getPage() - 1) * pagination.getTaillePage());
 
@@ -141,6 +203,14 @@ public class OffreService extends ServiceModel {
             for (int i = 0; i < list.size(); i++) {
                 Offre tempOffre = list.get(i);
                 tempOffre.setTypeOffre(this.findTypeOffre(tempOffre));
+            }
+            if(bc!=null&&bc.compareTo("")!=0){
+                if(bc.compareToIgnoreCase("true")==0)list = this.filtreBC(list, true);
+                else list = this.filtreBC(list, false);
+            }
+            if(bcTs!=null&&bcTs.compareTo("")!=0){
+                if(bcTs.compareToIgnoreCase("true")==0)list = this.filtreBCTS(list, true);
+                else list = this.filtreBCTS(list, false);
             }
             return list;
         }catch(Exception e){
@@ -450,6 +520,27 @@ public class OffreService extends ServiceModel {
             this.hibernateDao.update(offre);
         }catch(Exception e){
             throw new Exception("impossible de cloturé l'offre "+e.getMessage());
+        }
+    }
+    
+    public void open(Offre offre)throws Exception{
+        if(offre.getClose()==false)throw new Exception("l'offre est déjà ouvert");
+        offre.setClose(false);
+        try{
+            this.hibernateDao.update(offre);
+        }catch(Exception e){
+            throw new Exception("la réouverture de  l'offre "+e.getMessage()+" est impossible");
+        }
+    }
+    
+    public void downgrade(Offre offre, int etat)throws Exception{
+        if(etat>4||etat<0)throw new Exception("l'etape inseré n'existe pas"); 
+        if(offre.getStatu()<etat)throw new Exception("Veuillez choisir une etape inferieure de celle de l'etape actuel");
+        offre.setStatu(etat);
+        try{
+            this.hibernateDao.update(offre);
+        }catch(Exception e){
+            throw new Exception("impossible de changer l'etape de l'offre cause "+e.getMessage());
         }
     }
 }

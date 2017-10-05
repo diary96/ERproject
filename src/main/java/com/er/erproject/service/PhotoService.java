@@ -44,6 +44,7 @@ public class PhotoService extends ServiceModel {
             photo.populateCoordonnee();
             this.hibernateDao.save(photo);
         }catch(Exception e){
+            e.printStackTrace();
             throw new Exception("Impossible de sauvegarder la photo");
         }
     }

@@ -96,7 +96,7 @@ t<%--
                                 <div class="ln_solid"></div>
                                 <div class="form-group">
                                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                        <a href="detailOffre?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-danger" type="button">Annuler</a>                                      
+                                        <a href="detailOffre?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-dark" type="button">Retour</a>                                      
                                         <a  class="save btn btn-primary">Mettre par default</a>
                                         <button type="submit" class="btn btn-success">Generer PV</button>
                                     </div>

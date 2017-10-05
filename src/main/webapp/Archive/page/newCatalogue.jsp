@@ -27,6 +27,7 @@ t<%--
                             <br>
                             <form action="saveCatalogue" method="POST" id="demo-form2" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
                                 <input name="url" value="<s:property value="getUrl()"/>" style="display:none">
+                                
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Reference <span class="required">*</span>
                                     </label>

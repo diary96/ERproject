@@ -214,6 +214,7 @@ public class ArchiveAction extends ActionModel{
         }catch(Exception e){
             return Action.NONE;
         }
+        if(user.getNiveau()<2)return Action.NONE;
         try{
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié"); 
             Archive archive=null;
@@ -285,6 +286,7 @@ public class ArchiveAction extends ActionModel{
             return Action.NONE;
         }
         if(!this.checkerData(this.reference))return Action.NONE;
+        if(user.getNiveau()<2)return Action.NONE;
         Archive archive = null; 
         try{
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");                          
@@ -330,6 +332,7 @@ public class ArchiveAction extends ActionModel{
         }catch(Exception e){
             return Action.NONE;
         }
+        if(user.getNiveau()<2)return Action.NONE;
         try{
             this.typeFichier = this.typeFichierService.find();
             if(this.checkerData(this.getReferenceInterieure())){

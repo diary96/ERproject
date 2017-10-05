@@ -5,6 +5,8 @@
  */
 package com.er.erproject.util;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author diary
@@ -46,7 +48,8 @@ public class ConvertionLettre {
         montant = montantChiffre;
         String[] split = montantChiffre.split("\\.");
         this.partieEnt = Long.parseLong(split[0]);
-        this.partieFraq = Integer.parseInt(split[1]);
+        
+        this.partieFraq = Integer.valueOf(split[1]);
     }
 
     public String getMontantLettre() {
@@ -117,7 +120,7 @@ public class ConvertionLettre {
 
     public static String getLettre(double data) throws Exception {
         ConvertionLettre c = new ConvertionLettre();
-        c.setMontant(""+data+".00");
+        c.setMontant(""+new BigDecimal(data).toPlainString()+".00");
         c.calculer_glob();
         return c.getMontantLettre();
 

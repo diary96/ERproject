@@ -48,12 +48,23 @@ public class OffreAction extends ActionModel {
     private String er;
     private String telma;
     private String lieu;
+    
+    private String statu; 
 
     private InputStream fileInputStream;
     private String fileName;
     private boolean initiaux; 
     private boolean ts; 
 
+    public String getStatu() {
+        return statu;
+    }
+
+    public void setStatu(String statu) {
+        this.statu = statu;
+    }
+
+    
     public boolean getInitiaux() {
         return initiaux;
     }
@@ -254,6 +265,49 @@ public class OffreAction extends ActionModel {
             historique = new Historique();
             historique.setUser(user);
             historique.setDescription("tentative de cloturation de l'offre");
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+    
+    public String openOffre()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        if (this.idOffre == 0) {
+            return Action.NONE;
+        }
+        try {
+            if(user.getNiveau()<1)return Action.NONE;
+            this.offre = this.offreService.find(idOffre);
+            
+            
+            
+        } catch (Exception e) {
+            return Action.NONE;
+        }
+        try{
+            this.offreService.open(offre);
+            
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("réouverture de l'offre");
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
+        }catch(Exception e){
+            
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("tentative de réouverture de l'offre");
             historique.setDate(Calendar.getInstance().getTime());
             historique.setReferenceExterieur(offre.getAllReference());
             this.historiqueService.save(historique);
@@ -468,6 +522,58 @@ public class OffreAction extends ActionModel {
 //            throw ex;
             return Action.NONE;
         }
+        return Action.SUCCESS;
+    }
+    
+    public String loadDowngrade()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        try {
+            if(user.getNiveau()<1)return Action.NONE;
+            this.offre = this.offreService.find(idOffre);
+            this.titre = "Retrograde de l'offre "+offre.getAllReference();
+        } catch (Exception ex) {
+            return Action.NONE;
+        }
+        return Action.SUCCESS;
+    }
+    
+    public String saveDowngrade()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        
+        try {
+            if(user.getNiveau()<1)return Action.NONE;
+            this.offre = this.offreService.find(idOffre);
+        } catch (Exception ex) {
+            return Action.NONE;
+        }
+        try{
+            if(!this.checkerData(this.statu))throw new Exception("Veuillez remplir le champs de des etapes");
+            this.offreService.downgrade(offre, Integer.valueOf(this.statu));
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("rétrograde de l'offre au niveau "+StatuReference.getString(Integer.valueOf(this.getStatu())));
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+        }catch(Exception e){
+            historique = new Historique();
+            historique.setUser(user);
+            historique.setDescription("tentative de rétrograde de l'offre au niveau "+StatuReference.getString(Integer.valueOf(this.getStatu())));
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
+        }
+       
+        
         return Action.SUCCESS;
     }
 }

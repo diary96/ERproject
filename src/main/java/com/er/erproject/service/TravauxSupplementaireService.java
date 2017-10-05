@@ -37,6 +37,20 @@ public class TravauxSupplementaireService extends ServiceModel{
         }
         return null;
     }
+    public static Offre find(TravauxSupplementaire travauxSupplementaire, Session session)throws Exception{
+        Offre offre = null;
+        try{
+            String sql = "select o from TravauxSupplementaire s join s.offre o where s.id = :id"; 
+        
+            Query query = session.createQuery(sql); 
+            query.setParameter("id", travauxSupplementaire.getId());
+            if(!query.list().isEmpty())offre = (Offre) query.list().get(0);
+        }catch(Exception e){
+           throw new Exception("impossible d'extraire l'offre du travaux supplementaire "+travauxSupplementaire.getAllReference());
+        }
+        return offre;
+    }
+    
     public TravauxSupplementaire find(Offre offre)throws Exception{
         Session session = hibernateDao.getSessionFactory().openSession();
         String sql = "select s from TravauxSupplementaire s join s.offre o where o.id = :id";
@@ -51,6 +65,7 @@ public class TravauxSupplementaireService extends ServiceModel{
         }
         return null;
     }
+    
     public void update(TravauxSupplementaire travauxSupplementaire)throws Exception{
         try{
             this.hibernateDao.update(travauxSupplementaire);

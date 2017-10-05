@@ -83,6 +83,7 @@ public class TypeFichierAction extends ActionModel{
     public String listeType(){
         this.setSessionUser();
         if(this.user==null)return Action.LOGIN;
+        if(this.user.getNiveau()<2)return Action.NONE;
         try{
             this.typeFichiers = this.typeFichierService.find();
         }catch(Exception e){

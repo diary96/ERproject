@@ -43,7 +43,7 @@ public class CatalogueAction extends ActionModel {
     private String retourUrl;
     private String idOffre; 
     private String type;
-
+  
     public String getRetourUrl() {
         return retourUrl;
     }
@@ -294,6 +294,18 @@ public class CatalogueAction extends ActionModel {
         if (this.user == null) {
             return Action.LOGIN;
         }
+        if(user.getNiveau()<2)return Action.NONE;
+        try{
+            if(this.checkerData(reference)){
+                Catalogue catalogue =  (Catalogue)this.catalogueService.find(reference);
+                this.setDesignation(catalogue.getDesignation());
+                this.setReference(catalogue.getAllReference());
+                this.setUnite(catalogue.getUnite());
+                this.setPrixUnitaire(catalogue.getPrixUnitaire());
+            }
+        }catch(Exception e){
+            return Action.NONE;
+        }
         return Action.SUCCESS;
     }
 
@@ -303,6 +315,7 @@ public class CatalogueAction extends ActionModel {
             return Action.LOGIN;
         }
         try {
+            if(user.getNiveau()<2)return Action.NONE;
             if (!this.checkerData(this.designation)) {
                 throw new Exception("Veuillez remplir le champ de designation");
             }
@@ -319,6 +332,13 @@ public class CatalogueAction extends ActionModel {
                 catalogue.setPrixUnitaire(prixUnitaire);
 
                 this.catalogueService.save(catalogue);
+            }else{
+                Catalogue catalogue = (Catalogue)this.catalogueService.find(reference);
+                catalogue.setDesignation(designation);
+                catalogue.setUnite(unite);
+                catalogue.setPrixUnitaire(prixUnitaire);
+                
+                this.catalogueService.update(catalogue);
             }
 
         } catch (Exception e) {

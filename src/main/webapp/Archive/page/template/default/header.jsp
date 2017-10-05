@@ -84,16 +84,24 @@
 
                                         </ul>
                                     </li>
-                                    <li><a><i class="fa fa-table"></i>Base <span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="listeCatalogue">Employee</a></li>
-                                            <li><a href="listeCatalogue">Catalogue</a></li>
-                                            <li><a href="listeHorsCatalogue">Hors Catalogue</a></li>
-                                            <li><a href="listeTypeFichier">Gestion Type d'archive</a></li>
-                                            
+                                    <s:if test="getUser().getNiveau()>=2">
+                                        <li><a><i class="fa fa-table"></i>Base <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <s:if test="getUser().getNiveau()>=5">
+                                                    <li><a href="listeUser">Employee</a></li>
+                                                </s:if>
+                                                <li><a href="listeCatalogue">Catalogue</a></li>
+                                                <li><a href="listeHorsCatalogue">Hors Catalogue</a></li>
+                                                <li><a href="listeTypeFichier">Gestion Type d'archive</a></li>
+                                                <s:if test="getUser().getNiveau()>=4">
+                                                    <li><a href="listeFacturation">Liste des factures et paiement</a></li>
+                                                    <li><a href="listeFacturationTs">Liste des factures et paiement des travaux suppl&eacute;mentaires</a></li>
+                                                </s:if>
 
-                                        </ul>
-                                    </li>
+
+                                            </ul>
+                                        </li>
+                                    </s:if>
                                     
                                 </ul>
                             </div>
@@ -101,9 +109,7 @@
 
                             <!-- /menu footer buttons -->
                             <div class="sidebar-footer hidden-small">
-                                <a data-toggle="tooltip" data-placement="top" title="Settings">
-                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                                </a>
+                                
 
                                 <a data-toggle="tooltip" data-placement="top" title="Se deconnecter" href="deconnexion">
                                     <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
@@ -129,12 +135,7 @@
                                         <span class=" fa fa-angle-down"></span>
                                     </a>
                                     <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                        <li><a href="javascript:;"> Profile</a></li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span>Settings</span>
-                                            </a>
-                                        </li>
+                                        
                                         <li><a href="deconnexion"><i class="fa fa-sign-out pull-right"></i> SE DECONNECTER</a></li>
                                     </ul>
                                 </li>

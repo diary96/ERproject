@@ -17,12 +17,23 @@
     </div>
     <div class="" role="tabpanel" data-example-id="togglable-tabs">
         <a href="listeArchive?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-primary">Gestion des fichiers</a>
-        <a href="gestionHistorique?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-dark">Historique</a>
+        <s:if test="getUser().getNiveau()>=3">
+            <a href="gestionHistorique?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-dark">Historique</a>
+        </s:if>
+        <s:if test="getUser().getNiveau()>=1">
+            <a href="loadDowngrade?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-dark">R&eacute;trograder l'Offre</a>
+            <s:if test="getOffre().getClose()==true">
+                <a href="openOffre?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-danger">r&eacute;ouvrire l'offre</a>
+            </s:if>
+        </s:if>
         <s:if test="getOffre().getClose()==false">
             <a href="closeOffre?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-danger">Cloturé l'offre</a>
         </s:if>
-        <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@FACTURATION">
-                <a href="gestionPaiement?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-dark">Gestion des paiements</a>
+        
+        <s:if test="getUser().getNiveau()>=4">
+            <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@FACTURATION">
+                    <a href="gestionPaiement?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-dark">Gestion des paiements</a>
+            </s:if>
         </s:if>
         <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
             <%--<s:property value="@com.er.erproject.data.StatuReference@OFFRE"/>--%>
@@ -237,7 +248,7 @@
                 </s:if>
                 <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@FACTURATION">
                     <s:if test="getInitiaux()==false">
-                        <a href="loadVentilation?idOffre=<s:property value="getIdOffre()"/>&type=<s:property value="@com.er.erproject.data.VentilationData@SOUMISSION"/>" class="btn btn-success">Ventilation de facture des taches initiaux</a>
+                        <a href="loadVentilation?idOffre=<s:property value="getIdOffre()"/>&type=<s:property value="@com.er.erproject.data.VentilationData@SOUMISSION"/>" class="btn btn-success">Conditions de paiement  initiaux</a>
               
                     </s:if>
                     <s:else>
@@ -245,7 +256,7 @@
               
                     </s:else>
                     <s:if test="getTs()==false">
-                        <a href="loadVentilation?idOffre=<s:property value="getIdOffre()"/>&type=<s:property value="@com.er.erproject.data.VentilationData@TS"/>" class="btn btn-success">Ventilation de facture des T.S</a>
+                        <a href="loadVentilation?idOffre=<s:property value="getIdOffre()"/>&type=<s:property value="@com.er.erproject.data.VentilationData@TS"/>" class="btn btn-success">Conditions de paiement T.S</a>
               
                     </s:if>
                     <s:else>
@@ -281,8 +292,6 @@
                                 <td align="center"><s:property value="getPhotos().size()"/></td>
                                 <s:if test="getTemp().getStatu()==@com.er.erproject.data.StatuReference@PV">
                                     <td align="center">
-                                        <a href="minusEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>" ><i class="fa fa-minus" aria-hidden="true"></i></a> 
-                                        <a href="plusEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>" ><i class="fa fa-plus" aria-hidden="true"></i></a> 
                                         <a href="allEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>"><i class="fa fa-reply-all" aria-hidden="true"></i></a>
                                     </td>
                                     <td align="center">
@@ -305,9 +314,7 @@
                                 <td align="center"><s:property value="getPhotos().size()"/></td>
                                 <s:if test="getTemp().getStatu()==@com.er.erproject.data.StatuReference@PV">
                                     <td align="center">
-                                        <a href="minusEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>" ><i class="fa fa-minus" aria-hidden="true"></i></a> 
-                                        <a href="plusEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>" ><i class="fa fa-plus" aria-hidden="true"></i></a> 
-                                        <a href="allEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>"><i class="fa fa-reply-all" aria-hidden="true"></i></a>                             
+                                         <a href="allEffect?reference=<s:property value="getAllReference()" />&url=detailOffre&idOffre=<s:property value="getIdOffre()"/>"><i class="fa fa-reply-all" aria-hidden="true"></i></a>                             
                                     </td>
                                     <td align="center">
                                         <input style="width:25%" id="input<s:property value="getAllReference()"/>">

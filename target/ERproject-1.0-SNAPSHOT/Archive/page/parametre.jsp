@@ -9,7 +9,7 @@ t<%--
     <div class="x_panel">
         <%@include file="template/default/Erreur.jsp" %>
         <div class="x_title">
-            <h2>Parametre <s:property value="getType()"/></h2>
+            <h2><a href="<s:property value="getUrl()"/>?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-default"><i class="fa fa-arrow-left"></i></a>Parametre <s:property value="getType()"/></h2>
             
             <div class="clearfix"></div>
         </div>
@@ -83,7 +83,7 @@ t<%--
                                 <div class="ln_solid"></div>
                                 <div class="form-group">
                                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                        <button class="btn btn-danger" type="button">Annuler</button>                                      
+                                                                              
                                         <button type="submit" class="btn btn-success">Enregistrer</button>
                                     </div>
                                 </div>

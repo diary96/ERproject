@@ -37,6 +37,20 @@ public class SoumissionService extends ServiceModel{
         }
         return null;
     }
+    public static  Offre find(Soumission soumission,Session session)throws Exception{
+        Offre offre = null;
+        try{
+            String sql = "select o from Soumission s join s.offre o where s.id = :id";        
+            Query query = session.createQuery(sql); 
+            query.setParameter("id", soumission.getId());
+            if(!query.list().isEmpty()){
+                offre = (Offre) query.list().get(0);
+            }
+        }catch(Exception e){
+            throw new Exception("impossible d'extraire l'offre de la soumission "+soumission.getAllReference());
+        }
+        return offre;
+    }
     public Soumission find(Offre offre)throws Exception{
         Session session = hibernateDao.getSessionFactory().openSession();
         String sql = "select s from Soumission s join s.offre o where o.id = :id";
@@ -51,6 +65,24 @@ public class SoumissionService extends ServiceModel{
         }
         return null;
     }
+    
+    public static Soumission find(Offre offre,Session session)throws Exception{
+        Soumission soumission = null; 
+        try{
+            String sql = "select s from Soumission s join s.offre o where o.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", offre.getId());
+            if(!query.list().isEmpty()){
+                soumission = (Soumission)query.list().get(0);
+            }
+            
+        }catch(Exception e){
+            throw new Exception("impossible d'extraire la soumission cause "+e.getMessage());
+        }
+        
+        return soumission;
+    }
+    
     public void update(Soumission soumission)throws Exception{
         try{
             this.hibernateDao.update(soumission);

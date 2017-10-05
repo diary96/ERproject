@@ -12,9 +12,7 @@ import com.er.erproject.model.Travaux;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,7 +21,6 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import jxl.Cell;
 import jxl.CellView;
-import jxl.Sheet;
 
 import jxl.Workbook;
 import jxl.format.Alignment;

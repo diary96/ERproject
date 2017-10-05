@@ -35,10 +35,59 @@ public class AccueilAction extends ActionModel{
     private String ticket;
     private String statu;
     private String close; 
+    private String orderOld;
+    private String orderPage;
     private int pagination;
     private String order;
     private List<Offre> offres;
+    private User userTemp;
+    private String bcTest;
+    private String bcTsTest;
 
+    public String getBcTest() {
+        return bcTest;
+    }
+
+    public void setBcTest(String bcTest) {
+        this.bcTest = bcTest;
+    }
+
+    public String getBcTsTest() {
+        return bcTsTest;
+    }
+
+    public void setBcTsTest(String bcTsTest) {
+        this.bcTsTest = bcTsTest;
+    }
+
+    
+    public User getUserTemp() {
+        return userTemp;
+    }
+
+    public void setUserTemp(User userTemp) {
+        this.userTemp = userTemp;
+    }
+
+    
+    public String getOrderPage() {
+        return orderPage;
+    }
+
+    public void setOrderPage(String orderPage) {
+        this.orderPage = orderPage;
+    }
+
+    
+    public String getOrderOld() {
+        return orderOld;
+    }
+
+    public void setOrderOld(String type) {
+        this.orderOld = type;
+    }
+
+    
     public String getOrder() {
         return order;
     }
@@ -215,18 +264,35 @@ public class AccueilAction extends ActionModel{
         if (this.user == null) {
             return Action.LOGIN;
         }
+        this.setUserTemp(user);
         List<String[]> arg = this.getArg();
         this.titre = "Accueil";
         try{
             this.typeOffres = this.typeOffreService.findAll();
             this.parameter = new Pagination();
-            this.parameter.setTaillePage(10);
+            this.parameter.setTaillePage(20);
             if (this.pagination == 0) {
                 this.parameter.setPage(1);
             } else {
                 this.parameter.setPage(this.pagination);
             }
-            this.offres = this.offreService.find(arg,order, parameter);
+            if(pagination==0){
+                this.setOrderPage(this.orderOld);
+            }
+            if(pagination>1){
+                this.setOrderOld(this.orderPage);
+            }
+            this.offres = this.offreService.find(arg,order,orderOld, parameter,bcTest,bcTsTest);
+            if(!this.checkerData(this.getOrderOld())&&pagination==0){
+                this.setOrderOld(this.getOrder());
+            }else if(this.checkerData(this.getOrderOld())==true&&this.getOrderOld().compareTo(this.getOrder())==0&&pagination==0){
+                this.setOrderOld("");
+            }else if(this.checkerData(this.getOrderOld())==true&&this.getOrderOld().compareTo(this.getOrder())!=0&&pagination==0){
+                this.setOrderOld(this.getOrder());
+            }
+            
+            
+            
         }catch(Exception e){
             e.printStackTrace();
             this.setLinkError(Reference.VISIBIBLE);

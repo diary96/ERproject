@@ -193,11 +193,18 @@ public class PhotoAction extends ActionModel {
             this.photo = new Photo();
             if(StringUtilsData.isNoAlpha(this.latitude))throw new Exception("La latitude n'est pas un coordonnee valable");
             if(StringUtilsData.isNoAlpha(this.longitude))throw new Exception("La longitude n'est pas un coordonnee valable");
-            this.latitude+=" "+this.latitudeM;
-            this.longitude+=" "+this.longitudeM;
             
-            photo.setLatitude(latitude);
-            photo.setLongitude(longitude);
+            
+            if(!this.checker(this.latitude)||!this.checker(this.longitude)){
+                photo.setLatitude("");
+                photo.setLongitude("");
+            }
+            else{
+                this.latitude = this.latitudeM+" "+this.latitude;
+                this.longitude = this.longitudeM+" "+this.longitude;
+                photo.setLatitude(latitude);
+                photo.setLongitude(longitude);
+            } 
             photo.setPathPhoto("Archive/data/photo/"+photoFile.getName()+".jpeg");
             photo.setReferenceTravaux(referenceTravaux);
             

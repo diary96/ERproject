@@ -17,8 +17,9 @@
                   </div>
                   <div class="x_content">
                       <form action="accueil" id="demo-form2" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="" methode="GET">
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Reference : <span class="required">*</span>
+                          <input type="hidden" name="orderOld" value=""/>
+                          <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Reference : 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <input name="reference" value="<s:property value="getReference()"/>" type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
@@ -26,7 +27,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Libell&eacute; de l'archive : <span class="required">*</span>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Libell&eacute; de l'archive : 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <input name="nomProjet" value="<s:property value="getNomProjet()"/>" type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
@@ -34,14 +35,14 @@
                         </div>
                           
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Num&eacute;ro du ticket : <span class="required">*</span>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Num&eacute;ro du ticket : 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                <input name="ticket" value="<s:property value="getTicket()"/>"type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         <div class="item form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="type">Nom du departement <span class="required">*</span>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="type">Nom du departement 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <select id="heard" name="nomType"class="form-control" required="">
@@ -68,8 +69,9 @@
                                 </select>
                             </div>
                         </div>
+                        
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Etat : <span class="required">*</span>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Etat :
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                             
@@ -80,7 +82,28 @@
                                 </select>
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Bon de Commande : 
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select name="bcTest" class="form-control">
+                                    <option value="">Tout</option>
+                                    <option value="true" <s:if test="getBcTest().equalsIgnoreCase(true)">selected="true"</s:if> >Avec</option>
+                                    <option value="false"<s:if test="getBcTest().equalsIgnoreCase(false)">selected="true"</s:if>>Sans</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Bon de Commande des T.S : 
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select name="bcTsTest" class="form-control">
+                                    <option value="">Tout</option>
+                                    <option value="true" <s:if test="getBcTsTest().equalsIgnoreCase(true)">selected="true"</s:if> >Avec</option>
+                                    <option value="false"<s:if test="getBcTsTest().equalsIgnoreCase(false)">selected="true"</s:if>>Sans</option>
+                                </select>
+                            </div>
+                        </div>
                         <input value="1" name="pagination" type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" style="display:none">
                           
                         <div class="form-group">
@@ -95,37 +118,37 @@
                         <tr>
                             <th>#</th>
                             <th>
-                                <a href="?order=id&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=id&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
                                     Reference
                                 </a>
                             </th>                       
                             <th>
-                                <a href="?order=nomProjet&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=nomProjet&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
                                     Libell&eacute; de l'archive
                                 </a>
                             </th>
                             <th>
-                                <a href="?order=typeOffre&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=typeOffre&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
                                     Nom du departement
                                 </a>
                             </th>
                             <th>
-                                <a href="?order=ticket&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=ticket&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
                                     Numero du ticket 
                                 </a>
                             </th>                         
                             <th>
-                                <a href="?order=dateAjout&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=dateAjout&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
                                     Date d'ajout 
                                 </a>
                             </th>                         
                             <th>
-                                <a href="?order=statu&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=statu&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
                                    Etape 
                                 </a>
                             </th>                         
                             <th> 
-                                <a href="?order=close&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=close&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
                                    Etat 
                                 </a>
                             </th>
@@ -165,8 +188,10 @@
                                 <s:else>
                                     <td><button type="button" class="btn btn-success btn-xs">Ouvert</button></td>
                                 </s:else>
-                                
-                                <td><a href="gestionHistorique?idOffre=<s:property value="getId()" />" class="btn btn-primary btn-xs">Historique</a></td>
+                                <s:property value="getUser().getNiveau()"/>
+                                <s:if test="getUserTemp().getNiveau()>=3">
+                                    <td><a href="gestionHistorique?idOffre=<s:property value="getId()" />" class="btn btn-primary btn-xs">Historique</a></td>
+                                </s:if>
                                 <td> <a href="listeArchive?idOffre=<s:property value="getId()" />" class="btn btn-dark btn-xs"  >Gestion des fichiers</button></a>
                                 <td> <button id="<s:property value="getId()" />" class="supprimer btn btn-danger btn-xs"  >Supprimer</button></td>
 

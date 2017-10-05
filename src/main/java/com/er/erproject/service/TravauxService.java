@@ -168,18 +168,21 @@ public class TravauxService extends ServiceModel {
             if (Unite == null || Unite.compareTo("") == 0) {
                 throw new Exception("Veuillez remplir le champs de l'unite");
             }
-            HorsCatalogue horsCatalogue = new HorsCatalogue();
-            horsCatalogue.setDesignation(designation);
-            horsCatalogue.setPrixUnitaire(UtilConvert.toDoubleEntier(prixUnitaire));
-            horsCatalogue.setUnite(Unite);
-            if (admin == null || admin.compareTo("") == 0) {
-                horsCatalogue.setIsAdmin(false);
-            } else {
-                horsCatalogue.setIsAdmin(true);
-            }
-            this.hibernateDao.save(horsCatalogue);
+            HorsCatalogue horsCatalogue = this.find(designation, Unite, UtilConvert.toDoubleEntier(prixUnitaire));
+            if(horsCatalogue==null){
+                horsCatalogue = new HorsCatalogue();
+                horsCatalogue.setDesignation(designation);
+                horsCatalogue.setPrixUnitaire(UtilConvert.toDoubleEntier(prixUnitaire));
+                horsCatalogue.setUnite(Unite);
+                if (admin == null || admin.compareTo("") == 0) {
+                    horsCatalogue.setIsAdmin(false);
+                } else {
+                    horsCatalogue.setIsAdmin(true);
+                }
+                this.hibernateDao.save(horsCatalogue);
+            }  
             if (horsCatalogue.getId() > 0) {
-                this.save(horsCatalogue.getAllReference(), designation, prixUnitaire, Unite, quantite, type, refRelation, admin);
+                return this.save(horsCatalogue.getAllReference(), designation, prixUnitaire, Unite, quantite, type, refRelation, admin);
             } else {
                 throw new Exception("Impossible de sauvegarder les donnees du catalogue");
             }
@@ -187,6 +190,26 @@ public class TravauxService extends ServiceModel {
         return null;
     }
 
+    public HorsCatalogue find(String designation, String unite, double prixUnitaire)throws Exception{
+        HorsCatalogue horsCatalogue = null;
+        Session session=null; 
+        try{
+            session= this.hibernateDao.getSessionFactory().openSession();
+            Criteria criteria = session.createCriteria(HorsCatalogue.class,"horsCatalogue");
+            criteria.add(Restrictions.ilike("horsCatalogue.designation", designation));
+            criteria.add(Restrictions.ilike("horsCatalogue.unite", unite));
+            criteria.add(Restrictions.eq("horsCatalogue.prixUnitaire", prixUnitaire));
+            if(!criteria.list().isEmpty()){
+                horsCatalogue = (HorsCatalogue)criteria.list().get(0);
+            }
+        }catch(Exception e){
+            throw new Exception("impossible d'extraire le catalogue de la classe hors catalogue cause "+e.getMessage());
+        }finally{
+            if(session!=null)session.close();
+        }
+        return horsCatalogue;
+    }
+    
     public void save(TacheModel travaux) throws Exception {
 
         try {

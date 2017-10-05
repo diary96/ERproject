@@ -51,6 +51,7 @@ Contributor(s):
         <property name="CIN" column="cin" type="string"/>
         <property name="matricule" column="matriculeuser" type="string"/>
         <property name="password" column="password" type="string"/>
+        <property name="niveau" column="niveau" type="int"/>
         
     </class>
 </hibernate-mapping>

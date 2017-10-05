@@ -91,7 +91,9 @@ public class HistoriqueAction extends ActionModel {
             return Action.NONE;
         }
         try{
+            if(user.getNiveau()<3)return Action.NONE;
             this.historiques = this.historiqueService.find(offre);
+            this.titre = "Historique de l'objet "+offre.getAllReference();
         }catch(Exception e){
             e.printStackTrace();
             this.setLinkError(Reference.VISIBIBLE);

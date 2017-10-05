@@ -55,8 +55,7 @@ public class DateUtil {
         try{
             reponse = sdf.parse(date);
         }catch(Exception e){
-            e.printStackTrace();
-            throw new Exception("Impossible d'extraire la date");
+            throw new Exception("Impossible d'extraire la date, veuillez utiliser le format YYYY-MM-dd (ex : 2017-01-31)");
         }
         return reponse; 
     }

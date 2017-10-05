@@ -5,9 +5,11 @@
                     <h2><s:if test="getRetour()==null"></s:if><s:else><button onclick="javascript:history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i>  </button></s:else> Liste des catalogues <small></small></h2>
                     <ul class="nav navbar-right panel_toolbox">
 <!--                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>-->                      
-                        <li class="dropdown">
-                          <a href="gestionCatalogue" ><i class="fa fa-plus"></i></a>
-                        </li>
+                        <s:if test="getUser().getNiveau()>=2&&getIdOffre()==null||getUser().getNiveau()>=2&&idOffre==''">
+                            <li class="dropdown">
+                              <a href="gestionCatalogue" ><i class="fa fa-plus"></i></a>
+                            </li>
+                        </s:if>
 <!--                      <li><a class="close-link"><i class="fa fa-close"></i></a>-->
                     </ul>   
                     <div class="clearfix"></div>
@@ -100,7 +102,11 @@
                                     <th><s:property value="getAllReference()"/></th>
                                     <td><s:property value="getDesignation()"/></td>
                                     <td><s:property value="getUnite()"/></td>                              
-                                    <td><s:property value="getPrixUnitaire()"/></td>                        
+                                    <td><s:property value="getPrixUnitaire()"/></td> 
+                                    <s:if test="getUser().getNiveau()>=2&&idOffre==null||getUser().getNiveau()>=2&&idOffre==''">
+                                        <td> <a href="gestionCatalogue?reference=<s:property value="getAllReference()" />" class="btn btn-primary btn-xs"  >Modifier</a></td>
+                                        <td> <button id="<s:property value="getAllReference()" />" class="supprimer btn btn-danger btn-xs"  >Supprimer</button></td>
+                                    </s:if>
                                 </tr>
                             </s:iterator>
                         </tbody>
@@ -128,5 +134,16 @@
         });
     });
 </script>
-
+<script>
+    jQuery(document).ready(function ()
+    {
+        $('.supprimer').on('click', function ()
+        {
+            if (confirm("Voulez-vous vraiment supprimer le catalogue "+this.getAttribute('id')+"?")) {
+                window.location.replace("deleteReflect?reference="+this.getAttribute('id')+"&url=listeCatalogue");
+                
+            }
+        });
+    });
+</script>
 <%@include file="template/default/footer.jsp" %>

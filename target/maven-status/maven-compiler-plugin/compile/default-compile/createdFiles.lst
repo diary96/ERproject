@@ -59,6 +59,7 @@ com\er\erproject\model\PaiementTS.class
 com\er\erproject\action\HistoriqueAction.class
 com\er\erproject\model\Ventillation.class
 com\er\erproject\service\ReflectService.class
+com\er\erproject\action\UserAction.class
 com\er\erproject\model\BonCommande.class
 com\er\erproject\dao\HibernateDao.class
 com\er\erproject\data\ReferenceType.class
@@ -70,6 +71,7 @@ com\er\erproject\model\TacheTSHorsCatalogue.class
 com\er\erproject\model\Parametre.class
 com\er\erproject\action\AccueilAction.class
 com\er\erproject\model\TacheSoumissionCatalogue.class
+com\er\erproject\util\ServiceUtil.class
 com\er\erproject\model\TypeFichier.class
 com\er\erproject\util\DateUtil.class
 com\er\erproject\service\ArchiveService.class

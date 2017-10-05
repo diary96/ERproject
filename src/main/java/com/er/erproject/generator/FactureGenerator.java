@@ -9,7 +9,6 @@ import com.er.erproject.data.PathData;
 import com.er.erproject.model.BonCommande;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.TacheModel;
-import com.er.erproject.model.Ventillation;
 import com.er.erproject.model.VentillationModel;
 import com.er.erproject.util.ConvertionLettre;
 import com.er.erproject.util.DateUtil;
@@ -42,7 +41,17 @@ public class FactureGenerator {
     private VentillationModel ventillation;
     private BonCommande bc;
     private String condition;
+    private String responsable;
 
+    public String getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
+    }
+    
+    
     public String getCondition() {
         return condition;
     }
@@ -96,11 +105,12 @@ public class FactureGenerator {
         Test test = new Test();
     }
 
-    public FactureGenerator(Offre offre, VentillationModel ventillation,BonCommande bc,String condition) throws Exception {
+    public FactureGenerator(Offre offre, VentillationModel ventillation,BonCommande bc,String condition,String responsable) throws Exception {
         this.setOffre(offre);
         this.setVentillation(ventillation);
         this.setBc(bc);
         this.setCondition(condition);
+        this.setResponsable(responsable);
         Document document = new Document();
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(PathData.PATH_PDF_FACTURE));
         document.open();
@@ -161,7 +171,7 @@ public class FactureGenerator {
 
         table.setWidthPercentage(100);
 
-        table.setWidths(new float[]{6, 2,3, 1, 2});
+        table.setWidths(new float[]{5, 2,2, 2, 2});
 
         PdfPCell c1;
 
@@ -416,7 +426,7 @@ public class FactureGenerator {
         addEmptyLine(information,1);
         information.add(new Phrase("Le Responsable Administratif et Financier",smallFont));
         addEmptyLine(information,6);
-        information.add(new Phrase("RAKOTONIRINA Beby",smallFontBold));
+        information.add(new Phrase(this.responsable,smallFontBold));
         information.setAlignment(Element.ALIGN_CENTER);
         addEmptyLine(information,1);
         document.add(information);

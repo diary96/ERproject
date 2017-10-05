@@ -12,6 +12,16 @@ import com.er.erproject.data.Reference;
  * @author diary
  */
 public class Catalogue extends CatalogueModel{
+    private boolean cacher;
+
+    public boolean isCacher() {
+        return cacher;
+    }
+
+    public void setCacher(boolean cacher) {
+        this.cacher = cacher;
+    }
+    
     public Catalogue(){
         this.setReference(Reference.CATALOGUE);
     }

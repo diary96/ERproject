@@ -14,8 +14,15 @@
     <div class="x_content">
 
         <div role="tabpanel" class="tab-pane fade active in" id="init" aria-labelledby="home-tab">
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Responsable Financier : <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input  id="responsable" value="<s:property value="getResponsable()"/>"  type="text" required="required" class="form-control col-md-7 col-xs-12">
+                </div>
+            </div><div class="clearfix"></div><br>
             <s:iterator value="ventillations">
-                <a href="downloadFacture?idOffre=<s:property value="getIdOffre()"/>&referenceVentilation=<s:property value="getAllReference()"/>" class="btn btn-primary">Telecharger facture : <s:property value="getPourcentage()"/>%</a>
+                <button id="<s:property value="getAllReference()"/>" class="download btn btn-primary">Telecharger facture : <s:property value="getPourcentage()"/>%</button>
             </s:iterator>
             <p><u>Condition de r&edot;glement : </u><s:property value="getCondition()"/></p>
             <table id="table" cellspacing="1" class="table table-bordered">
@@ -87,7 +94,18 @@
     </div>
 
 </div>
-
+<script>
+    jQuery(document).ready(function ()
+    {
+        $('.download').on('click', function ()
+        {
+            if (confirm("Voulez-vous vraiment telecharger la facture ?")) {
+                window.location.replace("downloadFacture?idOffre=<s:property value="getIdOffre()"/>&referenceVentilation="+this.getAttribute('id')+"&responsable="+document.getElementById('responsable').value);
+                
+            }
+        });
+    });
+</script>
 <script>
     $(document).ready(function () {
         $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
@@ -108,11 +126,6 @@
             $(window).scrollTop(sessionStorage.scrollTop);
         }
     });
-//tu recupere la valeur dans lurl
-
-
-
-
 </script>
 
 <%@include file="template/default/footer.jsp" %>

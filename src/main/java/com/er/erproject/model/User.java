@@ -5,6 +5,7 @@
  */
 package com.er.erproject.model;
 
+import com.er.erproject.data.Reference;
 import java.util.Date;
 
 /**
@@ -18,8 +19,18 @@ public class User extends BaseModel{
     private String CIN;
     private String matricule; 
     private Date dateEmbauche;
-    private String password; 
+    private String password;
+    private int niveau; 
 
+    public int getNiveau() {
+        return niveau;
+    }
+
+    public void setNiveau(int niveau) {
+        this.niveau = niveau;
+    }
+
+    
     public String getPassword() {
         return password;
     }
@@ -76,6 +87,9 @@ public class User extends BaseModel{
 
     public void setDateEmbauche(Date dateEmbauche) {
         this.dateEmbauche = dateEmbauche;
+    }
+    public User(){
+        this.setReference(Reference.USER);
     }
     
 }

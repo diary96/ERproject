@@ -14,6 +14,7 @@ import com.er.erproject.util.UtilConvert;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -76,6 +77,7 @@ public class CatalogueService extends ServiceModel {
             }
             pagination.setMax(realTotal);
             Criteria criteria = session.createCriteria(Catalogue.class, "catalogue");
+            criteria.add(Restrictions.eq("catalogue.cacher", false));
             if (order != null && order.compareTo("") != 0) {
                 criteria.addOrder(Order.asc(order));
             }
@@ -173,9 +175,58 @@ public class CatalogueService extends ServiceModel {
             throw new Exception("La reference inserer n'est pas de type de Catalogue");
         }
     }
-
+    
+    public static void update(Catalogue catalogue,Session session)throws Exception{
+        try{
+            session.update(catalogue);
+        }catch(Exception e ){
+            e.printStackTrace();
+            throw new Exception("impossible de mettre a jour le catalogue "+e.getMessage());
+        }
+    }
+    public static void save(Catalogue catalogue,Session session)throws Exception{
+        try{
+            session.save(catalogue);
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception("impossible de sauvegarder le catalogue "+e.getMessage());
+        }
+    }
+    
+    public void update(Catalogue catalogue)throws Exception{
+        Session session = null; 
+        Transaction tr = null;
+        try{
+            session = this.hibernateDao.getSessionFactory().openSession();
+            tr = session.beginTransaction();
+            Catalogue catalogueOld = new Catalogue(); 
+            catalogueOld.setId(catalogue.getId());
+            this.hibernateDao.findById(catalogueOld);
+            if(catalogueOld.getPrixUnitaire()!=catalogue.getPrixUnitaire()){
+                catalogue.setCacher(true);
+                
+                Catalogue newCatalogue = new Catalogue(); 
+                newCatalogue.setDesignation(catalogue.getDesignation());
+                newCatalogue.setPrixUnitaire(catalogue.getPrixUnitaire());
+                newCatalogue.setIsAdmin(false);
+                newCatalogue.setUnite(catalogue.getUnite());
+                newCatalogue.setCacher(false);
+                CatalogueService.save(newCatalogue, session);
+            }
+            CatalogueService.update(catalogue, session);
+            tr.commit();
+        }catch(Exception e){
+            e.printStackTrace();
+            if(tr!=null)tr.rollback();
+            throw new Exception("impossible de mettre a jour le catalogue "+catalogue.getAllReference()+" cause "+e.getMessage());
+        }finally{
+            if(session!=null)session.close();
+        }
+    }
+    
     public void save(Catalogue catalogue) throws Exception {
         try {
+            catalogue.setCacher(false);
             this.hibernateDao.save(catalogue);
         } catch (Exception e) {
             throw new Exception("impossible de sauvegarder le catalogue dans la base :" + e.getMessage() + " veuillez informer l'administrateur");
