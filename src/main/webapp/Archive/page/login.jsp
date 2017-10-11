@@ -61,8 +61,8 @@
                             <div class="form-bottom">
 			                    <form role="form" action="login" method="post" class="login-form">
 			                    	<div class="form-group">
-			                    		<label class="sr-only" for="form-username">Email</label>
-			                        	<input type="text" name="login" placeholder="Email" class="form-username form-control" id="form-username">
+			                    		<label class="sr-only" for="form-username">Matricule</label>
+			                        	<input type="text" name="login" placeholder="Matricule" class="form-username form-control" id="form-username">
 			                        </div>
 			                        <div class="form-group">
 			                        	<label class="sr-only" for="form-password">Code PIN</label>

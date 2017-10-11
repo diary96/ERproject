@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import jxl.Cell;
 import jxl.CellView;
 
@@ -42,141 +43,8 @@ import jxl.write.WriteException;
  * @author diary
  */
 public class XlsGenerator {
-
-    public static void main(String[] args)
-            throws BiffException, IOException, WriteException {
-        WritableWorkbook wworkbook;
-        wworkbook = Workbook.createWorkbook(new File("E:/University/xlsExport/output.xls"));
-        WritableSheet wsheet = wworkbook.createSheet("Devise", 0);
-
-        WritableFont cellFont = new WritableFont(WritableFont.ARIAL, 10);
-        cellFont.setBoldStyle(WritableFont.BOLD);
-
-        WritableCellFormat titleFormat = new WritableCellFormat(cellFont);
-        setAllBorder(titleFormat);
-        titleFormat.setAlignment(Alignment.CENTRE);
-
-        WritableCellFormat normalBoltFormat = new WritableCellFormat(cellFont);
-        normalBoltFormat.setAlignment(Alignment.LEFT);
-
-        WritableCellFormat normalFormat = new WritableCellFormat();
-        normalFormat.setAlignment(Alignment.LEFT);
-
-        WritableCellFormat extraFormat = new WritableCellFormat(cellFont);
-//        setAllBorder(extraFormat);
-        extraFormat.setAlignment(Alignment.RIGHT);
-
-        WritableCellFormat extraBorderFormat = new WritableCellFormat(cellFont);
-        setAllBorder(extraBorderFormat);
-        extraBorderFormat.setAlignment(Alignment.RIGHT);
-
-        WritableCellFormat normal = new WritableCellFormat();
-        setAllBorder(normal);
-        normal.setAlignment(Alignment.LEFT);
-
-        WritableCellFormat argentFormat = new WritableCellFormat();
-        setAllBorder(argentFormat);
-        argentFormat.setAlignment(Alignment.RIGHT);
-
-        WritableCellFormat centerFormat = new WritableCellFormat();
-        setAllBorder(centerFormat);
-        centerFormat.setAlignment(Alignment.CENTRE);
-        
-        File imageFile = new File("C:/Users/diary/Documents/Develeppoment/Logo/ER_LOGO.jpg");
-        BufferedImage input = ImageIO.read(imageFile);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(input, "PNG", baos);
-        wsheet.addImage(new WritableImage(1, 0, input.getWidth() / 250,
-                input.getHeight() / 70, baos.toByteArray()));
-        
-        List<Label> labels = new ArrayList();
-        labels.add(new Label(1, 5, "LALAS CYBER AMBATOROKA", normalBoltFormat));
-        labels.add(new Label(1, 6, "REC-20160906-0306-fo", normalFormat));
-        labels.add(new Label(1, 7, "SOUM05", normal));
-        labels.add(new Label(0, 8, "N°", titleFormat));
-        labels.add(new Label(1, 8, "DENOMINATION", titleFormat));
-        labels.add(new Label(2, 8, "U", titleFormat));
-        labels.add(new Label(3, 8, "QTE", titleFormat));
-        labels.add(new Label(4, 8, "PU", titleFormat));
-        labels.add(new Label(5, 8, "MONTANT", titleFormat));
-
-        List<Label> denominations = new ArrayList();
-        denominations.add(new Label(1, 9, "Ouverture d'une chambre soudee", normal));
-        denominations.add(new Label(1, 10, "Soudure d'une chambre", normal));
-        denominations.add(new Label(1, 11, "Total HT", extraFormat));
-        denominations.add(new Label(1, 12, "TVA", extraFormat));
-        denominations.add(new Label(1, 13, "TOTAL TTC", extraFormat));
-
-        List<Number> num = new ArrayList();
-        num.add(new Number(0, 9, 1, centerFormat));
-        num.add(new Number(0, 10, 2, centerFormat));
-        
-        List<Label> unites = new ArrayList();
-        unites.add(new Label(2, 9, "U", centerFormat));
-        unites.add(new Label(2, 10, "U", centerFormat));
-
-        List<Number> qte = new ArrayList();
-        qte.add(new Number(3, 9, 3, centerFormat));
-        qte.add(new Number(3, 10, 1, centerFormat));
-
-        List<Number> pu = new ArrayList();
-        pu.add(new Number(4, 9, 8000, argentFormat));
-        pu.add(new Number(4, 10, 70000, argentFormat));
-
-        List<Number> montant = new ArrayList();
-        montant.add(new Number(5, 9, 24000, argentFormat));
-        montant.add(new Number(5, 10, 70000, argentFormat));
-        montant.add(new Number(5, 11, 94000, extraBorderFormat));
-        montant.add(new Number(5, 12, 62000, extraBorderFormat));
-        montant.add(new Number(5, 13, 156000, extraBorderFormat));
-        
-        labels.add(new Label(2,15,"Antananarivo le, 12 Septembre 2016"));
-        
-        File imageFileLogo = new File("C:/Users/diary/Documents/Develeppoment/Logo/signature.gif");
-        BufferedImage inputLogo = ImageIO.read(imageFileLogo);
-        ByteArrayOutputStream baosLogo = new ByteArrayOutputStream();
-        ImageIO.write(inputLogo, "PNG", baosLogo);
-        wsheet.addImage(new WritableImage(4, 17, inputLogo.getWidth() / 100,
-                inputLogo.getHeight() / 30, baosLogo.toByteArray()));
-        
-        for (int i = 0; i < num.size(); i++) {
-            wsheet.addCell(num.get(i));
-
-        }
-        for (int i = 0; i < labels.size(); i++) {
-            wsheet.addCell(labels.get(i));
-
-        }
-        for (int i = 0; i < denominations.size(); i++) {
-            wsheet.addCell(denominations.get(i));
-        }
-        for (int i = 0; i < unites.size(); i++) {
-            wsheet.addCell(unites.get(i));
-        }
-        for (int i = 0; i < qte.size(); i++) {
-            wsheet.addCell(qte.get(i));
-        }
-
-        for (int i = 0; i < pu.size(); i++) {
-            wsheet.addCell(pu.get(i));
-        }
-        for (int i = 0; i < montant.size(); i++) {
-            wsheet.addCell(montant.get(i));
-        }
-        sheetAutoFitColumns(wsheet);
-        wworkbook.write();
-        wworkbook.close();
-
-        Workbook workbook = Workbook.getWorkbook(new File("E:/University/xlsExport/output.xls"));
-//      Sheet sheet = workbook.getSheet(0);
-//      Cell cell1 = sheet.getCell(0, 2);
-//     
-//      Cell cell2 = sheet.getCell(3, 4);
-
-        workbook.close();
-
-    }
-    public static void  generateXLS(Offre offre)throws Exception{
+    
+    public static void  generateXLS(Offre offre,HttpServletRequest servletRequest)throws Exception{
         if(offre.getTacheinitials()==null)throw new Exception("Offre non initialiser");
         if(offre.getSoumission()==null)throw new Exception("Offre non initialiser");
         
@@ -185,7 +53,7 @@ public class XlsGenerator {
                 
         
         WritableWorkbook wworkbook;
-        wworkbook = Workbook.createWorkbook(new File(PathData.PATH_XLS_DEVIS));
+        wworkbook = Workbook.createWorkbook(new File(servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_XLS_DEVIS));
         WritableSheet wsheet = wworkbook.createSheet("Devise", 0);
 
         WritableFont cellFont = new WritableFont(WritableFont.ARIAL, 10);
@@ -221,11 +89,11 @@ public class XlsGenerator {
         setAllBorder(centerFormat);
         centerFormat.setAlignment(Alignment.CENTRE);
         
-        File imageFile = new File("C:/Users/diary/Documents/Develeppoment/Logo/ER_LOGO.jpg");
+        File imageFile = new File(servletRequest.getSession().getServletContext().getRealPath("/")+"Archive/data/Logo/ER_LOGO.jpg");
         BufferedImage input = ImageIO.read(imageFile);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(input, "PNG", baos);
-        wsheet.addImage(new WritableImage(1, 0, input.getWidth() / 250,
+        wsheet.addImage(new WritableImage(1, 0, input.getWidth() / 750,
                 input.getHeight() / 70, baos.toByteArray()));
         
         List<Label> labels = new ArrayList();
@@ -333,7 +201,7 @@ public class XlsGenerator {
         dateFormat = new SimpleDateFormat("EEEE dd MMMMM yyyy");
         labels.add(new Label(2,depart,"Antananarivo le, "+dateFormat.format(date)));
         depart++;
-        File imageFileLogo = new File("C:/Users/diary/Documents/Develeppoment/Logo/signature.gif");
+        File imageFileLogo = new File(servletRequest.getSession().getServletContext().getRealPath("/")+"Archive/data/Logo/signature.gif");
         BufferedImage inputLogo = ImageIO.read(imageFileLogo);
         ByteArrayOutputStream baosLogo = new ByteArrayOutputStream();
         ImageIO.write(inputLogo, "PNG", baosLogo);
@@ -368,10 +236,11 @@ public class XlsGenerator {
         wworkbook.write();
         wworkbook.close();
 
-        Workbook workbook = Workbook.getWorkbook(new File(PathData.PATH_XLS_DEVIS));
+        Workbook workbook = Workbook.getWorkbook(new File(servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_XLS_DEVIS));
         workbook.close();
     }
-    public static void  generateFactureXLS(Offre offre)throws Exception{
+    
+    public static void  generateFactureXLS(Offre offre,HttpServletRequest servletRequest)throws Exception{
         if(offre.getTacheinitials()==null)throw new Exception("Offre non initialiser");
         if(offre.getSoumission()==null)throw new Exception("Offre non initialiser");
         if(offre.getStatu()<StatuReference.FACTURATION)throw new Exception("L'offre ne peut pas etre facturisé");
@@ -381,7 +250,7 @@ public class XlsGenerator {
                 
         
         WritableWorkbook wworkbook;
-        wworkbook = Workbook.createWorkbook(new File(PathData.PATH_XLS_FACTURE));
+        wworkbook = Workbook.createWorkbook(new File(servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_XLS_FACTURE));
         WritableSheet wsheet = wworkbook.createSheet("Devise", 0);
 
         WritableFont cellFont = new WritableFont(WritableFont.ARIAL, 10);
@@ -417,7 +286,7 @@ public class XlsGenerator {
         setAllBorder(centerFormat);
         centerFormat.setAlignment(Alignment.CENTRE);
         
-        File imageFile = new File("C:/Users/diary/Documents/Develeppoment/Logo/ER_LOGO.jpg");
+        File imageFile = new File(servletRequest.getSession().getServletContext().getRealPath("/")+"Archive/data/Logo/ER_LOGO.jpg");
         BufferedImage input = ImageIO.read(imageFile);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(input, "PNG", baos);
@@ -534,7 +403,7 @@ public class XlsGenerator {
         dateFormat = new SimpleDateFormat("EEEE dd MMMMM yyyy");
         labels.add(new Label(3,depart,"Antananarivo le, "+dateFormat.format(date)));
         depart++;
-        File imageFileLogo = new File("C:/Users/diary/Documents/Develeppoment/Logo/signature.gif");
+        File imageFileLogo = new File("Archive/data/Logo/signature.gif");
         BufferedImage inputLogo = ImageIO.read(imageFileLogo);
         ByteArrayOutputStream baosLogo = new ByteArrayOutputStream();
         ImageIO.write(inputLogo, "PNG", baosLogo);
@@ -572,7 +441,7 @@ public class XlsGenerator {
         wworkbook.write();
         wworkbook.close();
 
-        Workbook workbook = Workbook.getWorkbook(new File(PathData.PATH_XLS_FACTURE));
+        Workbook workbook = Workbook.getWorkbook(new File(servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_XLS_FACTURE));
         workbook.close();
     }
 
@@ -580,10 +449,12 @@ public class XlsGenerator {
         centerFormat.setBorder(Border.ALL, BorderLineStyle.THIN, Colour.BLACK);
 
     }
+    
     private static int plus(int dep,int value){
         dep=dep+value;
         return dep;
     }
+   
     private static void sheetAutoFitColumns(WritableSheet sheet) {
         for (int i = 0; i < sheet.getColumns(); i++) {
             Cell[] cells = sheet.getColumn(i);

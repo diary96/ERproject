@@ -58,36 +58,52 @@
 
                         <div class="clearfix"></div>
                         <div class="x_content">
-
                             <br>
                             <form action="savePhoto" method="POST" id="demo-form2" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="" enctype="multipart/form-data">
-
-
+                                <h4>DMS (degrés, minutes, secondes)*</h4>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Latitude <span class="required">*</span>
-                                    </label>
-                                    <input name="referenceTravaux" value="<s:property value="getReferenceTravaux()"/>" style="display:none">
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input value="<s:property value="getLatitude()" />" id="designation" name="latitude" type="text" required="required" class="form-control col-md-7 col-xs-12" >
-                                        <select class="form-control" name="latitudeM">
-                                            <option value="S">SUD</option>
-                                            <option value="N">NORD</option>
-                                            
-                                        </select>
+                                    <label class="col-md-3 control-label" for="latitude">Latitude</label>
+                                    <div class="col-md-9">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="latitudeM" value="S" id="sud" checked="">    
+                                            S
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="latitudeM" value="N" id="nord" >
+                                            N
+                                        </label>     
+                                        
+                                        <input class="form-control sexagesimal" value="<s:property value="getLatitude_degres()"/>" name="latitude_degres" type="textbox">
+                                        <label for="latitude_degres">°</label>
+                                        <input class="form-control sexagesimal" value="<s:property value="getLatitude_minutes()"/>" name="latitude_minutes" type="textbox">
+                                        <label for="latitude_minutes">'</label>
+                                        <input class="form-control sexagesimalsec" value="<s:property value="getLatitude_secondes()"/>" name="latitude_secondes" type="textbox">
+                                        <label for="latitude_secondes">''</label>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Longitude <span class="required">*</span>
-                                    </label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input value="<s:property value="getLongitude()" />" id="designation" name="longitude" type="text" required="required" class="form-control col-md-7 col-xs-12" >
-                                        <select class="form-control" name="longitudeM">
-                                            <option value="E">EST</option>
-                                            <option value="O">OUEST</option>
-                                            
-                                        </select>
+                                    <label class="col-md-3 control-label" for="longitude">Longitude</label>
+                                    <div class="col-md-9">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="longitudeM" value="E" id="E" checked="">
+                                            E
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="longitudeM" value="O" id="O">    
+                                            O
+                                        </label>
+                                        <input class="form-control sexagesimal" value="<s:property value="getLongitude_degres()"/>" name="longitude_degres" type="textbox">
+                                        <label for="longitude_degres">°</label>
+                                        <input class="form-control sexagesimal" value="<s:property value="getLongitude_minutes()"/>" name="longitude_minutes" type="textbox">
+                                        <label for="longitude_minutes">'</label>
+                                        <input class="form-control sexagesimalsec" value="<s:property value="getLongitude_secondes()"/>" name="longitude_secondes" type="textbox">
+                                        <label for="longitude_secondes">''</label>
                                     </div>
                                 </div>
+                                
+                                <input name="referenceTravaux" value="<s:property value="getReferenceTravaux()"/>" style="display:none">
+                                    
+                                
 
                                 
                                 <div class="form-group">

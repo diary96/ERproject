@@ -168,7 +168,11 @@ public class UserAction extends ActionModel{
     public String newUser() throws Exception{
         this.setSessionUser();
         if(this.user==null)return Action.LOGIN;
-        if(this.user.getNiveau()<5)return Action.NONE;
+        if(user.getId()!=this.getIdUser()){
+            if(this.user.getNiveau()<5){
+                return Action.NONE;
+            }
+        }
         try{
             this.titre = "Gestion d'utilisateur";
             this.information = "Nouveau utilisateur";
@@ -193,7 +197,11 @@ public class UserAction extends ActionModel{
     public String saveUser() throws Exception{
         this.setSessionUser();
         if(this.user==null)return Action.LOGIN;
-        if(this.user.getNiveau()<5)return Action.NONE;
+        if(user.getId()!=this.getIdUser()){
+            if(this.user.getNiveau()<5){
+                return Action.NONE;
+            }
+        }
         User userTemp;
         try{
             if(!this.checkerData(this.nom))throw new Exception("Veuillez remplir le champ du nom");

@@ -24,9 +24,11 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 
 /**
  *
@@ -34,7 +36,7 @@ import org.hibernate.criterion.Restrictions;
  */
 public class OffreService extends ServiceModel {
 
-    private int getSizeRow(List<String[]> arg,Class classe,Session session) throws Exception {       
+    private int getSizeRow(List<String[]> arg,Class classe,String bc,String bcTs,Session session) throws Exception {       
         try {
             Criteria criteria = session.createCriteria(classe, "offre");
             for (int i = 0; i < arg.size(); i++) {
@@ -69,6 +71,28 @@ public class OffreService extends ServiceModel {
                     } catch (Exception e) {
                         criteria.add(Restrictions.between(temp[0], Double.valueOf(temp[1]), Double.valueOf(temp[2])));
                     }
+                }
+            }
+            if(bc!=null&&bc.compareTo("")!=0){
+                DetachedCriteria subCriteria = DetachedCriteria.forClass(Soumission.class, "soumission");
+                subCriteria.createAlias("soumission.bonCommande", "bonCommande");
+                subCriteria.add(Restrictions.eqProperty("soumission.offre.id","offre.id"));
+                subCriteria.setProjection(Projections.count("soumission.bonCommande"));
+                if(bc.compareToIgnoreCase("true")==0){ 
+                   criteria.add(Subqueries.gt(Long.valueOf("0"),subCriteria));
+                }else{
+                    criteria.add(Subqueries.le(Long.valueOf("0"),subCriteria));
+                }             
+            }      
+            if(bcTs!=null&&bcTs.compareTo("")!=0){
+                DetachedCriteria subCriteria = DetachedCriteria.forClass(TravauxSupplementaire.class, "soumission");
+                subCriteria.createAlias("soumission.bonCommande", "bonCommande");
+                subCriteria.add(Restrictions.eqProperty("soumission.offre.id","offre.id"));
+                subCriteria.setProjection(Projections.count("soumission.bonCommande"));
+                if(bcTs.compareToIgnoreCase("true")==0){ 
+                   criteria.add(Subqueries.gt(Long.valueOf("0"),subCriteria));
+                }else{
+                    criteria.add(Subqueries.le(Long.valueOf("0"),subCriteria));
                 }
             }
             criteria.setProjection(Projections.rowCount());
@@ -107,6 +131,7 @@ public class OffreService extends ServiceModel {
         }
         return reponse;
     }
+    
     public List<Offre> filtreBCTS(List<Offre> offres, boolean test){
         BonCommandeService bonCommandeService = new BonCommandeService();
         bonCommandeService.setHibernateDao(hibernateDao);
@@ -138,7 +163,7 @@ public class OffreService extends ServiceModel {
         Session session = null;
         try{
             session = hibernateDao.getSessionFactory().openSession();
-            int page = this.getSizeRow(arg,Offre.class,session);
+            int page = this.getSizeRow(arg,Offre.class,bc,bcTs,session);
             int realTotal = 0;
             if (page != 0) {
                 realTotal = page / pagination.getTaillePage();
@@ -199,19 +224,31 @@ public class OffreService extends ServiceModel {
                     }
                 }
             }
-            List<Offre> list = criteria.list();
-            for (int i = 0; i < list.size(); i++) {
-                Offre tempOffre = list.get(i);
-                tempOffre.setTypeOffre(this.findTypeOffre(tempOffre));
-            }
+            
+            
             if(bc!=null&&bc.compareTo("")!=0){
-                if(bc.compareToIgnoreCase("true")==0)list = this.filtreBC(list, true);
-                else list = this.filtreBC(list, false);
-            }
+                DetachedCriteria subCriteria = DetachedCriteria.forClass(Soumission.class, "soumission");
+                subCriteria.createAlias("soumission.bonCommande", "bonCommande");
+                subCriteria.add(Restrictions.eqProperty("soumission.offre.id","offre.id"));
+                subCriteria.setProjection(Projections.count("soumission.bonCommande"));
+                if(bc.compareToIgnoreCase("true")==0){ 
+                   criteria.add(Subqueries.gt(Long.valueOf("0"),subCriteria));
+                }else{
+                    criteria.add(Subqueries.le(Long.valueOf("0"),subCriteria));
+                }             
+            }      
             if(bcTs!=null&&bcTs.compareTo("")!=0){
-                if(bcTs.compareToIgnoreCase("true")==0)list = this.filtreBCTS(list, true);
-                else list = this.filtreBCTS(list, false);
+                DetachedCriteria subCriteria = DetachedCriteria.forClass(TravauxSupplementaire.class, "soumission");
+                subCriteria.createAlias("soumission.bonCommande", "bonCommande");
+                subCriteria.add(Restrictions.eqProperty("soumission.offre.id","offre.id"));
+                subCriteria.setProjection(Projections.count("soumission.bonCommande"));
+                if(bcTs.compareToIgnoreCase("true")==0){ 
+                   criteria.add(Subqueries.gt(Long.valueOf("0"),subCriteria));
+                }else{
+                    criteria.add(Subqueries.le(Long.valueOf("0"),subCriteria));
+                }
             }
+            List<Offre> list = criteria.list();
             return list;
         }catch(Exception e){
             e.printStackTrace();

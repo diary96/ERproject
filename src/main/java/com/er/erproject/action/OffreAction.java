@@ -5,6 +5,7 @@
  */
 package com.er.erproject.action;
 
+import com.er.erproject.data.PathData;
 import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
 import com.er.erproject.data.StatuReference;
@@ -347,8 +348,8 @@ public class OffreAction extends ActionModel {
             if(!this.checkerData(lieu))throw new Exception("Vueillez remplir le champ du lieu");
             if(!this.checkerData(er))throw new Exception("Vueillez remplir le champ du responsable de l'entreprise");
             if(!this.checkerData(telma))throw new Exception("Vueillez remplir le champ du responsable de telma");
-            PVGenerator pv = new PVGenerator(offre, DateUtil.convert(date), er, telma, lieu);
-            File fileToDownload = new File("E:/Stage/ER/ERproject/src/main/webapp/Archive/data/PDF/pv_generate.pdf");
+            PVGenerator pv = new PVGenerator(offre, DateUtil.convert(date), er, telma, lieu,this.servletRequest);
+            File fileToDownload = new File(this.servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PDF_PV);
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);
             historique = new Historique();

@@ -196,7 +196,7 @@ public class BonCommandeAction extends ActionModel{
         }catch(Exception e){
             return Action.NONE;
         }
-        
+        FileUtil fileUtil = new FileUtil(this.servletRequest);
         try{
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");              
             if (!this.checkerData(this.service))throw new Exception("Veuillez remplir le champ de service");
@@ -207,7 +207,7 @@ public class BonCommandeAction extends ActionModel{
             BonCommande bonCommande;
             if(idBonCommande==0){
                 if(this.bc==null)throw new Exception("Aucun bon de commande inserer");
-                FileUtil.saveBC(bc,FileUtil.getEx(this.bcFileName));
+                fileUtil.saveBC(bc,FileUtil.getEx(this.bcFileName));
                 
                 bonCommande = new BonCommande(); 
                 bonCommande.setService(this.getService()); 
@@ -217,7 +217,7 @@ public class BonCommandeAction extends ActionModel{
                 bonCommande.setReferenceInterieur(this.getReferenceInterieure());
                 bonCommande.setDateajout(Calendar.getInstance().getTime());
                 bonCommande.setPath("Archive/data/bc/"+bc.getName()+"."+FileUtil.getEx(this.bcFileName));
-                this.bonCommandeService.save(bonCommande, offre, type);
+                this.bonCommandeService.save(bonCommande, offre, type,this.servletRequest);
                 
                 historique = new Historique();
                 historique.setUser(user);
@@ -235,7 +235,7 @@ public class BonCommandeAction extends ActionModel{
                 bonCommande.setNumeroBC(this.getNumero());
                 bonCommande.setReferenceInterieur(this.getReferenceInterieure());
                 if(this.bc!=null){
-                    FileUtil.saveBC(bc,FileUtil.getEx(this.bcFileName));                   
+                    fileUtil.saveBC(bc,FileUtil.getEx(this.bcFileName));                   
                     bonCommande.setPath("Archive/data/bc/"+bc.getName()+"."+FileUtil.getEx(this.bcFileName));                   
                 }
                 bonCommandeService.update(bonCommande,offre);

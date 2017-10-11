@@ -15,6 +15,7 @@ import com.er.erproject.model.TypeFichier;
 import com.er.erproject.util.FileUtil;
 import java.util.Calendar;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -33,8 +34,9 @@ public class BonCommandeService extends ServiceModel {
         }
     }
 
-    public void save(BonCommande bonCommande, Offre offre, short type) throws Exception {
+    public void save(BonCommande bonCommande, Offre offre, short type,HttpServletRequest servletRequest) throws Exception {
         BonCommande tempBC = null;
+        FileUtil fileUtil = new FileUtil(servletRequest);
         if (type == VentilationData.SOUMISSION) {
             if (offre.getSoumission() == null) {
                 SoumissionService soumissionService = new SoumissionService();
@@ -44,7 +46,7 @@ public class BonCommandeService extends ServiceModel {
             Soumission temp = offre.getSoumission();
             tempBC = this.find(temp);
             if (tempBC != null) {
-                FileUtil.deleteFile(tempBC.getPath());
+                fileUtil.deleteFile(tempBC.getPath());
                 this.hibernateDao.delete(tempBC);
             }
             this.save(bonCommande);
@@ -68,7 +70,7 @@ public class BonCommandeService extends ServiceModel {
             TravauxSupplementaire temp = offre.getTravauxSupplementaire();
             tempBC = this.find(temp);
             if (tempBC != null) {
-                FileUtil.deleteFile(tempBC.getPath());
+                fileUtil.deleteFile(tempBC.getPath());
                 this.hibernateDao.delete(tempBC);
             }
             this.save(bonCommande);

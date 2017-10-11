@@ -5,6 +5,8 @@
  */
 package com.er.erproject.model;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author diary
@@ -86,6 +88,24 @@ public class Soumission extends BaseModel {
 
     public double getTotal() {
         return total;
+    }
+    public String getTotalString(){
+        return this.getValeurString(getTotal());
+    }
+    public String getValeurRemiseString(){
+         return this.getValeurString(getValeurRemise());
+    }
+    public String getValeurApresRemiseString(){
+         return this.getValeurString(getTotal()-getValeurRemise());
+    }
+    public String getValeurTVAString(){
+        return this.getValeurString(this.getValeurTVA());
+    }
+    public String getTotalTTCString(){
+        return this.getValeurString(this.getTotalTTC());
+    }
+    private String getValeurString(double data){
+         return new BigDecimal(data).toPlainString();
     }
 
     public void setTotal(double total) {

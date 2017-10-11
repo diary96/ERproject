@@ -6,7 +6,8 @@
 <struts>
 
     <constant name="struts.devMode" value="true" />
-
+    <constant name="struts.multipart.maxSize" value="30000000" />
+    
     <package name="action" namespace="/" extends="struts-default">
         <action name="index" class="com.er.erproject.action.IndexAction" method="load">
             <result name="error" type="redirect">accueil</result>
@@ -131,7 +132,12 @@
                 <param name="bufferSize">1024</param>
             </result>
             <result name="login" type="redirect">index</result> 
-            <result name="error" type="redirect">${url}</result> 
+            <result name="error" type="redirectAction">
+                <param name="actionName">facturation</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result>
             <result name="none" type="redirect">accueil</result> 
         </action>
         <action name="downloadFactureTS" class="com.er.erproject.action.FacturationAction" method="downloadFactureTs">
@@ -142,7 +148,13 @@
                 <param name="bufferSize">1024</param>
             </result>
             <result name="login" type="redirect">index</result> 
-            <result name="error" type="redirect">${url}</result> 
+            <result name="error" type="redirectAction">
+                <param name="actionName">facturationTS</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result>
+           
             <result name="none" type="redirect">accueil</result> 
         </action>
         <action name="saveParametre" class="com.er.erproject.action.OffreAction" method="saveParametre">
@@ -236,10 +248,22 @@
             <result name="none" type="redirect">accueil</result> 
         </action>
         <action name="saveTache" class="com.er.erproject.action.GestionTravauxAction" method="saveTache">
-            <result name="success" type="redirect">${url}</result> 
+            <result name="success" type="redirectAction">
+                <param name="actionName">newTache</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="url">${url}</param>
+                <param name="reussite">${reussite}</param>
+                
+            </result> 
+            <result name="error" type="chain">
+                <param name="actionName">newTache</param>
+                <param name="idOffre">${idOffre}</param>
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+                <param name="url">${url}</param>
+            </result> 
             <result name="login" type="redirect">index</result> 
-            <result name="error" type="redirect">${url}</result> 
-            <result name="none" type="redirect">accueil</result> 
+            <result name="none" type="redirect">accueil</result>     
         </action>
         <action name="saveMateriel" class="com.er.erproject.action.MateriauxAction" method="save">
             <result name="success" type="redirect">${url}</result> 
@@ -266,6 +290,12 @@
             <result name="none" type="redirect">accueil</result> 
         </action>
         <action name="allEffect" class="com.er.erproject.action.GestionTravauxAction" method="all">
+            <result name="success" type="redirect">${url}</result> 
+            <result name="login" type="redirect">index</result> 
+            <result name="error" type="redirect">${url}</result> 
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="allOffreEffect" class="com.er.erproject.action.GestionTravauxAction" method="allOffre">
             <result name="success" type="redirect">${url}</result> 
             <result name="login" type="redirect">index</result> 
             <result name="error" type="redirect">${url}</result> 
@@ -350,8 +380,8 @@
             <result name="none" type="redirect">accueil</result> 
         </action>
         <action name="saveArchive" class="com.er.erproject.action.ArchiveAction" method="save">
-           <interceptor-ref name="fileUpload"/> 
-            <interceptor-ref name="defaultStack"></interceptor-ref>     
+            <interceptor-ref name="fileUpload"/> 
+            <interceptor-ref name="defaultStack"/>    
             <result name="success" type="redirectAction">
                 <param name="actionName">listeArchive</param>
                 <param name="idOffre">${idOffre}</param>

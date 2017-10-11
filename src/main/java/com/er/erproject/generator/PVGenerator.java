@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -81,16 +82,17 @@ public class PVGenerator {
         this.offre = offre;
     }
 
-    public PVGenerator(Offre offre, Date date, String er, String telma, String lieu) throws Exception {
+    public PVGenerator(Offre offre, Date date, String er, String telma, String lieu,HttpServletRequest servletRequest) throws Exception {
         this.offre = offre;
         Document document = new Document();
         
-        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(PathData.PATH_PDF_PV));
-        setNumberPage(writer);
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PDF_PV));
+        
+        setNumberPage(writer,servletRequest);
         document.open();
 
         addMetaData(document);
-        addContent(document, date, er, telma);
+        addContent(document, date, er, telma,writer,servletRequest);
         sautPage(document, 1);
         addLastPage(document, date, er, telma, lieu);
         document.close();
@@ -107,7 +109,7 @@ public class PVGenerator {
         document.addCreator("E.R Systeme");
     }
 
-    private void addContent(Document document, Date date, String er, String telma) throws Exception {
+    private void addContent(Document document, Date date, String er, String telma, PdfWriter writer,HttpServletRequest servletRequest) throws Exception {
         PdfPTable table = new PdfPTable(3);
         table.setWidthPercentage(100);
         table.setWidths(new float[]{(float) 3 / 2, 5, (float) 3 / 2});
@@ -419,6 +421,8 @@ public class PVGenerator {
         for (int i = 0; i < offre.getTacheinitials().getTravaux().size(); i++) {
             TacheModel tache = offre.getTacheinitials().getTravaux().get(i);
             if (tache.getPhotos() != null && !tache.getPhotos().isEmpty()) {
+                float leftPage = 842-(document.getPageSize().getHeight()- writer.getVerticalPosition(false));        
+                if(leftPage<200)sautPage(document,1);
                 information = new Paragraph();
                 information.add(new Phrase(tache.getCatalogue().getDesignation(), boldFont));
                 addEmptyLine(information, 1);
@@ -428,25 +432,25 @@ public class PVGenerator {
                     Photo photo = tache.getPhotos().get(si);
                     Photo photo2 = null;
                     addEmptyLine(information, 1);
-                    Image img = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo.getPathPhoto());
+                    Image img = Image.getInstance(servletRequest.getSession().getServletContext().getRealPath("/") + photo.getPathPhoto());
                     img.scaleAbsolute(220, ServiceUtil.resizeHeight(img.getWidth(), img.getHeight()));
                     information.add(new Chunk(img, 0, 0, true));
                     int limit = tache.getPhotos().size()-1;
                     if(si<limit){
                         information.add(new Chunk(glue));
                         photo2 = tache.getPhotos().get(si+1);
-                        Image img2 = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo2.getPathPhoto());
+                        Image img2 = Image.getInstance(servletRequest.getSession().getServletContext().getRealPath("/")+ photo2.getPathPhoto());
                         img2.scaleAbsolute(220, ServiceUtil.resizeHeight(img2.getWidth(), img2.getHeight()));
                         information.add(new Chunk(img2, 0, 0, true));
                        
                     }
                     addEmptyLine(information,1);
-                    information.add(new Phrase(photo.getLatitude() + " " + photo.getLongitude(), normalFont));
+                    information.add(new Phrase(photo.getLatitude() + "   " + photo.getLongitude(), normalFont));
                     
                     if(si<limit){
                         
                         information.add(new Chunk(glue));
-                        information.add(new Phrase(photo2.getLatitude() + " " + photo2.getLongitude(), normalFont));
+                        information.add(new Phrase(photo2.getLatitude() + "   " + photo2.getLongitude(), normalFont));
                     }
                     addEmptyLine(information, 1);
                     
@@ -461,6 +465,8 @@ public class PVGenerator {
         for (int i = 0; i < offre.getTacheSoumission().getTravaux().size(); i++) {
             TacheModel tache = offre.getTacheSoumission().getTravaux().get(i);
             if (tache.getPhotos() != null && !tache.getPhotos().isEmpty()) {
+                float leftPage = 842-(document.getPageSize().getHeight()- writer.getVerticalPosition(false));        
+                if(leftPage<200)sautPage(document,1);
                 information = new Paragraph();
                 information.add(new Phrase(tache.getCatalogue().getDesignation(), boldFont));
                 addEmptyLine(information, 1);
@@ -470,26 +476,26 @@ public class PVGenerator {
                     Photo photo = tache.getPhotos().get(si);
                     Photo photo2 = null;
                     addEmptyLine(information, 1);
-                    Image img = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo.getPathPhoto());
+                    Image img = Image.getInstance(servletRequest.getSession().getServletContext().getRealPath("/")+ photo.getPathPhoto());
                     img.scaleAbsolute(220,ServiceUtil.resizeHeight(img.getWidth(), img.getHeight()));
                     information.add(new Chunk(img, 0, 0, true));
                     int limit = tache.getPhotos().size()-1;
                     if(si<limit){
                         information.add(new Chunk(glue));
                         photo2 = tache.getPhotos().get(si+1);
-                        Image img2 = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo2.getPathPhoto());
+                        Image img2 = Image.getInstance(servletRequest.getSession().getServletContext().getRealPath("/")+ photo2.getPathPhoto());
                         img2.scaleAbsolute(220, ServiceUtil.resizeHeight(img2.getWidth(), img2.getHeight()));
                         
                         information.add(new Chunk(img2, 0, 0, true));
                        
                     }
                     addEmptyLine(information,1);
-                    information.add(new Phrase(photo.getLatitude() + " " + photo.getLongitude(), normalFont));
+                    information.add(new Phrase(photo.getLatitude() + "   " + photo.getLongitude(), normalFont));
                     
                     if(si<limit){
                         
                         information.add(new Chunk(glue));
-                        information.add(new Phrase(photo2.getLatitude() + " " + photo2.getLongitude(), normalFont));
+                        information.add(new Phrase(photo2.getLatitude() + "   " + photo2.getLongitude(), normalFont));
                     }
                     addEmptyLine(information, 1);
                     
@@ -504,6 +510,8 @@ public class PVGenerator {
         for (int i = 0; i < offre.getTacheSupplementaire().getTravaux().size(); i++) {
             TacheModel tache = offre.getTacheSupplementaire().getTravaux().get(i);
             if (tache.getPhotos() != null && !tache.getPhotos().isEmpty()) {
+                float leftPage = 842-(document.getPageSize().getHeight()- writer.getVerticalPosition(false));        
+                if(leftPage<200)sautPage(document,1);
                 information = new Paragraph();
                 information.add(new Phrase(tache.getCatalogue().getDesignation(), boldFont));
                 addEmptyLine(information, 1);
@@ -513,26 +521,26 @@ public class PVGenerator {
                     Photo photo = tache.getPhotos().get(si);
                     Photo photo2 = null;
                     addEmptyLine(information, 1);
-                    Image img = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo.getPathPhoto());
+                    Image img = Image.getInstance(servletRequest.getSession().getServletContext().getRealPath("/")+ photo.getPathPhoto());
                     img.scaleAbsolute(220,ServiceUtil.resizeHeight(img.getWidth(), img.getHeight()));
                     information.add(new Chunk(img, 0, 0, true));
                     int limit = tache.getPhotos().size()-1;
                     if(si<limit){
                         information.add(new Chunk(glue));
                         photo2 = tache.getPhotos().get(si+1);
-                        Image img2 = Image.getInstance(PathData.PATH_PHOTO_SIMPLE + "/" + photo2.getPathPhoto());
+                        Image img2 = Image.getInstance(servletRequest.getSession().getServletContext().getRealPath("/")+ photo2.getPathPhoto());
                         img2.scaleAbsolute(220, ServiceUtil.resizeHeight(img2.getWidth(), img2.getHeight()));
                         
                         information.add(new Chunk(img2, 0, 0, true));
                        
                     }
                     addEmptyLine(information,1);
-                    information.add(new Phrase(photo.getLatitude() + " " + photo.getLongitude(), normalFont));
+                    information.add(new Phrase(photo.getLatitude() + "   " + photo.getLongitude(), normalFont));
                     
                     if(si<limit){
                         
                         information.add(new Chunk(glue));
-                        information.add(new Phrase(photo2.getLatitude() + " " + photo2.getLongitude(), normalFont));
+                        information.add(new Phrase(photo2.getLatitude() + "   " + photo2.getLongitude(), normalFont));
                     }
                     addEmptyLine(information, 1);
                     
@@ -611,7 +619,7 @@ public class PVGenerator {
         }
     }
 
-    public void setNumberPage(PdfWriter writer) {
+    public void setNumberPage(PdfWriter writer,final HttpServletRequest servletRequest) {
         writer.setPageEvent(new PdfPageEventHelper() {
             @Override
             public void onStartPage(PdfWriter writer, Document document) {
@@ -626,7 +634,7 @@ public class PVGenerator {
                 PdfPCell cell=null;
 
                 try {
-                    cell = new PdfPCell(Image.getInstance("C:/Users/diary/Documents/Develeppoment/Logo/telma.jpg"));
+                    cell = new PdfPCell(Image.getInstance(servletRequest.getSession().getServletContext().getRealPath("/")+"Archive/data/Logo/telma.jpg"));
                 } catch (BadElementException ex) {
                     Logger.getLogger(PVGenerator.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {

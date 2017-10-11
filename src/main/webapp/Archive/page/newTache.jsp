@@ -9,8 +9,13 @@ t<%--
 <div class="col-md-12">
     <div class="x_panel">
         <%@include file="template/default/Erreur.jsp" %>
+        <div class="alert alert-success alert-dismissible fade in" role="alert" style="display:<s:property value="getReussite()"/>">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                </button>
+            <i class="fa fa-check" aria-hidden="true"></i><strong> Enregistrement r&eacute;ussi</strong> 
+        </div>
         <div class="x_title">
-            <h2><a href="detailOffre?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-default"><i class="fa fa-arrow-left"></i>  </a> Nouvelle Tache <s:property value="getType()"/></h2>
+            <h2><a href="<s:property value="url"/>?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-default"><i class="fa fa-arrow-left"></i>  </a> Nouvelle Tache <s:property value="getType()"/></h2>
             
             <div class="clearfix"></div>
         </div>
@@ -67,7 +72,7 @@ t<%--
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Reference <span class="required">*</span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input  id="reference" name="reference" value="<s:property value="getReference()"/>" type="text" required="required" style="width:71%"class="form-control col-md-7 col-xs-12">
+                                        <input  id="reference" name="reference" value="<s:property value="getReference()"/>" type="text" required="required" style="width:70%"class="form-control col-md-7 col-xs-12">
                                         <div class="input-group-btn">
                                             <a href="listeCatalogue?retour=newTache&idOffre=<s:property value="getIdOffre()"/>&type=<s:property value="getType()"/>&url=<s:property value="getUrlStatique()"/>" class="btn btn-dark" type="button" style="margin-left:  5px;margin-right:  0px" >C</a>
                                             <a href="listeHorsCatalogue?retour=newTache&idOffre=<s:property value="getIdOffre()"/>&type=<s:property value="getType()"/>&url=<s:property value="getUrlStatique()"/>" class="btn btn-dark" type="button" style="margin-left:  5px;" data-href="listeUser?idDernierArticle=0&amp;type=1">HC</a>
@@ -104,7 +109,7 @@ t<%--
                                     </div>
                                 </div>
                                 <div id="admin" class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Dossier administratif <span class="required">*</span>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Dossier administratif (exclure dans P.V)<span class="required">*</span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <input name="admin" type="checkbox" data-toggle="toggle" data-on="oui" data-off="non">

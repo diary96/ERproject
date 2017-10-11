@@ -61,7 +61,7 @@ public class HibernateDao {
                 session.close();
         }
     }
-    public void findById(BaseModel obj,Session session) throws Exception{
+    public static void findById(BaseModel obj,Session session) throws Exception{
        
         try{
             session.load(obj,obj.getId());
@@ -105,7 +105,8 @@ public class HibernateDao {
                 session.close();
         }   
     }
-    public void update(BaseModel model,Session session) throws Exception {      
+    
+    public static void update(BaseModel model,Session session) throws Exception {      
         try{    
             session.update(model);         
         }catch (Exception ex){

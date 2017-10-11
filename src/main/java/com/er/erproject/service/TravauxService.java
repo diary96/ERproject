@@ -28,6 +28,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -554,6 +555,64 @@ public class TravauxService extends ServiceModel {
         try {            
             tache.setEffectuer(effectuer);
             this.hibernateDao.update(tache);           
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Impossible de mettre a jour la tache");
+        }
+    }
+    
+    public void allDone(Offre offre)throws Exception{
+        OffreService offreService = new OffreService();
+        offreService.setHibernateDao(hibernateDao);
+        
+        if(offre.getTacheinitials()==null){
+            offreService.popoluteTacheInitial(offre);
+        }
+        if(offre.getTacheSoumission()==null){
+            offreService.popoluteTacheSoumission(offre);
+        }
+        Session session = null; 
+        Transaction tr = null;
+        try{
+            session = this.hibernateDao.getSessionFactory().openSession();
+            tr = session.beginTransaction();
+            for(int i=0;i<offre.getTacheinitials().getTravaux().size();i++){
+                TacheModel tacheModel = offre.getTacheinitials().getTravaux().get(i);
+                TravauxService.allDone(tacheModel.getAllReference(), session);
+            }
+            for(int i=0;i<offre.getTacheSoumission().getTravaux().size();i++){
+                TacheModel tacheModel = offre.getTacheSoumission().getTravaux().get(i);
+                TravauxService.allDone(tacheModel.getAllReference(), session);
+            }
+            tr.commit();
+        }catch(Exception e){
+            if(tr!=null)tr.rollback();
+            throw new Exception("impossible de tout effectuer les taches, cause "+e.getMessage());
+        }finally{
+            if(session!=null)session.close();
+        }
+        
+        
+    }
+   
+    public static void allDone(String reference,Session session)throws Exception{
+        
+        if (reference == null || reference.compareTo("") == 0) {
+            throw new Exception("La reference est vide");
+        }
+        TacheModel tache = null;
+        try {
+            tache = (TacheModel) ReflectService.find(reference,session);
+
+        } catch (Exception e) {
+            throw new Exception("La tache que vous recherchiez est introuvable");
+        }
+        int quantite = tache.getQuantite();
+
+        try {
+            tache.setEffectuer(quantite);
+            HibernateDao.update(tache,session);
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception("Impossible de mettre a jour la tache");

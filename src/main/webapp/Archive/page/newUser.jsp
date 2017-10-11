@@ -63,7 +63,7 @@ t<%--
                                         <input id="designation" name="dateEmbauche" value="<s:property value="getDateEmbauche()"/>" type="date" required="required" class="form-control col-md-7 col-xs-12" >
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                        <div class="form-group" <s:if test="getUser().getNiveau()<5">style="display:none"</s:if>>
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Niveau d'accès <span class="required">*</span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">

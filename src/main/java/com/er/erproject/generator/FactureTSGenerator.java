@@ -16,6 +16,7 @@ import com.er.erproject.util.NumberUtil;
 import com.er.erproject.util.UtilConvert;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -31,6 +32,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -105,17 +107,17 @@ public class FactureTSGenerator {
         Test test = new Test();
     }
 
-    public FactureTSGenerator(Offre offre, VentillationModel ventillation,BonCommande bc,String condition,String responsable) throws Exception {
+    public FactureTSGenerator(Offre offre, VentillationModel ventillation,BonCommande bc,String condition,String responsable,HttpServletRequest servletRequest) throws Exception {
         this.setOffre(offre);
         this.setVentillation(ventillation);
         this.setBc(bc);
         this.setCondition(condition);
         this.setResponsable(responsable);
         Document document = new Document();
-        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(PathData.PATH_PDF_FACTURE));
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PDF_FACTURE));
         document.open();
         addMetaData(document);
-        addContent(document);
+        addContent(document,writer,servletRequest);
         document.close();
     }
 
@@ -130,10 +132,10 @@ public class FactureTSGenerator {
         document.addCreator("E.R System");
     }
 
-    private void addContent(Document document) throws DocumentException, BadElementException, IOException, Exception {
+    private void addContent(Document document,PdfWriter writer,HttpServletRequest servletRequest) throws DocumentException, BadElementException, IOException, Exception {
         Paragraph information = new Paragraph();
 
-        Image img = Image.getInstance("C:/Users/diary/Documents/Develeppoment/Logo/ER_LOGO _min.jpg");
+        Image img = Image.getInstance(servletRequest.getSession().getServletContext().getRealPath("/")+"Archive/data/Logo/ER_LOGO _min.jpg");
         information.add(img);
         addEmptyLine(information, 1);
         document.add(information);
@@ -388,6 +390,9 @@ public class FactureTSGenerator {
 
         document.add(table);
         
+        float leftPage = 842-(document.getPageSize().getHeight()- writer.getVerticalPosition(false));        
+        if(leftPage<300)sautPage(document,1);
+        
         information = new Paragraph(); 
         information.add(new Phrase("Arrêté la présente facture à la somme de : "+ConvertionLettre.getLettre(offre.getStatTS().getTotalTTC())+" Ariary ",smallFontBold));
         document.add(information);
@@ -410,7 +415,7 @@ public class FactureTSGenerator {
         if(ventillation.getPourcentage()==100){
             information.add(new Phrase(DateUtil.toLettreWithoutDay(ventillation.getDate()),extraSmallFont));
         }
-        img = Image.getInstance("C:/Users/diary/Documents/Develeppoment/Logo/Capture.JPG");
+        img = Image.getInstance(servletRequest.getSession().getServletContext().getRealPath("/")+"Archive/data/Logo/Capture.JPG");
         img.setAbsolutePosition(document.right()/2-50,document.bottom());
 //        writer.getDirectContent().addImage(image);
         
@@ -425,6 +430,11 @@ public class FactureTSGenerator {
     private static void addEmptyLine(Paragraph paragraph, int number) {
         for (int i = 0; i < number; i++) {
             paragraph.add(new Paragraph(" "));
+        }
+    }
+    private static void sautPage(Document document, int saut) throws DocumentException {
+        for (int i = 0; i < saut; i++) {
+            document.add(Chunk.NEXTPAGE);
         }
     }
 }

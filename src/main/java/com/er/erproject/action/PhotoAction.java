@@ -11,10 +11,8 @@ import com.er.erproject.model.Photo;
 import com.er.erproject.model.TacheModel;
 import com.er.erproject.model.User;
 import com.er.erproject.service.PhotoService;
-import com.er.erproject.service.ReflectService;
 import com.er.erproject.service.TravauxService;
 import com.er.erproject.util.FileUtil;
-import com.er.erproject.util.StringUtilsData;
 import com.er.erproject.util.UtilConvert;
 import com.opensymphony.xwork2.Action;
 import java.io.File;
@@ -37,8 +35,65 @@ public class PhotoAction extends ActionModel {
     private File photoFile; 
     private String referencePhoto;
     
+    private String latitude_degres=""; 
+    private String latitude_minutes=""; 
+    private String latitude_secondes=""; 
+    
+    private String longitude_degres=""; 
+    private String longitude_minutes=""; 
+    private String longitude_secondes="";
+    
     private String url;
 
+    public String getLatitude_degres() {
+        return latitude_degres;
+    }
+
+    public void setLatitude_degres(String latitude_degres) {
+        this.latitude_degres = latitude_degres;
+    }
+
+    public String getLatitude_minutes() {
+        return latitude_minutes;
+    }
+
+    public void setLatitude_minutes(String latitude_minutes) {
+        this.latitude_minutes = latitude_minutes;
+    }
+
+    public String getLatitude_secondes() {
+        return latitude_secondes;
+    }
+
+    public void setLatitude_secondes(String latitude_secondes) {
+        this.latitude_secondes = latitude_secondes;
+    }
+
+    public String getLongitude_degres() {
+        return longitude_degres;
+    }
+
+    public void setLongitude_degres(String longitude_degres) {
+        this.longitude_degres = longitude_degres;
+    }
+
+    public String getLongitude_minutes() {
+        return longitude_minutes;
+    }
+
+    public void setLongitude_minutes(String longitude_minutes) {
+        this.longitude_minutes = longitude_minutes;
+    }
+
+    public String getLongitude_secondes() {
+        return longitude_secondes;
+    }
+
+    public void setLongitude_secondes(String longitude_secondes) {
+        this.longitude_secondes = longitude_secondes;
+    }
+
+    
     public String getReferencePhoto() {
         return referencePhoto;
     }
@@ -164,7 +219,7 @@ public class PhotoAction extends ActionModel {
         
        
         try{
-            photoService.delete(referencePhoto);      
+            photoService.delete(referencePhoto,this.servletRequest);      
             
         }catch(Exception e){
             this.setLinkError(Reference.VISIBIBLE);
@@ -188,13 +243,23 @@ public class PhotoAction extends ActionModel {
            
             return Action.NONE;
         }
+        FileUtil fileUtil = new FileUtil(this.servletRequest);
         try{
-            FileUtil.savePdp(photoFile, "jpeg");
+            if(this.photoFile==null)throw new Exception("Veuillez inserer une photo");
+            fileUtil.savePdp(photoFile, "jpeg");
             this.photo = new Photo();
-            if(StringUtilsData.isNoAlpha(this.latitude))throw new Exception("La latitude n'est pas un coordonnee valable");
-            if(StringUtilsData.isNoAlpha(this.longitude))throw new Exception("La longitude n'est pas un coordonnee valable");
-            
-            
+           if(!this.checkerData(this.latitude_degres)&&!this.checkerData(this.latitude_minutes)&&!this.checkerData(this.latitude_secondes)){
+                this.setLatitude("");
+            }else{
+                String latitudeTemp = this.latitude_degres+"\u00b0"+this.latitude_minutes+"'"+this.latitude_secondes+"\"";
+                this.setLatitude(latitudeTemp);
+            }
+            if(!this.checkerData(this.longitude_degres)&&!this.checkerData(this.longitude_minutes)&&!this.checkerData(this.longitude_secondes)){
+                this.setLongitude("");
+            }else{
+                String latitudeTemp = this.longitude_degres+"\u00b0"+this.longitude_minutes+"'"+this.longitude_secondes+"\"";
+                this.setLongitude(latitudeTemp);
+            }
             if(!this.checker(this.latitude)||!this.checker(this.longitude)){
                 photo.setLatitude("");
                 photo.setLongitude("");

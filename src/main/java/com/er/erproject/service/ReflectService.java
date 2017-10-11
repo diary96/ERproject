@@ -9,6 +9,7 @@ import com.er.erproject.dao.HibernateDao;
 import com.er.erproject.data.Reference;
 import com.er.erproject.model.BaseModel;
 import com.er.erproject.util.ReferenceUtil;
+import org.hibernate.Session;
 
 /**
  *
@@ -27,6 +28,15 @@ public class ReflectService extends ServiceModel{
         BaseModel autoCast = (BaseModel) ReferenceUtil.toBaseModel(reference);
         try{
             hibernateDao.findById(autoCast);
+        }catch(Exception e){
+            throw new Exception("la reference inserer est introuvable");
+        }
+        return autoCast;
+    }
+    public static BaseModel find(String reference,Session session)throws Exception{
+        BaseModel autoCast = (BaseModel) ReferenceUtil.toBaseModel(reference);
+        try{
+            HibernateDao.findById(autoCast,session);
         }catch(Exception e){
             throw new Exception("la reference inserer est introuvable");
         }

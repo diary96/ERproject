@@ -77,21 +77,27 @@ t<%--
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Service : <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input  value="<s:property value="getService()"/>" id="reference" name="service" type="text" required="required" class="form-control col-md-7 col-xs-12">
+                                    <select name="service" onchange="check()" id="service" class="form-control">
+                                        <option value="TELMA SA" <s:if test="getService().equalsIgnoreCase('TELMA SA')"> selected="true" </s:if>>TELMA SA</opion>
+                                        <option value="TELMA GLOBAL NET SA" <s:if test="getService().equalsIgnoreCase('TELMA GLOBAL NET SA')"> selected="true" </s:if>>TELMA GLOBAL NET SA</option>
+                                        <option value="TELMA MOBILE" <s:if test="getService().equalsIgnoreCase('TELMA MOBILE')"> selected="true" </s:if>>TELMA MOBILE</option>
+                                        
+                                    </select>
+                                    
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">NIF <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input  id="reference" value="<s:property value="getNif()"/>" name="nif" type="text" required="required" class="form-control col-md-7 col-xs-12">
+                                    <input  id="nif" value="<s:property value="getNif()"/>" name="nif" type="text" required="required" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Stat <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input id="designation" value="<s:property value="getStat()"/>" name="stat" type="text" required="required" class="form-control col-md-7 col-xs-12" >
+                                    <input id="stat" value="<s:property value="getStat()"/>" name="stat" type="text" required="required" class="form-control col-md-7 col-xs-12" >
                                 </div>
                             </div>
                             <div class="form-group">
@@ -137,7 +143,25 @@ t<%--
     </div>
 </div>
 </div>
-
+<script>
+    check();
+    function check() {
+        var value = document.getElementById("service").value;
+        if(value === "TELMA SA"){
+            document.getElementById('nif').value = "3000003944";
+            document.getElementById('stat').value = "61101 111995 0 00180";   
+        }
+        if(value === "TELMA GLOBAL NET SA" ){
+            document.getElementById('nif').value = "2000001530";
+            document.getElementById('stat').value = "63122 11 1995 0 10065";
+        }
+        if(value === "TELMA MOBILE" ){
+            document.getElementById('nif').value = "1000001233";
+            document.getElementById('stat').value = "46526 11 2006 0 10490";
+        }
+    }
+    
+</script>
 <script src="Archive/assets/gentella/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
 <script src="Archive/assets/js/bootstrap-toggle.min.js"></script>
 <script src="Archive/assets/js/custom-file-input.js"></script>

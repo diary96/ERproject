@@ -38,6 +38,8 @@
         <link href="Archive/assets/css/custome.css" rel="stylesheet">
         <link href='Archive/assets/css/style_table.css" rel="stylesheet"'>
         <script src="Archive/assets/gentella/vendors/jquery/dist/jquery.min.js"></script>
+        
+        <link href="Archive/assets/css/gps.css" rel="stylesheet">
         <!-- test -->
        
 
@@ -111,6 +113,7 @@
                             <div class="sidebar-footer hidden-small">
                                 
 
+                                
                                 <a data-toggle="tooltip" data-placement="top" title="Se deconnecter" href="deconnexion">
                                     <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                                 </a>
@@ -136,6 +139,7 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-usermenu pull-right">
                                         
+                                        <li><a href="newUser?idUser=<s:property value="getUser().getId()"/>"> Modifier mon profile</a></li>
                                         <li><a href="deconnexion"><i class="fa fa-sign-out pull-right"></i> SE DECONNECTER</a></li>
                                     </ul>
                                 </li>

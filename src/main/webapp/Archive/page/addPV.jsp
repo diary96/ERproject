@@ -37,8 +37,11 @@
         </s:if>
         <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
             <%--<s:property value="@com.er.erproject.data.StatuReference@OFFRE"/>--%>
-            <li role="presentation" class="active"><a href="#offre" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Offre Initial</a>
-            </li>
+            
+            <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@OFFRE">
+                <li role="presentation"><a href="#offre" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Offre Initial</a>
+                </li>
+            </s:if>
             <s:if test="getOffre().getStatu()>@com.er.erproject.data.StatuReference@OFFRE">
                 <li role="presentation" class=""><a href="#soumission" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Sousmission</a>
                 </li>
@@ -54,44 +57,50 @@
 
         </ul>
         <div id="myTabContent" class="tab-content">
-            <div role="tabpanel" class="tab-pane fade active in" id="offre" aria-labelledby="home-tab">
+            <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@OFFRE">
+                <div role="tabpanel" class="tab-pane fade active in" id="offre" aria-labelledby="home-tab">
 
-                <!-- start offre -->
-                <div id="table">
-                    <a href="gestionInitial?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> D&eacute;tails des travaux de l'offre </a>
-                    <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@OFFRE">
-                        <a href="valider?idOffre=<s:property value="getIdOffre()"/>&nextLevel=<s:property value="@com.er.erproject.data.StatuReference@SSOUMISSION"/>&url=detailOffre" class="btn btn-success"><i class="fa fa-check"></i> Valider </a>
-                    </s:if>
-                    <table cellspacing="1" class="table table-bordered">
-                        <tr>
-                            <td>Reference du travaux</td>
-                            <th>Designation</th>
-                            <th>Unite</th>
-                            <th>Quantite</th>                     
-                        </tr>
-
-                        <s:iterator value="getOffre().getTacheinitials().getTravaux()">
+                    <!-- start offre -->
+                    <div id="table">
+                        <a href="gestionInitial?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> D&eacute;tails des travaux de l'offre </a>
+                        <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@OFFRE">
+                            <a href="valider?idOffre=<s:property value="getIdOffre()"/>&nextLevel=<s:property value="@com.er.erproject.data.StatuReference@SSOUMISSION"/>&url=detailOffre" class="btn btn-success"><i class="fa fa-check"></i> Valider </a>
+                        </s:if>
+                        <table cellspacing="1" class="table table-bordered">
                             <tr>
-                                <td><s:property value="getAllReference()"/></td>
-                                <td><s:property value="getCatalogue().getDesignation()"/></td>
-                                <td align="center"><s:property value="getCatalogue().getUnite()"/></td>
-                                <td align="center"><s:property value="getQuantite()"/></td>
+                                <td>Reference du travaux</td>
+                                <th>Designation</th>
+                                <th>Unite</th>
+                                <th>Quantite</th>                     
                             </tr>
-                        </s:iterator>                       
-                        <!-- This is our clonable table line -->
-                    </table>
-                    <!--<a id="export-btn" class="btn btn-primary">Export Data</a>-->
-                    <!--<p id="export"></p>-->
-                </div>
-                <!-- end offre -->
 
-            </div>
-            <div role="tabpanel" class="tab-pane fade" id="soumission" aria-labelledby="profile-tab">
+                            <s:iterator value="getOffre().getTacheinitials().getTravaux()">
+                                <tr>
+                                    <td><s:property value="getAllReference()"/></td>
+                                    <td><s:property value="getCatalogue().getDesignation()"/></td>
+                                    <td align="center"><s:property value="getCatalogue().getUnite()"/></td>
+                                    <td align="center"><s:property value="getQuantite()"/></td>
+                                </tr>
+                            </s:iterator>                       
+                            <!-- This is our clonable table line -->
+                        </table>
+                        <!--<a id="export-btn" class="btn btn-primary">Export Data</a>-->
+                        <!--<p id="export"></p>-->
+                    </div>
+                    <!-- end offre -->
+
+                </div>
+            </s:if>
+            <div role="tabpanel" class="tab-pane fade <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@SOUMISSION">active in</s:if>" id="soumission" aria-labelledby="profile-tab">
                 <!-- start  soumission--> 
                 <div id="table">
                     <a href="gestionSoumission?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Gestion des status des travaux de soumission</a>
+                    
                     <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@SOUMISSION">
                         <a href="parametre?idOffre=<s:property value="getIdOffre()"/>&type=<s:property value="@com.er.erproject.data.ReferenceType@SOUMISSION"/>&url=detailOffre" class="btn btn-primary"><i class="fa fa-cogs"></i>  Taxe et Remise</a>
+                    </s:if>
+                    <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@SOUMISSION">
+                        <a href="valider?idOffre=<s:property value="getIdOffre()"/>&nextLevel=<s:property value="@com.er.erproject.data.StatuReference@STRAVAUX"/>&url=detailOffre" class="btn btn-success"><i class="fa fa-check"></i> Valider </a>
                     </s:if>
                     <s:if test="getOffre().getStatu()>@com.er.erproject.data.StatuReference@SOUMISSION">
                         <a href="download?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-primary"><i class="fa fa-download"></i> Telecharger devis</a>
@@ -99,9 +108,7 @@
                     <s:if test="getOffre().getStatu()>@com.er.erproject.data.StatuReference@SOUMISSION">
                         <a href="gestionBC?idOffre=<s:property value="getIdOffre()"/>&type=<s:property value="@com.er.erproject.data.VentilationData@SOUMISSION"/>" class="btn btn-primary"><i class="fa fa-folder-o"></i> Bon de commande</a>
                     </s:if>
-                    <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@SOUMISSION">
-                        <a href="valider?idOffre=<s:property value="getIdOffre()"/>&nextLevel=<s:property value="@com.er.erproject.data.StatuReference@STRAVAUX"/>&url=detailOffre" class="btn btn-success"><i class="fa fa-check"></i> Valider </a>
-                    </s:if>
+                    
                     <table cellspacing="1" class="table table-bordered">
                         <tr>
                             <td>Reference du travaux</td>
@@ -244,6 +251,7 @@
 
                 <a href="loadPv?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-primary">Generer PV PDF</a>
                 <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@PV">
+                    <a href="allOffreEffect?idOffre=<s:property value="getIdOffre()"/>&url=detailOffre" class="btn btn-success"><i class="fa fa-reply-all" aria-hidden="true"></i> Tout effectuer les taches </a>
                     <a href="valider?idOffre=<s:property value="getIdOffre()"/>&nextLevel=<s:property value="@com.er.erproject.data.StatuReference@SFACTURATION"/>&url=detailOffre" class="btn btn-success"><i class="fa fa-check"></i> Valider </a>
                 </s:if>
                 <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@FACTURATION">
@@ -278,7 +286,9 @@
 
                             <th>Photos</th>
                             <th>Nombre de photo</th>
-                            <th>Action</th>
+                            <s:if test="getTemp().getStatu()==@com.er.erproject.data.StatuReference@PV">
+                                <th>Action</th>
+                            </s:if>
 
                         </tr>
 

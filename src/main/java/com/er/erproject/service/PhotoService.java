@@ -11,6 +11,7 @@ import com.er.erproject.model.TacheModel;
 import com.er.erproject.util.FileUtil;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -48,7 +49,8 @@ public class PhotoService extends ServiceModel {
             throw new Exception("Impossible de sauvegarder la photo");
         }
     }
-    public void delete(String reference)throws Exception{
+    public void delete(String reference,HttpServletRequest servletRequest)throws Exception{
+        FileUtil fileUtil = new FileUtil(servletRequest);
         Photo photo = null;
         ReflectService reflectService = new ReflectService(this.hibernateDao);
         try{
@@ -62,7 +64,7 @@ public class PhotoService extends ServiceModel {
             throw new Exception("Impossible de supprimer la photo");
         }
         try{
-           FileUtil.deleteFile(photo.getPathPhoto());
+           fileUtil.deleteFile(photo.getPathPhoto());
         }catch(Exception e){
             throw new Exception("Impossible de supprimer la photo dans la base, supprimer manuellement");
         }

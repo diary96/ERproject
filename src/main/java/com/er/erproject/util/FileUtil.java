@@ -11,33 +11,34 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
+import org.apache.struts2.interceptor.ServletRequestAware;
 
 /**
  *
  * @author diary
  */
-public class FileUtil {
-
-    public static boolean savePdp(File image, String ext) throws Exception {
+public class FileUtil implements ServletRequestAware{
+    
+    HttpServletRequest servletRequest;
+    public boolean savePdp(File image, String ext) throws Exception {
         try {
 
             String myfilename = image.getName() + "." + ext;
-            System.out.println("Dst File name: " + myfilename);
-
-            File destFile = new File(PathData.PATH_PHOTO, myfilename); // Null pointer exception is thrown here
+            File destFile = new File(servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PHOTO, myfilename); // Null pointer exception is thrown here
             FileUtils.copyFile(image, destFile);
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new Exception("impossible de copier la photo");
         }
         return true;
     }
-    public static boolean saveBC(File bc, String ext) throws Exception {
+    
+    public boolean saveBC(File bc, String ext) throws Exception {
         try {
             String myfilename = bc.getName() + "." + ext;
-            File destFile = new File(PathData.PATH_BC, myfilename); // Null pointer exception is thrown here
+            File destFile = new File(servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_BC, myfilename);
             FileUtils.copyFile(bc, destFile);
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,16 +46,18 @@ public class FileUtil {
         }
         return true;
     }
-    public static boolean saveArchive(File bc,String ext)throws Exception{
+    
+    public boolean saveArchive(File bc,String ext)throws Exception{
         try{
             String myfilename = bc.getName() + "."+ext;
-            File destFile = new File(PathData.PATH_ARCHIVE, myfilename); // Null pointer exception is thrown here
+            File destFile = new File(servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_ARCHIVE, myfilename); // Null pointer exception is thrown here
             FileUtils.copyFile(bc, destFile);
             return destFile.exists();
         }catch(Exception e){
             throw e;
         }
     }
+    
     public static String getEx(String name)throws Exception{
         String ext=null;
         String[] data = name.split(Pattern.quote("."));
@@ -62,10 +65,11 @@ public class FileUtil {
         else throw new Exception("extension non valide");
         return ext;
     }
-    public static void deleteFile(String pathPhoto) throws Exception {
+    
+    public  void deleteFile(String pathPhoto) throws Exception {
         File photo = null;
-        String path = PathData.PATH_PHOTO_SIMPLE + "/" + pathPhoto;
-        boolean test;
+        String path = servletRequest.getSession().getServletContext().getRealPath("/")+ pathPhoto;
+        boolean test=false;
         try {
             photo = new File(path);
             test = photo.exists();
@@ -80,4 +84,14 @@ public class FileUtil {
             throw new Exception("Impossible de supprimer la photo");
         }
     }
+
+    @Override
+    public void setServletRequest(HttpServletRequest request) {
+        this.servletRequest = request;
+    }
+
+    public FileUtil(HttpServletRequest servletRequest) {
+        this.servletRequest = servletRequest;
+    }
+    
 }

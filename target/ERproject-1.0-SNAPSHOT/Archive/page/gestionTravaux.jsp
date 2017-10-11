@@ -109,7 +109,20 @@
         <div class="row tile_count">
             <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                 <span class="count_top"><i class="fa fa-money"></i> Total</span>
-                <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getTotal()"/></div>             
+                <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getTotalString()"/></div>             
+            </div>
+            
+            <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-money"></i> Remise</span>
+                <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getRemise()"/> %</div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-money"></i> Valeur de la remise</span>
+                <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getValeurRemiseString()"/></div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-money"></i> Valeur apres la remise</span>
+                <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getValeurApresRemiseString()"/></div>
             </div>
             <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                 <span class="count_top"><i class="fa fa-money"></i> TVA </span>
@@ -117,20 +130,11 @@
             </div>
             <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                 <span class="count_top"><i class="fa fa-money"></i> Valeur du TVA </span>
-                <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getValeurTVA()"/></div>
+                <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getValeurTVAString()"/></div>
             </div>
-            <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-money"></i> Remise</span>
-                <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getRemise()"/> %</div>
-            </div>
-            <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-money"></i> Valeur de la remise</span>
-                <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getValeurRemise()"/></div>
-            </div>
-
             <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                 <span class="count_top"><i class="fa fa-money"></i> Total TTC</span>
-                <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getTotalTTC()"/></div>
+                <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getTotalTTCString()"/></div>
             </div>
 
 
@@ -143,7 +147,20 @@
         <div class="row tile_count">
             <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                 <span class="count_top"><i class="fa fa-money"></i> Total</span>
-                <div class="count"><s:property value="getOffre().getSoumission().getTotal()"/></div>             
+                <div class="count"><s:property value="getOffre().getSoumission().getTotalString()"/></div>             
+            </div>
+            
+            <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-money"></i> Remise</span>
+                <div class="count"><s:property value="getOffre().getSoumission().getRemise()"/> %</div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-money"></i> Valeur de la remise</span>
+                <div class="count"><s:property value="getOffre().getSoumission().getValeurRemiseString()"/></div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-money"></i> Valeur apres la remise</span>
+                <div class="count"><s:property value="getOffre().getSoumission().getValeurApresRemiseString()"/></div>
             </div>
             <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                 <span class="count_top"><i class="fa fa-money"></i> TVA </span>
@@ -151,20 +168,11 @@
             </div>
             <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                 <span class="count_top"><i class="fa fa-money"></i> Valeur du TVA </span>
-                <div class="count"><s:property value="getOffre().getSoumission().getValeurTVA()"/></div>
+                <div class="count"><s:property value="getOffre().getSoumission().getValeurTVAString()"/></div>
             </div>
-            <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-money"></i> Remise</span>
-                <div class="count"><s:property value="getOffre().getSoumission().getRemise()"/> %</div>
-            </div>
-            <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-money"></i> Valeur de la remise</span>
-                <div class="count"><s:property value="getOffre().getSoumission().getValeurRemise()"/></div>
-            </div>
-
             <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                 <span class="count_top"><i class="fa fa-money"></i> Total TTC</span>
-                <div class="count"><s:property value="getOffre().getSoumission().getTotalTTC()"/></div>
+                <div class="count"><s:property value="getOffre().getSoumission().getTotalTTCString()"/></div>
             </div>
 
 

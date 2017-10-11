@@ -46,6 +46,7 @@
                                     <td> <button id="<s:property value="getAllReference()" />" class="supprimer btn btn-danger btn-xs"  >Supprimer</button></td>
                                 </tr>
                             </s:iterator>
+                                <tr><th><a href="gestionArchive?idOffre=<s:property value="getIdOffre()"/>" ><i class="fa fa-plus"></i> </a></th></tr>
                         </tbody>
                     </table>
                 </div>                    

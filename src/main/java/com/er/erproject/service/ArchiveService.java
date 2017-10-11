@@ -9,6 +9,8 @@ import com.er.erproject.model.Archive;
 import com.er.erproject.model.Offre;
 import com.er.erproject.util.FileUtil;
 import java.util.List;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -28,7 +30,8 @@ public class ArchiveService extends ServiceModel{
             throw new Exception("impossible d'enregistrer l'archive "+archive.getNom()+" dans la base");
         }
     }
-    public void update(Archive archive)throws Exception{
+    public void update(Archive archive,HttpServletRequest servletRequest)throws Exception{
+         FileUtil fileUtil = new FileUtil(servletRequest);
         Session session=null;
         Transaction tr = null;
         if(archive.getId()==0)throw new Exception("archive non initialise");
@@ -38,7 +41,7 @@ public class ArchiveService extends ServiceModel{
             Archive temp =null;
             temp = this.find(archive.getId());
             if(temp.getPath().compareTo(archive.getPath())!=0){
-                FileUtil.deleteFile(temp.getPath());
+                fileUtil.deleteFile(temp.getPath());
             }
             temp = archive;
             this.hibernateDao.update(temp, session);
@@ -78,16 +81,20 @@ public class ArchiveService extends ServiceModel{
             throw new Exception("impossible de trouver l'archive dans la base");
         }
     }
-    public void delete(Archive archive)throws Exception{
+    public void delete(Archive archive,HttpServletRequest serveletRequest)throws Exception{
+        FileUtil fileUtil = new FileUtil(serveletRequest);
+        
         try{
             try{
-            FileUtil.deleteFile(archive.getPath());
+            fileUtil.deleteFile(archive.getPath());
             }catch(Exception e){
+                e.printStackTrace();
                 throw new Exception("impossible de supprimer le fichier de l'archive");
             }
             try{
                 this.hibernateDao.delete(archive);
             }catch(Exception e){
+                e.printStackTrace();
                 throw new Exception("impossible de supprimer l'archive dans la base");
             }
         }catch(Exception e){

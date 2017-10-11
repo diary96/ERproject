@@ -66,7 +66,17 @@ public class GestionTravauxAction extends ActionModel {
     private String fileName;
 
     private List<Photo> photos;
+    private String reussite="none";
 
+    public String getReussite() {
+        return reussite;
+    }
+
+    public void setReussite(String reussite) {
+        this.reussite = reussite;
+    }
+    
+    
     public List<Photo> getPhotos() {
         return photos;
     }
@@ -313,8 +323,8 @@ public class GestionTravauxAction extends ActionModel {
         this.offreService.popoluteTacheInitial(offre);
         this.offreService.popoluteTacheSoumission(offre);
         try {
-            XlsGenerator.generateXLS(offre);
-            File fileToDownload = new File(PathData.PATH_XLS_DEVIS);
+            XlsGenerator.generateXLS(offre,this.servletRequest);
+            File fileToDownload = new File(this.servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_XLS_DEVIS);
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);
             
@@ -422,7 +432,7 @@ public class GestionTravauxAction extends ActionModel {
         if (this.idOffre == 0) {
             return Action.NONE;
         }
-        this.url = url + "?idOffre=" + this.getIdOffre();
+        
         try {
             this.offre = this.offreService.find(idOffre);
         } catch (Exception e) {
@@ -446,13 +456,15 @@ public class GestionTravauxAction extends ActionModel {
         if (this.url.compareToIgnoreCase("") == 0 || this.url == null) {
             return Action.NONE;
         }
-        if (this.idOffre == 0) {
+        try{
+            this.offre = this.offreService.find(idOffre);
+        }catch(Exception e){
             return Action.NONE;
         }
-        TacheModel tacheModel= new TacheModel();
+        TacheModel tacheModel;
         try {
             this.cheker();
-            this.offre = this.offreService.find(idOffre);
+            
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
             tacheModel =  travauxService.save(reference, designation, prixUnitaire, unite, quantite, type, this.offre.getAllReference(), this.admin);
             
@@ -462,6 +474,7 @@ public class GestionTravauxAction extends ActionModel {
             historique.setDate(Calendar.getInstance().getTime());
             historique.setReferenceExterieur(offre.getAllReference());
             this.historiqueService.save(historique);
+            this.reussite = Reference.VISIBIBLE;
         
         } catch (Exception e) {
             
@@ -473,13 +486,12 @@ public class GestionTravauxAction extends ActionModel {
             this.historiqueService.save(historique);
             
             e.printStackTrace();
+            this.reussite = Reference.INVISIBIBLE;
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
-            this.url = "newTache?idOffre=" + this.idOffre + "&url=" + url + "&linkError=" + this.getLinkError() + "&messageError=" + UtilConvert.toUrlPath(this.getMessageError()) + "&type=" + this.type;
-//            throw e;
+            //            throw e;
             return Action.ERROR;
         }
-        this.url = url + "?idOffre=" + this.idOffre;
         return Action.SUCCESS;
     }
 
@@ -743,6 +755,42 @@ public class GestionTravauxAction extends ActionModel {
         return Action.SUCCESS;
     }
 
+    public String allOffre()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        if (this.url == null || this.url.compareToIgnoreCase("") == 0) {
+            return Action.NONE;
+        }
+
+        try{
+            this.offre = this.offreService.find(idOffre);
+        }catch(Exception e){
+            return Action.NONE;
+        }
+        this.url = url + "?idOffre=" + this.idOffre;
+        try {
+            if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");              
+            this.travauxService.allDone(offre);
+            
+            historique =new Historique();
+            historique.setUser(user);
+            historique.setDescription("tout effectuer les tache de l'offre n° "+offre.getAllReference());
+            historique.setDate(Calendar.getInstance().getTime());
+            historique.setReferenceExterieur(offre.getAllReference());
+            this.historiqueService.save(historique);
+            
+        } catch (Exception e) {
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            this.url = url + "&url=" + this.getUrlStatique() + "&linkError=" + this.getLinkError() + "&messageError=" + UtilConvert.toUrlPath(this.getMessageError());
+            return Action.ERROR;
+        }
+
+        return Action.SUCCESS;
+    }
+    
     public String change() throws Exception {
         this.setSessionUser();
         if (this.user == null) {

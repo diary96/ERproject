@@ -5,6 +5,7 @@
  */
 package com.er.erproject.action;
 
+import com.er.erproject.data.PathData;
 import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
 import com.er.erproject.data.StatuReference;
@@ -461,6 +462,7 @@ public class FacturationAction extends ActionModel {
         Date temp = Calendar.getInstance().getTime();
         this.dateToday = DateUtil.convert(temp);
         BonCommande bonCommande = null;
+        FileUtil fileUtil = new FileUtil(this.servletRequest);
         try {
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
             if(!this.checkerData(this.ventillation))throw new Exception("Aucun ventilation inseré");
@@ -482,11 +484,9 @@ public class FacturationAction extends ActionModel {
             historique.setDate(Calendar.getInstance().getTime());
             historique.setReferenceExterieur(offre.getAllReference());
             this.historiqueService.save(historique);
-            
-            e.printStackTrace();
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
-            if(bonCommande!=null)FileUtil.deleteFile(bonCommande.getPath());
+            if(bonCommande!=null)fileUtil.deleteFile(bonCommande.getPath());
             return Action.ERROR;
         }
         return Action.SUCCESS;
@@ -497,24 +497,21 @@ public class FacturationAction extends ActionModel {
         if (this.user == null) {
             return Action.LOGIN;
         }
-        if (this.idOffre == 0) {
+        try{
+            this.offre = this.offreService.find(idOffre);
+        }catch(Exception e){
             return Action.NONE;
         }
         try {
-            this.offre = this.offreService.find(idOffre);
             this.offreService.populateStatistiqueInitial(offre);
             if(this.offre.getStatu()<StatuReference.FACTURATION)return Action.NONE;
             this.ventillations = this.ventillationService.find(offre,VentilationData.SOUMISSION);
             this.condition = VentillationModel.getCondition(ventillations);
             if(!this.checkerData(this.responsable)) this.setResponsable("RAKOTONIRINA Beby");
-            
-
         } catch (Exception ex) {
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(ex.getMessage());
-            ex.printStackTrace();
-//            throw ex;
-            return Action.NONE;
+            return Action.ERROR;
         }
         return Action.SUCCESS;
     }
@@ -524,11 +521,12 @@ public class FacturationAction extends ActionModel {
         if (this.user == null) {
             return Action.LOGIN;
         }
-        if (this.idOffre == 0) {
+        try{
+            this.offre = this.offreService.find(idOffre);
+        }catch(Exception e){
             return Action.NONE;
         }
         try {
-            this.offre = this.offreService.find(idOffre);
             this.offreService.populateStatistiqueTS(offre);
             if(this.offre.getStatu()<StatuReference.FACTURATION)return Action.NONE;
             this.ventillations = this.ventillationService.find(offre,VentilationData.TS);
@@ -540,7 +538,7 @@ public class FacturationAction extends ActionModel {
             this.setMessageError(ex.getMessage());
             ex.printStackTrace();
 //            throw ex;
-            return Action.NONE;
+            return Action.ERROR;
         }
         return Action.SUCCESS;
     }
@@ -650,8 +648,8 @@ public class FacturationAction extends ActionModel {
             if(bc==null)throw new Exception("aucun bon de commande enregistré, veuillez enregistrer un bon de commande pour les travaux initiaux");
             this.condition = VentillationModel.getConditionWithoutDate(ventillations);
             if(!this.checkerData(this.responsable))this.responsable = "RAKOTONIRINA Beby";
-            FactureGenerator pv = new FactureGenerator(offre,ventillationData,bc,this.condition,responsable);
-            File fileToDownload = new File("E:/Stage/ER/ERproject/src/main/webapp/Archive/data/PDF/facture_generate.pdf");
+            FactureGenerator pv = new FactureGenerator(offre,ventillationData,bc,this.condition,responsable,this.servletRequest);
+            File fileToDownload = new File(this.servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PDF_FACTURE);
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);
             
@@ -680,23 +678,26 @@ public class FacturationAction extends ActionModel {
         if (this.idOffre == 0) {
             return Action.NONE;
         }
-        try {
+        try{
             this.offre = this.offreService.find(idOffre);
             this.offreService.populateStatistiqueTS(offre);
             this.offreService.populateTravauxSupplementaire(offre);
             if(this.offre.getStatu()<StatuReference.FACTURATION)return Action.NONE;
+        }catch(Exception e){
+            return Action.NONE;
+        }
+        try {
             this.ventillations = this.ventillationService.find(offre,VentilationData.TS);
             VentillationModel ventillationData = this.ventillationService.find(this.referenceVentilation);
             BonCommandeService bonCommandeService = new BonCommandeService();
             bonCommandeService.setHibernateDao(this.offreService.getHibernateDao());
             
             BonCommande bc = bonCommandeService.find(offre.getTravauxSupplementaire());
-            if(bc==null)throw new Exception("aucun bon de commande enregistré, veuillez enregistrer un bon de commande pour les travaux supplementaire");
-           
+            if(bc==null)throw new Exception("aucun bon de commande enregistré, veuillez enregistrer un bon de commande pour les travaux supplementaire");      
             this.condition = VentillationModel.getConditionWithoutDate(ventillations);
             if(!this.checkerData(this.responsable))this.responsable = "RAKOTONIRINA Beby";
-            FactureTSGenerator pv = new FactureTSGenerator(offre,ventillationData,bc,this.condition,responsable);
-            File fileToDownload = new File("E:/Stage/ER/ERproject/src/main/webapp/Archive/data/PDF/facture_generate.pdf");
+            FactureTSGenerator pv = new FactureTSGenerator(offre,ventillationData,bc,this.condition,responsable,this.servletRequest);
+            File fileToDownload = new File(this.servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PDF_FACTURE);
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);
             
@@ -713,7 +714,7 @@ public class FacturationAction extends ActionModel {
             this.setMessageError(ex.getMessage());
             ex.printStackTrace();
 //            throw ex;
-            return Action.NONE;
+            return Action.ERROR;
         }
         return Action.SUCCESS;
     }

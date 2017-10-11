@@ -7,6 +7,7 @@
 <!--<script src="../assets/gentella/vendors/jquery/dist/jquery.min.js"></script>-->
 
 <div class="x_panel">
+      <%@include file="template/default/Erreur.jsp" %>
     <div class="x_title">
         <h2><a href="detailOffre?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-default"><i class="fa fa-arrow-left"></i>  </a>Apercu du facture Initial du tickets numero  : <s:property value="getOffre().getTicket()"/> </h2>
         <div class="clearfix"></div>

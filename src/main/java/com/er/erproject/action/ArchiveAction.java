@@ -8,7 +8,6 @@ package com.er.erproject.action;
 import com.er.erproject.data.PathData;
 import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
-import com.er.erproject.data.StatuReference;
 import com.er.erproject.model.Archive;
 import com.er.erproject.model.Historique;
 import com.er.erproject.model.Offre;
@@ -215,6 +214,7 @@ public class ArchiveAction extends ActionModel{
             return Action.NONE;
         }
         if(user.getNiveau()<2)return Action.NONE;
+        FileUtil fileUtil = new FileUtil(this.servletRequest);
         try{
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié"); 
             Archive archive=null;
@@ -224,7 +224,8 @@ public class ArchiveAction extends ActionModel{
             if(this.idType==0)throw new Exception("veuillez choisir un type de fichier");
             if(!this.checkerData(this.referenceInterieure)){         
                 if(this.archiveF==null)throw new Exception("veuillez choisir un fichier");
-                FileUtil.saveArchive(archiveF, FileUtil.getEx(this.archiveFFileName));
+                
+                fileUtil.saveArchive(archiveF, FileUtil.getEx(this.archiveFFileName));
                 archive = new Archive(); 
                 archive.setNom(this.getReference());
                 archive.setPath(PathData.PATH_ARCHIVE_SIMPLE+"/"+archiveF.getName()+"."+FileUtil.getEx(this.archiveFFileName));
@@ -253,10 +254,10 @@ public class ArchiveAction extends ActionModel{
                 archive.setTypeFichier(typeFichier);
                 archive.setOffre(offre);
                 if(this.archiveF!=null){
-                    FileUtil.saveArchive(archiveF, FileUtil.getEx(this.archiveFFileName));                   
+                    fileUtil.saveArchive(archiveF, FileUtil.getEx(this.archiveFFileName));                   
                     archive.setPath(PathData.PATH_ARCHIVE_SIMPLE+"/"+archiveF.getName()+"."+FileUtil.getEx(this.archiveFFileName));                
                 }
-                this.archiveService.update(archive);
+                this.archiveService.update(archive,this.servletRequest);
                 
                 historique = new Historique();
                 historique.setUser(user);
@@ -297,7 +298,7 @@ public class ArchiveAction extends ActionModel{
             }catch(Exception e){
                 throw new Exception("la reference inseré n'est pas de type archive");
             }
-            this.archiveService.delete(archive);
+            this.archiveService.delete(archive,this.servletRequest);
             
             historique = new Historique();
             historique.setUser(user);
