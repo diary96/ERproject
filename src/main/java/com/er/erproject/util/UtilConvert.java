@@ -157,7 +157,10 @@ public class UtilConvert {
     public static double toSeconde(int minute, int seconde) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    public static String convertToHeure(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("HH-mm");
+        return sdf.format(date);
+    }
     public static String toStringAdvance(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy HH:mm");
         return sdf.format(date);

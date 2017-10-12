@@ -44,7 +44,17 @@ public class FactureGenerator {
     private BonCommande bc;
     private String condition;
     private String responsable;
+    private String fonction;
 
+    public String getFonction() {
+        return fonction;
+    }
+
+    public void setFonction(String fonction) {
+        this.fonction = fonction;
+    }
+
+    
     public String getResponsable() {
         return responsable;
     }
@@ -107,12 +117,13 @@ public class FactureGenerator {
         Test test = new Test();
     }
 
-    public FactureGenerator(Offre offre, VentillationModel ventillation,BonCommande bc,String condition,String responsable,HttpServletRequest servletRequest) throws Exception {
+    public FactureGenerator(Offre offre, VentillationModel ventillation,BonCommande bc,String condition,String responsable,String fonction,HttpServletRequest servletRequest) throws Exception {
         this.setOffre(offre);
         this.setVentillation(ventillation);
         this.setBc(bc);
         this.setCondition(condition);
         this.setResponsable(responsable);
+        this.setFonction(fonction);
         Document document = new Document();
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PDF_FACTURE));
         document.open();
@@ -428,7 +439,7 @@ public class FactureGenerator {
         information = new Paragraph();
         information.add(new Phrase("Antananarivo le,",smallFont));
         addEmptyLine(information,1);
-        information.add(new Phrase("Le Responsable Administratif et Financier",smallFont));
+        information.add(new Phrase(this.fonction,smallFont));
         addEmptyLine(information,6);
         information.add(new Phrase(this.responsable,smallFontBold));
         information.setAlignment(Element.ALIGN_CENTER);

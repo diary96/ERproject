@@ -5,6 +5,7 @@
  */
 package com.er.erproject.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +69,25 @@ public class Statistique {
         this.setTva(tva);
         this.setRemise(remise);
     }
-
+    
+    public String getTotalEffectuerString(){
+        return this.getValeurString(getTotalEffectuer());
+    }
+    public String getValeurRemiseString(){
+         return this.getValeurString(getValeurRemise());
+    }
+    public String getValeurApresRemiseString(){
+         return this.getValeurString(getTotalEffectuer()-getValeurRemise());
+    }
+    public String getValeurTVAString(){
+        return this.getValeurString(this.getValeurTVA());
+    }
+    public String getTotalTTCString(){
+        return this.getValeurString(this.getTotalTTC());
+    }
+    private String getValeurString(double data){
+         return new BigDecimal(data).toPlainString();
+    }
     public Statistique(List<TacheModel> tache, List<TacheModel> tache1, double tva, double remise) {
         List<TacheModel> newList = new ArrayList();
         newList.addAll(tache);

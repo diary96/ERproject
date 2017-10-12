@@ -15,16 +15,21 @@
     <div class="x_content">
 
         <div role="tabpanel" class="tab-pane fade active in" id="init" aria-labelledby="home-tab">
-            <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Responsable Financier : <span class="required">*</span>
-                </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+             <div class="form-group">
+                <label class="control-label col-md-1 col-sm-1 col-xs-1" for="first-name">Fonction :  </label>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <input  id="fonction" value="<s:property value="getFonction()"/>"  type="text" required="required" class="form-control col-md-7 col-xs-12">
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3">
                     <input  id="responsable" value="<s:property value="getResponsable()"/>"  type="text" required="required" class="form-control col-md-7 col-xs-12">
                 </div>
             </div><div class="clearfix"></div><br>
             <s:iterator value="ventillations">
                 <button id="<s:property value="getAllReference()"/>" class="download btn btn-primary">Telecharger facture : <s:property value="getPourcentage()"/>%</button>
             </s:iterator>
+             <s:if test="getUser().getNiveau()>=4">
+                <a href="loadVentilation?idOffre=<s:property value="getIdOffre()"/>&type=<s:property value="@com.er.erproject.data.VentilationData@TS"/>" class="btn btn-dark">Modifier condition de paiement</a>
+            </s:if>
             <p><u>Condition de r&edot;glement : </u><s:property value="getCondition()"/></p>
             <table id="table" cellspacing="1" class="table table-bordered">
                 <tr>
@@ -50,11 +55,25 @@
                 </s:iterator>
                 
             </table>
+            
             <div class="x_panel">
                 <div class="row tile_count">
                     <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                         <span class="count_top"><i class="fa fa-money"></i> Total</span>
-                        <div class="count"><s:property value="getOffre().getStatTS().getTotalEffectuer()"/></div>             
+                        <div class="count"><s:property value="getOffre().getStatTS().getTotalEffectuerString()"/></div>             
+                    </div>
+                    
+                    <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                        <span class="count_top"><i class="fa fa-money"></i> Remise</span>
+                        <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getRemise()"/> %</div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                        <span class="count_top"><i class="fa fa-money"></i> Valeur de la remise</span>
+                        <div class="count"><s:property value="getOffre().getStatTS().getValeurRemiseString()"/></div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                        <span class="count_top"><i class="fa fa-money"></i> Valeur apr&egrave;s la remise</span>
+                        <div class="count"><s:property value="getOffre().getStatTS().getValeurApresRemiseString()"/></div>
                     </div>
                     <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                         <span class="count_top"><i class="fa fa-money"></i> TVA </span>
@@ -62,20 +81,11 @@
                     </div>
                     <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                         <span class="count_top"><i class="fa fa-money"></i> Valeur du TVA </span>
-                        <div class="count"><s:property value="getOffre().getStatTS().getValeurTVA()"/></div>
+                        <div class="count"><s:property value="getOffre().getStatTS().getValeurTVAString()"/></div>
                     </div>
-                    <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
-                        <span class="count_top"><i class="fa fa-money"></i> Remise</span>
-                        <div class="count"><s:property value="getOffre().getTravauxSupplementaire().getRemise()"/> %</div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
-                        <span class="count_top"><i class="fa fa-money"></i> Valeur de la remise</span>
-                        <div class="count"><s:property value="getOffre().getStatTS().getValeurRemise()"/></div>
-                    </div>
-
                     <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                         <span class="count_top"><i class="fa fa-money"></i> Total TTC</span>
-                        <div class="count"><s:property value="getOffre().getStatTS().getTotalTTC()"/></div>
+                        <div class="count"><s:property value="getOffre().getStatTS().getTotalTTCString()"/></div>
                     </div>
 
 
@@ -91,7 +101,7 @@
         $('.download').on('click', function ()
         {
             if (confirm("Voulez-vous vraiment telecharger la facture ?")) {
-                window.location.replace("downloadFactureTS?idOffre=<s:property value="getIdOffre()"/>&referenceVentilation="+this.getAttribute('id')+"&responsable="+document.getElementById('responsable').value);
+                window.location.replace("downloadFactureTS?idOffre=<s:property value="getIdOffre()"/>&referenceVentilation="+this.getAttribute('id')+"&responsable="+document.getElementById('responsable').value+"&fonction="+document.getElementById('fonction').value);
                 
             }
         });

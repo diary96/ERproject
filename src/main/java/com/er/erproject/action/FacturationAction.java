@@ -64,7 +64,17 @@ public class FacturationAction extends ActionModel {
     private String referenceVentilation;
     private String order;
     private String responsable;
+    private String fonction;
 
+    public String getFonction() {
+        return fonction;
+    }
+
+    public void setFonction(String fonction) {
+        this.fonction = fonction;
+    }
+
+    
     public String getResponsable() {
         return responsable;
     }
@@ -424,13 +434,22 @@ public class FacturationAction extends ActionModel {
             return Action.NONE;
         }
         try {
-            this.offre = this.offreService.find(idOffre);          
+            this.offre = this.offreService.find(idOffre);       
+            if(offre.getStatu()<StatuReference.FACTURATION)return Action.NONE;
         } catch (Exception e) {
             return Action.NONE;
         }
         try{
+            if(this.type==VentilationData.SOUMISSION){
+                if(this.ventillationService.ventillationSoumissionExist(offre)){
+                    this.ventillation = VentillationService.spliter(this.ventillationService.find(offre, type));
+                }
+            }
             if(this.type==VentilationData.TS){
                 offreService.checkerTSEmpty(offre);
+                if(this.ventillationService.ventillationTSExist(offre)){
+                    this.ventillation = VentillationService.spliter(this.ventillationService.find(offre, type));
+                }
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -456,6 +475,7 @@ public class FacturationAction extends ActionModel {
         }
         try {
             this.offre = this.offreService.find(idOffre);
+            if(offre.getStatu()<StatuReference.FACTURATION)return Action.NONE;
         } catch (Exception e) {
             return Action.NONE;
         }
@@ -466,12 +486,24 @@ public class FacturationAction extends ActionModel {
         try {
             if(this.offre.getClose())throw new Exception("l'offre est clôturée et ne peut plus etre modifié");               
             if(!this.checkerData(this.ventillation))throw new Exception("Aucun ventilation inseré");
+            boolean test; 
+            if(type == VentilationData.SOUMISSION){
+                test = this.ventillationService.ventillationSoumissionExist(offre);
+            }else{
+                test = this.ventillationService.ventillationTSExist(offre);
+            }
             this.ventillationService.save(this.getVentillation(),this.getOffre(), this.getType());
             this.url = "detailOffre?idOffre="+this.getIdOffre();
             
             historique =new Historique();
             historique.setUser(user);
-            historique.setDescription("ajout des modes de paiements");
+            if(test==false){
+                if(type == VentilationData.SOUMISSION) historique.setDescription("ajout des modes de paiements");
+                else  historique.setDescription("ajout des modes de paiements des T.S");     
+            }else {
+                if(type == VentilationData.SOUMISSION) historique.setDescription("modification des modes de paiements");
+                else  historique.setDescription("modification des modes de paiements des T.S");     
+             };
             historique.setDate(Calendar.getInstance().getTime());
             historique.setReferenceExterieur(offre.getAllReference());
             this.historiqueService.save(historique);
@@ -503,11 +535,13 @@ public class FacturationAction extends ActionModel {
             return Action.NONE;
         }
         try {
+            this.titre = "Facturation des taches initiaux";
             this.offreService.populateStatistiqueInitial(offre);
             if(this.offre.getStatu()<StatuReference.FACTURATION)return Action.NONE;
             this.ventillations = this.ventillationService.find(offre,VentilationData.SOUMISSION);
             this.condition = VentillationModel.getCondition(ventillations);
             if(!this.checkerData(this.responsable)) this.setResponsable("RAKOTONIRINA Beby");
+            if(!this.checkerData(this.fonction)) this.setFonction("Le Responsable Administratif et Financier");
         } catch (Exception ex) {
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(ex.getMessage());
@@ -532,12 +566,11 @@ public class FacturationAction extends ActionModel {
             this.ventillations = this.ventillationService.find(offre,VentilationData.TS);
             this.condition = VentillationModel.getCondition(ventillations);
             if(!this.checkerData(this.responsable)) this.setResponsable("RAKOTONIRINA Beby");
+             if(!this.checkerData(this.fonction)) this.setFonction("Le Responsable Administratif et Financier");
 
         } catch (Exception ex) {
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(ex.getMessage());
-            ex.printStackTrace();
-//            throw ex;
             return Action.ERROR;
         }
         return Action.SUCCESS;
@@ -631,11 +664,14 @@ public class FacturationAction extends ActionModel {
             return Action.LOGIN;
         }
         if(!this.checkerData(this.referenceVentilation))return Action.NONE;
-        if (this.idOffre == 0) {
+        
+        try{
+            this.offre = this.offreService.find(idOffre);
+           
+        }catch(Exception e){
             return Action.NONE;
         }
         try {
-            this.offre = this.offreService.find(idOffre);
             this.offreService.populateStatistiqueInitial(offre);
             this.offreService.popoluteTacheSoumission(offre);
             if(this.offre.getStatu()<StatuReference.FACTURATION)return Action.NONE;
@@ -648,7 +684,8 @@ public class FacturationAction extends ActionModel {
             if(bc==null)throw new Exception("aucun bon de commande enregistré, veuillez enregistrer un bon de commande pour les travaux initiaux");
             this.condition = VentillationModel.getConditionWithoutDate(ventillations);
             if(!this.checkerData(this.responsable))this.responsable = "RAKOTONIRINA Beby";
-            FactureGenerator pv = new FactureGenerator(offre,ventillationData,bc,this.condition,responsable,this.servletRequest);
+            if(!this.checkerData(this.fonction))this.fonction = "Le Responsable Administratif et Financier";
+            FactureGenerator pv = new FactureGenerator(offre,ventillationData,bc,this.condition,responsable,fonction,this.servletRequest);
             File fileToDownload = new File(this.servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PDF_FACTURE);
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);
@@ -662,9 +699,7 @@ public class FacturationAction extends ActionModel {
         } catch (Exception ex) {
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(ex.getMessage());
-            ex.printStackTrace();
-//            throw ex;
-            return Action.NONE;
+            return Action.ERROR;
         }
         return Action.SUCCESS;
     }
@@ -696,7 +731,8 @@ public class FacturationAction extends ActionModel {
             if(bc==null)throw new Exception("aucun bon de commande enregistré, veuillez enregistrer un bon de commande pour les travaux supplementaire");      
             this.condition = VentillationModel.getConditionWithoutDate(ventillations);
             if(!this.checkerData(this.responsable))this.responsable = "RAKOTONIRINA Beby";
-            FactureTSGenerator pv = new FactureTSGenerator(offre,ventillationData,bc,this.condition,responsable,this.servletRequest);
+            if(!this.checkerData(this.fonction)) this.setFonction("Le Responsable Administratif et Financier");
+            FactureTSGenerator pv = new FactureTSGenerator(offre,ventillationData,bc,this.condition,responsable,fonction,this.servletRequest);
             File fileToDownload = new File(this.servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PDF_FACTURE);
             fileName = fileToDownload.getName();
             fileInputStream = new FileInputStream(fileToDownload);

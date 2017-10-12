@@ -30,7 +30,7 @@ public class AddAction extends ActionModel{
     private OffreService offreService;
     private TypeOffreService typeOffreService;
     private List<TypeOffre> typeOffres;
-
+    private long idOffre = 0;
     private String ticket;
     private String projet;
     private String localisation;
@@ -40,6 +40,15 @@ public class AddAction extends ActionModel{
     private String dateAjout;
     private long type;   
 
+    public long getIdOffre() {
+        return idOffre;
+    }
+
+    public void setIdOffre(long idOffre) {
+        this.idOffre = idOffre;
+    }
+
+    
     public String getDateAjout() {
         return dateAjout;
     }
@@ -157,14 +166,41 @@ public class AddAction extends ActionModel{
         this.typeOffres = this.typeOffreService.findAll();
     }
     public String newLoadOffre() throws Exception{
-        this.titre = "Nouvelle Offre";
+        
         this.setSessionUser();
         if(!this.checkerUser()) return Action.NONE;
         this.populate();
-        this.dateAjout = DateUtil.convert(Calendar.getInstance().getTime());
-        this.time = "00:00";
+        if(this.idOffre==0){
+            this.titre = "Nouvelle Offre";
+            this.dateAjout = DateUtil.convert(Calendar.getInstance().getTime());
+            this.time = "00:00";
+        }else{
+            try{
+                Offre offreTemp = this.offreService.find(idOffre);
+                this.titre = "Modification des informations de l'offre "+offreTemp.getAllReference();
+                this.offreService.findTypeOffre(offreTemp);
+                this.ticket = offreTemp.getTicket();
+                this.projet = offreTemp.getNomProjet(); 
+                this.localisation = offreTemp.getLocalisation(); 
+                if(offreTemp.getDeadline()!=null){
+                     this.deadLine = UtilConvert.convertToSQLDate(offreTemp.getDeadline());
+                     this.time = UtilConvert.convertToHeure(offreTemp.getDeadline());
+                }else{ 
+                    this.time = "00:00";
+                }
+                if(offreTemp.getDatetravauxprevu()!=null){
+                    this.dateTravaux = UtilConvert.convertToSQLDate(offreTemp.getDatetravauxprevu());
+                }
+                this.type = offreTemp.getTypeOffre().getId();
+                this.dateAjout = UtilConvert.convertToSQLDate(offreTemp.getDateAjout());
+            }catch(Exception e){
+                return Action.NONE;
+            }
+        }
+        
         return Action.SUCCESS;
     }
+    
     public String saveOffre() throws Exception{
         this.setLinkError(Reference.INVISIBIBLE);
         this.populate();
@@ -172,45 +208,78 @@ public class AddAction extends ActionModel{
         if(!this.checkerUser()) return Action.NONE;
         try{
             this.chekerData();
-            Offre offre = new Offre();
-            offre.setDateAjout(new Date(Calendar.getInstance().getTime().getTime()));
-            offre.setTicket(ticket);
-            offre.setNomProjet(projet);
-            offre.setStatu(0);
-            TypeOffre typeOffre = new TypeOffre();
-            typeOffre.setId(type);
-            offre.setTypeOffre(typeOffre);
-            offre.setUser(user);
-            offre.setLocalisation(localisation);
-            
-            Date temp = DateUtil.convert(this.dateAjout);
-            offre.setDateAjout(temp);
-            if(this.isValide(this.deadLine)){
-                Date deadLineDate = UtilConvert.convertToSQLDate(this.deadLine,this.time);
-                if(temp.after(deadLineDate))throw new Exception("la deadline ne peut pas se situer avant la date d'ajout");
-                offre.setDeadline(deadLineDate);
+            if(this.idOffre==0){
+                Offre offre = new Offre();  
+                offre.setTicket(ticket);
+                offre.setNomProjet(projet);
+                offre.setStatu(0);
+                TypeOffre typeOffre = new TypeOffre();
+                typeOffre.setId(type);
+                offre.setTypeOffre(typeOffre);
+                offre.setUser(user);
+                offre.setLocalisation(localisation);
+
+                Date temp = DateUtil.convert(this.dateAjout);
+                offre.setDateAjout(temp);
+                if(this.isValide(this.deadLine)){
+                    Date deadLineDate = UtilConvert.convertToSQLDate(this.deadLine,this.time);
+                    if(temp.after(deadLineDate))throw new Exception("la deadline ne peut pas se situer avant la date d'ajout");
+                    offre.setDeadline(deadLineDate);
+                }
+                if(this.isValide(this.dateTravaux))offre.setDatetravauxprevu(UtilConvert.convertToSQLDate(this.dateTravaux));
+                Offre offreTemp = this.offreService.find(ticket);
+                if(offreTemp!=null){
+                    throw new Exception("impossible d'enregistrer cette offre, une offre possède le même ticket");
+                }
+                if(Calendar.getInstance().getTime().before(temp))throw new Exception("Veuillez choisir une date inferieur a celui d'aujourd'hui"); 
+               
+                this.offreService.save(offre);
+                historique = new Historique();
+                historique.setUser(user);
+                historique.setDescription("ajout d'une nouvelle offre");
+                
+                historique.setDate(Calendar.getInstance().getTime());
+                
+                historique.setReferenceExterieur(offre.getAllReference());
+                this.historiqueService.save(historique);
+            }else{
+                Offre offre = this.offreService.find(idOffre);
+                String tempTicket = offre.getTicket();
+                offre.setTicket(ticket);
+                offre.setNomProjet(projet);
+                offre.setStatu(0);
+                TypeOffre typeOffre = new TypeOffre();
+                typeOffre.setId(type);
+                offre.setTypeOffre(typeOffre);
+                offre.setUser(user);
+                offre.setLocalisation(localisation);
+
+                Date temp = DateUtil.convert(this.dateAjout);
+                offre.setDateAjout(temp);
+                if(this.isValide(this.deadLine)){
+                    Date deadLineDate = UtilConvert.convertToSQLDate(this.deadLine,this.time);
+                    if(temp.after(deadLineDate))throw new Exception("la deadline ne peut pas se situer avant la date d'ajout");
+                    offre.setDeadline(deadLineDate);
+                }
+                if(this.isValide(this.dateTravaux))offre.setDatetravauxprevu(UtilConvert.convertToSQLDate(this.dateTravaux));
+                if(tempTicket.compareToIgnoreCase(offre.getTicket())!=0){
+                    Offre offreTemp = this.offreService.find(ticket);
+                    if(offreTemp!=null){
+                        throw new Exception("impossible de modifier cette offre, une offre possède le même ticket");
+                    }
+                }
+                if(Calendar.getInstance().getTime().before(temp))throw new Exception("Veuillez choisir une date inferieur a celui d'aujourd'hui"); 
+             
+                this.offreService.update(offre);
+                historique = new Historique();
+                historique.setUser(user);
+                historique.setDescription("modification des informations de l'offre");
+               
+                historique.setDate(Calendar.getInstance().getTime());
+                historique.setReferenceExterieur(offre.getAllReference());
+                this.historiqueService.save(historique);
             }
-            if(this.isValide(this.dateTravaux))offre.setDatetravauxprevu(UtilConvert.convertToSQLDate(this.dateTravaux));
-            Offre offreTemp = this.offreService.find(ticket);
-            if(offreTemp!=null){
-                throw new Exception("impossible d'enregistrer cette offre, une offre possède le même ticket");
-            }
-            this.offreService.save(offre);
-            historique = new Historique();
-            historique.setUser(user);
-            historique.setDescription("ajout d'une nouvelle offre");
-            
-            if(Calendar.getInstance().getTime().before(temp))throw new Exception("Veuillez choisir une date inferieur a celui d'aujourd'hui"); 
-            historique.setDate(temp);
-            historique.setReferenceExterieur(offre.getAllReference());
-            this.historiqueService.save(historique);
-        }catch(Exception e){
-            historique = new Historique();
-            historique.setUser(user);
-            historique.setDescription("Tentative d'ajout d'une nouvelle offre");
-            historique.setDate(Calendar.getInstance().getTime());
-            this.historiqueService.save(historique);
-            
+        }catch(Exception e){     
             this.titre = "Nouvelle Offre | Erreur";
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());

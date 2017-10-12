@@ -91,7 +91,7 @@
 
                 </div>
             </s:if>
-            <div role="tabpanel" class="tab-pane fade <s:if test="getOffre().getStatu()==@com.er.erproject.data.StatuReference@SOUMISSION">active in</s:if>" id="soumission" aria-labelledby="profile-tab">
+            <div role="tabpanel" class="tab-pane fade<s:if test="getOffre().getStatu()>=@com.er.erproject.data.StatuReference@SOUMISSION"> active in</s:if>" id="soumission" aria-labelledby="profile-tab">
                 <!-- start  soumission--> 
                 <div id="table">
                     <a href="gestionSoumission?idOffre=<s:property value="getIdOffre()"/>" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Gestion des status des travaux de soumission</a>

@@ -81,7 +81,7 @@
                                     <option value="false" <s:if test="getClose().equalsIgnoreCase(false)">selected="true"</s:if>>Ouvert</option>                  
                                 </select>
                             </div>
-                        </div>
+                        </div>                 
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Bon de Commande : 
                             </label>
@@ -192,8 +192,9 @@
                                 <s:if test="getUserTemp().getNiveau()>=3">
                                     <td><a href="gestionHistorique?idOffre=<s:property value="getId()" />" class="btn btn-primary btn-xs">Historique</a></td>
                                 </s:if>
-                                <td> <a href="listeArchive?idOffre=<s:property value="getId()" />" class="btn btn-dark btn-xs"  >Gestion des fichiers</button></a>
-                                <td> <button id="<s:property value="getId()" />" class="supprimer btn btn-danger btn-xs"  >Supprimer</button></td>
+                                <td> <a href="listeArchive?idOffre=<s:property value="getId()" />" class="btn btn-dark btn-xs"  >Gestion des fichiers</a>
+                                <td> <a href="newOffre?idOffre=<s:property value="getId()" />" class="btn btn-primary btn-xs"  >Modifier information</a>
+                                <td> <button id="<s:property value="getId()" />" class="supprimer btn btn-danger btn-xs"  >Supprimer</td>
 
                             </tr>
                               

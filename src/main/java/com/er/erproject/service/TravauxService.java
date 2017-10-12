@@ -109,7 +109,7 @@ public class TravauxService extends ServiceModel {
                     travauxSupplementaireService.setHibernateDao(hibernateDao);
                     tuc.setTravauxSupplementaire(travauxSupplementaireService.find((Offre) reflectService.find(refRelation)));
                     tuc.setQuantite(UtilConvert.toEntier(quantite));
-                    tuc.setEffectuer(0);
+                    tuc.setEffectuer(tuc.getQuantite());
                     this.save(tuc);
                     return tuc;
                 }
@@ -150,11 +150,8 @@ public class TravauxService extends ServiceModel {
                     travauxSupplementaireService.setHibernateDao(hibernateDao);
                     tuc.setTravauxSupplementaire(travauxSupplementaireService.find((Offre) reflectService.find(refRelation)));
                     tuc.setQuantite(UtilConvert.toEntier(quantite));
-                    if (catalogue.getIsAdmin() == false) {
-                        tuc.setEffectuer(tuc.getQuantite());
-                    } else {
-                        tuc.setEffectuer(0);
-                    }
+                    tuc.setEffectuer(tuc.getQuantite());       
+                    
                     this.save(tuc);
                     return tuc;
                 }

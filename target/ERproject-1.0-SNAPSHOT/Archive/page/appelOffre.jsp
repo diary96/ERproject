@@ -12,8 +12,8 @@
         <form action="saveOffre" methode="POST" class="form-horizontal form-label-left" novalidate="">
 
             <span class="section">Information de l'offre</span>
-
-            <div class="item form-group">
+            <input type="hidden" name="idOffre" value="<s:property value="getIdOffre()"/>">
+             <div class="item form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ticket">Ticket :<span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -61,7 +61,7 @@
                 <div class="col-md-6 col-sm-6 col-xs-12">
                     <select id="heard" name="type"class="form-control" required="">
                         <s:iterator value="typeOffres">
-                            <option value="<s:property value="getId()"/>"><s:property value="getNom()"/></option>
+                            <option value="<s:property value="getId()"/>"<s:if test="getId()==getType()">selected="true"</s:if>><s:property value="getNom()"/></option>
                         </s:iterator>
                         <
                     </select>

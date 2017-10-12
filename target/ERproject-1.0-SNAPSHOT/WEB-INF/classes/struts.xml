@@ -135,6 +135,8 @@
             <result name="error" type="redirectAction">
                 <param name="actionName">facturation</param>
                 <param name="idOffre">${idOffre}</param>
+                <param name="responsable">${responsable}</param>
+                <param name="fonction">${fonction}</param>
                 <param name="linkError">${linkError}</param>
                 <param name="messageError">${messageError}</param>
             </result>

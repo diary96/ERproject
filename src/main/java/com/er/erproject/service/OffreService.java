@@ -131,6 +131,14 @@ public class OffreService extends ServiceModel {
         }
         return reponse;
     }
+    public void update(Offre offre)throws Exception{
+        try{
+            if(offre.getClose())throw new Exception("l'offre est cloturé et ne peut plus être modifiée");
+            this.hibernateDao.update(offre);
+        }catch(Exception e){
+            throw new Exception("impossible de mettre a jour l'offre cause "+e.getMessage());
+        }
+    }
     
     public List<Offre> filtreBCTS(List<Offre> offres, boolean test){
         BonCommandeService bonCommandeService = new BonCommandeService();

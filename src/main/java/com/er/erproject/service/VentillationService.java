@@ -13,6 +13,7 @@ import com.er.erproject.model.TravauxSupplementaire;
 import com.er.erproject.model.Ventillation;
 import com.er.erproject.model.VentillationModel;
 import com.er.erproject.model.VentillationTS;
+import com.er.erproject.util.DateUtil;
 import com.er.erproject.util.UtilConvert;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -452,6 +453,21 @@ public class VentillationService extends ServiceModel {
         return ventillations;
     }
     
+    public static String spliter(List<VentillationModel> data)throws Exception{
+        String reponse=""; 
+        if(data==null)throw new Exception("les conditions ne sont pas initialisé");
+        for(int i=0;i<data.size();i++){
+            VentillationModel ventillationTemp = data.get(i);
+            String tempData; 
+            String payementName; 
+            if(ventillationTemp.getPayementName()==null)payementName ="none";
+            else payementName = ventillationTemp.getPayementName();
+            tempData = String.valueOf(ventillationTemp.getPourcentage())+"/"+DateUtil.convert(ventillationTemp.getDate())+"/"+ventillationTemp.getTypeDescription()+"/"+payementName+",";
+            reponse+=tempData;
+        }
+        return reponse;
+    }
+    
     public static List<VentillationModel> spliter(String data, short type) throws Exception {
         List<VentillationModel> ventillations = new ArrayList();
         String[] fistSplit = data.split(",");
@@ -501,20 +517,18 @@ public class VentillationService extends ServiceModel {
             tr = session.beginTransaction();
             if(type==VentilationData.SOUMISSION){
                 if (this.ventillationSoumissionExist(offre)) {
-                    throw new Exception("cette offre possede deja des ventilations");
+                    this.delete(offre, type, session); 
                 }
             }
             else{
                 if(this.ventillationTSExist(offre)){
-                    throw new Exception("cette offre possède déjâ des ventilations pour les travaux supplémentaires");
+                    this.delete(offre, type, session); 
                 }
             }
             for (int i = 0; i < ventillations.size(); i++) {
                 this.save(ventillations.get(i), offre, type, session);
-            }
-            
+            }           
             tr.commit();
-
         } catch (Exception e) {
             if (tr != null) {
                 tr.rollback();
@@ -631,6 +645,56 @@ public class VentillationService extends ServiceModel {
 
     }
 
+    private void delete(VentillationModel ventillation)throws Exception{
+        try{
+            this.hibernateDao.delete(ventillation);
+        }catch(Exception e){
+            throw new Exception("impossible de supprimer la ventilation");
+        }
+    }
+    
+    private static void delete(VentillationModel ventillation, Session session)throws Exception{
+        try{
+            session.delete(ventillation);
+        }catch(Exception e){
+            throw new Exception("impossible de supprimer la ventilation");
+        }
+    }
+    
+    public void delete(Offre offre, short type)throws Exception{
+        List<VentillationModel> ventillation = this.find(offre, type);
+        if(ventillation.isEmpty())throw new Exception("la ventilation est vide");
+        Session session = null; 
+        Transaction tr=null;
+        try{
+            session = this.hibernateDao.getSessionFactory().openSession();
+            tr = session.beginTransaction(); 
+            for(int i=0;i<ventillation.size();i++){
+                VentillationService.delete(ventillation.get(i), session);
+            }
+            tr.commit();
+        }catch(Exception e){ 
+            if(tr!=null)tr.rollback();
+            throw e;
+        }finally{
+            if(session!=null)session.close();
+        }
+    }
+    
+    public void delete(Offre offre, short type,Session session)throws Exception{
+        List<VentillationModel> ventillation = this.find(offre, type);
+        if(ventillation.isEmpty())throw new Exception("la ventilation est vide");    
+        try{
+           
+            for(int i=0;i<ventillation.size();i++){
+                VentillationService.delete(ventillation.get(i), session);
+            }
+            
+        }catch(Exception e){
+            throw e;
+        }
+    }
+    
     public boolean ventillationSoumissionExist(Offre offre) throws Exception {
         if (offre.getSoumission() == null) {
             SoumissionService soumissionService = new SoumissionService();
