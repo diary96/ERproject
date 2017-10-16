@@ -124,6 +124,51 @@
             <result name="error" type="redirect">${url}</result> 
             <result name="none" type="redirect">accueil</result> 
         </action>
+        <action name="downloadOffre" class="com.er.erproject.action.AccueilAction" method="download">
+            <result name="success" type="stream">
+                <param name="contentDisposition">attachment;filename=${fileName}</param>
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">fileInputStream</param>
+                <param name="bufferSize">1024</param>
+            </result>
+            <result name="login" type="redirect">index</result> 
+            <result name="error" type="redirectAction">
+                <param name="actionName">accueil</param>               
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result>
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="downloadListeFacture" class="com.er.erproject.action.FacturationAction" method="downloadListeFacture">
+            <result name="success" type="stream">
+                <param name="contentDisposition">attachment;filename=${fileName}</param>
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">fileInputStream</param>
+                <param name="bufferSize">1024</param>
+            </result>
+            <result name="login" type="redirect">index</result> 
+            <result name="error" type="redirectAction">
+                <param name="actionName">listeFacturation</param>               
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result>
+            <result name="none" type="redirect">accueil</result> 
+        </action>
+        <action name="downloadListeFactureTS" class="com.er.erproject.action.FacturationAction" method="downloadListeFactureTS">
+            <result name="success" type="stream">
+                <param name="contentDisposition">attachment;filename=${fileName}</param>
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">fileInputStream</param>
+                <param name="bufferSize">1024</param>
+            </result>
+            <result name="login" type="redirect">index</result> 
+            <result name="error" type="redirectAction">
+                <param name="actionName">listeFacturationTs</param>               
+                <param name="linkError">${linkError}</param>
+                <param name="messageError">${messageError}</param>
+            </result>
+            <result name="none" type="redirect">accueil</result> 
+        </action>
         <action name="downloadFacture" class="com.er.erproject.action.FacturationAction" method="downloadFacture">
             <result name="success" type="stream">
                 <param name="contentDisposition">attachment;filename=${fileName}</param>
@@ -255,6 +300,7 @@
                 <param name="idOffre">${idOffre}</param>
                 <param name="url">${url}</param>
                 <param name="reussite">${reussite}</param>
+                <param name="type">${type}</param>
                 
             </result> 
             <result name="error" type="chain">

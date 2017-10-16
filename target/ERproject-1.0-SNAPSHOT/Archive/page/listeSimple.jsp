@@ -22,7 +22,7 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Reference : 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input name="reference" value="<s:property value="getReference()"/>" type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                                <input name="reference" id="reference" value="<s:property value="getReference()"/>" type="text"  name="last-name" required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         
@@ -30,7 +30,7 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Libell&eacute; de l'archive : 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input name="nomProjet" value="<s:property value="getNomProjet()"/>" type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                                <input name="nomProjet" id="nomProjet" value="<s:property value="getNomProjet()"/>" type="texte" required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                           
@@ -38,14 +38,14 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Num&eacute;ro du ticket : 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                               <input name="ticket" value="<s:property value="getTicket()"/>"type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                               <input name="ticket" value="<s:property value="getTicket()"/>"type="texte" id="ticket" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         <div class="item form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="type">Nom du departement 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select id="heard" name="nomType"class="form-control" required="">
+                                <select id="nomType" name="nomType"class="form-control" required="">
                                     <option value="none" <s:if test="getNomType()==none">selected="true"</s:if>>Tout</option>
                                     <s:iterator value="typeOffres">            
                                         <option value="<s:property value="getId()"/>" <s:if test="getNomType()==getId()">selected="true"</s:if>><s:property value="getNom()"/></option>
@@ -59,7 +59,7 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Etape : <span class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select name="statu" class="form-control">
+                                <select name="statu" id="statu" class="form-control">
                                     <option value="none" <s:if test="getStatu().equalsIgnoreCase(none)||getStatu().equalsIgnoreCase('')">selected="true"</s:if>>Tout</option>
                                     <option value="0" <s:if test="getStatu()==0">selected="true"</s:if>>Appel d'offre</option>
                                     <option value="1" <s:if test="getStatu()==1">selected="true"</s:if>>Soumission</option>
@@ -75,18 +75,25 @@
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                             
-                                <select name="close" class="form-control">
+                                <select id="close" name="close" class="form-control">
                                     <option value="none" <s:if test="getClose()==none">selected="true"</s:if> >Tout</option>
                                     <option value="true" <s:if test="getClose().equalsIgnoreCase(true)">selected="true"</s:if>>Cloturé</option>
                                     <option value="false" <s:if test="getClose().equalsIgnoreCase(false)">selected="true"</s:if>>Ouvert</option>                  
                                 </select>
                             </div>
-                        </div>                 
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date de travaux : 
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="dateTravaux" name="dateTravaux" value="<s:property value="getDateTravaux()"/>" type="date" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Bon de Commande : 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select name="bcTest" class="form-control">
+                                <select id="bcTest" name="bcTest" class="form-control">
                                     <option value="">Tout</option>
                                     <option value="true" <s:if test="getBcTest().equalsIgnoreCase(true)">selected="true"</s:if> >Avec</option>
                                     <option value="false"<s:if test="getBcTest().equalsIgnoreCase(false)">selected="true"</s:if>>Sans</option>
@@ -97,53 +104,70 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Bon de Commande des T.S : 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select name="bcTsTest" class="form-control">
+                                <select id="bcTsTest" name="bcTsTest" class="form-control">
                                     <option value="">Tout</option>
                                     <option value="true" <s:if test="getBcTsTest().equalsIgnoreCase(true)">selected="true"</s:if> >Avec</option>
                                     <option value="false"<s:if test="getBcTsTest().equalsIgnoreCase(false)">selected="true"</s:if>>Sans</option>
                                 </select>
                             </div>
                         </div>
-                        <input value="1" name="pagination" type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" style="display:none">
-                          
-                        <div class="form-group">
-                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                <button type="submit" class="btn btn-success">Recherche</button>
+                                <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Proces Verbal : 
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="pvTest" name="pvTest" class="form-control">
+                                    <option value="">Tout</option>
+                                    <option value="true" <s:if test="getPvTest().equalsIgnoreCase(true)">selected="true"</s:if> >Avec</option>
+                                    <option value="false"<s:if test="getPcTest().equalsIgnoreCase(false)">selected="true"</s:if>>Sans</option>
+                                </select>
                             </div>
                         </div>
-
+                        <input value="1" name="pagination" type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" style="display:none">
+                          
+                       <div class="form-group">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-md-offset-3">
+                                <button type="submit" class="btn btn-success">Recherche</button>
+                            </div>
+                            
+                            
+                        </div>
                     </form>
+                        <div class="">
+                            <button class="telecharger btn btn-primary"><i class="fa fa-2x fa-file-pdf-o" aria-hidden="true"></i> T&eacute;l&eacute;charger la recherche</button>
+                        </div>
+                   
+                        
                     <table class="table table-hover">
                       <thead>
                         <tr>
                             <th>#</th>
                             <th>
-                                <a href="?order=id&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=id&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&dateTravaux=<s:property value="getDateTravaux()"/>&pvTest=<s:property value="getPvTest()"/>">
                                     Reference
                                 </a>
                             </th>                       
                             <th>
-                                <a href="?order=nomProjet&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=nomProjet&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&dateTravaux=<s:property value="getDateTravaux()"/>&pvTest=<s:property value="getPvTest()"/>">
                                     Libell&eacute; de l'archive
                                 </a>
                             </th>
                             <th>
-                                <a href="?order=typeOffre&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=typeOffre&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&dateTravaux=<s:property value="getDateTravaux()"/>&pvTest=<s:property value="getPvTest()"/>">
                                     Nom du departement
                                 </a>
                             </th>
                             <th>
-                                <a href="?order=ticket&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=ticket&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&dateTravaux=<s:property value="getDateTravaux()"/>&pvTest=<s:property value="getPvTest()"/>">
                                     Numero du ticket 
                                 </a>
                             </th>                         
                             <th>
-                                <a href="?order=dateAjout&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=dateAjout&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&dateTravaux=<s:property value="getDateTravaux()"/>&pvTest=<s:property value="getPvTest()"/>">
                                     Date d'ajout 
                                 </a>
                             </th>                         
                             <th>
-                                <a href="?order=statu&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>">
+                                <a href="?order=statu&orderOld=<s:property value="getOrderOld()"/>&pagination=<s:property value="%{#statu.index+1}" />&reference=<s:property value="getReference()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&nomProjet=<s:property value="getNomProjet()"/>&ticket=<s:property value="getTicket()"/>&nomType=<s:property value="getNomType()"/>&statu=<s:property value="getStatu()"/>&close=<s:property value="getClose()"/>&bcTest=<s:property value="getBcTest()"/>&bcTsTest=<s:property value="getBcTsTest()"/>&dateTravaux=<s:property value="getDateTravaux()"/>&pvTest=<s:property value="getPvTest()"/>">
                                    Etape 
                                 </a>
                             </th>                         
@@ -225,6 +249,18 @@
     jQuery(document).ready(function ($) {
         $(".clickable-row").dblclick(function () {
             window.location = $(this).data("href");
+        });
+    });
+</script>
+
+<script>
+    jQuery(document).ready(function ()
+    {
+        $('.telecharger').on('click', function ()
+        {
+            if (confirm("Voulez-vous vraiment telecharger la liste de cette recherche ?")) {
+                window.location.replace("downloadOffre?reference="+document.getElementById('reference').value+"&nomProjet="+document.getElementById('nomProjet').value+"&ticket="+document.getElementById('ticket').value+"&nomType="+document.getElementById('nomType').options[document.getElementById('nomType').selectedIndex].value+"&statu="+document.getElementById('statu').options[document.getElementById('statu').selectedIndex].value+"&close="+document.getElementById('close').options[document.getElementById('close').selectedIndex].value+"&bcTest="+document.getElementById('bcTest').options[document.getElementById('bcTest').selectedIndex].value+"&dateTravaux="+document.getElementById('dateTravaux').value+"&bcTsTest="+document.getElementById('bcTsTest').options[document.getElementById('bcTsTest').selectedIndex].value+"&pvTest="+document.getElementById('pvTest').options[document.getElementById('pvTest').selectedIndex].value);
+            }
         });
     });
 </script>

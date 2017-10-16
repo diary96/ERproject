@@ -145,7 +145,7 @@ public class FactureTSGenerator {
     private void addContent(Document document,PdfWriter writer,HttpServletRequest servletRequest) throws DocumentException, BadElementException, IOException, Exception {
         Paragraph information = new Paragraph();
 
-        Image img = Image.getInstance(servletRequest.getSession().getServletContext().getRealPath("/")+"Archive/data/Logo/ER_LOGO _min.jpg");
+        Image img = Image.getInstance(servletRequest.getSession().getServletContext().getRealPath("/")+"Archive/data/Logo/ER_LOGO_min.jpg");
         information.add(img);
         addEmptyLine(information, 1);
         document.add(information);

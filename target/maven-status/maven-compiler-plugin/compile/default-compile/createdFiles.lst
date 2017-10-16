@@ -22,6 +22,7 @@ com\er\erproject\model\TacheModel.class
 com\er\erproject\action\UtilAction.class
 com\er\erproject\action\MateriauxAction.class
 com\er\erproject\service\HistoriqueService.class
+com\er\erproject\generator\OffreGenerator.class
 com\er\erproject\model\TravauxSupplementaire.class
 com\er\erproject\generator\XlsGenerator.class
 com\er\erproject\util\UtilConvert.class
@@ -39,9 +40,12 @@ com\er\erproject\security\Cryptographie.class
 com\er\erproject\data\Reference.class
 com\er\erproject\service\TravauxService.class
 com\er\erproject\model\TacheSoumissionHorsCatalogue.class
+com\er\erproject\generator\FacturePdfGenerator$1.class
 com\er\erproject\model\Statistique.class
 com\er\erproject\action\IndexAction.class
+com\er\erproject\generator\FacturePdfGenerator.class
 com\er\erproject\model\TacheInitialHorsCatalogue.class
+com\er\erproject\generator\OffreGenerator$1.class
 com\er\erproject\service\ServiceModel.class
 com\er\erproject\util\StringUtilsData.class
 com\er\erproject\model\TacheInitialCatalogue.class
@@ -84,6 +88,8 @@ com\er\erproject\service\UserService.class
 com\er\erproject\action\AddAction.class
 com\er\erproject\action\TypeFichierAction.class
 com\er\erproject\generator\FactureGenerator.class
+com\er\erproject\generator\FactureTsPdfGenerator$1.class
+com\er\erproject\generator\FactureTsPdfGenerator.class
 com\er\erproject\action\CatalogueAction.class
 com\er\erproject\generator\Test.class
 com\er\erproject\model\Paiement.class

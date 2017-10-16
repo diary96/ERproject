@@ -25,6 +25,26 @@ public class DateUtil {
         }
         return reponse; 
     }
+    public static String convertNormal(Date date)throws Exception{
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); 
+        String reponse; 
+        try{
+            reponse = sdf.format(date);
+        }catch(Exception e){
+            throw new Exception("La date inserer n'est pas valide");
+        }
+        return reponse; 
+    }
+    public static String convertAllNormal(Date date)throws Exception{
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm"); 
+        String reponse; 
+        try{
+            reponse = sdf.format(date);
+        }catch(Exception e){
+            throw new Exception("La date inserer n'est pas valide");
+        }
+        return reponse; 
+    }
     public static String toLettre(Date date)throws Exception{
        
         SimpleDateFormat dateFormat;

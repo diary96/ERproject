@@ -2,7 +2,10 @@
 <div class="x_panel">
   <%@include file="template/default/Erreur.jsp" %>
                 <div class="x_title">
-                    <h2><s:if test="getRetour()==null"></s:if><s:else><button onclick="javascript:history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i>  </button></s:else> Liste des catalogues <small></small></h2>
+                    <h2><s:if test="getRetour()==null"></s:if>
+                        <s:else>
+                            <button onclick="javascript:history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i>  </button>
+                        </s:else> Liste des catalogues <small></small></h2>
                     <ul class="nav navbar-right panel_toolbox">
 <!--                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>-->                      
                         <s:if test="getUser().getNiveau()>=2&&getIdOffre()==null||getUser().getNiveau()>=2&&idOffre==''">

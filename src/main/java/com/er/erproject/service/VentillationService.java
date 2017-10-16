@@ -347,6 +347,99 @@ public class VentillationService extends ServiceModel {
         return ventillations;
     }
     
+    public List<Ventillation> findPopulateVentillation(List<String[]> arg,String payement,String retard,String order,String orderOld)throws Exception{
+        List<Ventillation> ventillations = null;
+        Session session = null; 
+        try{
+            session = this.hibernateDao.getSessionFactory().openSession();
+            
+            Criteria criteria = session.createCriteria(Ventillation.class, "ventilation");
+            criteria.createAlias("ventilation.soumission", "soumission"); 
+            criteria.createAlias("soumission.offre", "offre");
+            
+            if (order != null && order.compareTo("") != 0) {
+                if(orderOld.compareTo(order)==0){
+                    criteria.addOrder(Order.desc(order));
+                }else{
+                    criteria.addOrder(Order.asc(order));
+                }
+                
+            }
+            if(payement!=null&&payement.compareTo("")!=0){
+                if(payement.compareToIgnoreCase("true")==0){
+                    criteria.add(Restrictions.isNotNull("ventilation.datepaiement"));
+                }else{
+                    criteria.add(Restrictions.isNull("ventilation.datepaiement"));
+                }            
+            }
+            if(retard!=null&&retard.compareTo("")!=0){
+                if(payement==null||payement.compareTo("")==0){   
+                    criteria.add(Restrictions.isNull("ventilation.datepaiement"));
+                    if(retard.compareToIgnoreCase("true")==0){
+                        criteria.add(Restrictions.lt("ventilation.date",Calendar.getInstance().getTime()));
+                       
+                    }else{
+                        criteria.add(Restrictions.ge("ventilation.date",Calendar.getInstance().getTime()));
+                        
+                    }
+                    
+                }else{
+                    if(payement.compareToIgnoreCase("true")==0){
+                        if(retard.compareToIgnoreCase("true")==0){
+                            criteria.add(Restrictions.ltProperty("ventilation.date","ventilation.datepaiement"));
+                        }else{
+                            criteria.add(Restrictions.geProperty("ventilation.date","ventilation.datepaiement"));
+                        }
+                        
+                    }else{
+                        if(retard.compareToIgnoreCase("true")==0){
+                            criteria.add(Restrictions.lt("ventilation.date",Calendar.getInstance().getTime()));
+                        }else{
+                            criteria.add(Restrictions.ge("ventilation.date",Calendar.getInstance().getTime()));
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < arg.size(); i++) {
+                String[] temp = arg.get(i);
+                if (temp.length == 2) {   
+                    try{
+                        if(temp[0].contains(".id")){
+                            criteria.add(Restrictions.eq(temp[0], Long.valueOf(temp[1])));
+                        }else{
+                            criteria.add(Restrictions.eq(temp[0], Integer.valueOf(temp[1])));
+                        }
+                    }catch(Exception e){
+                        criteria.add(Restrictions.ilike(temp[0], "%" + temp[1] + "%"));                      
+                    }
+                    
+                }
+                if (temp.length == 3) {
+                    try {
+                        criteria.add(Restrictions.between(temp[0], UtilConvert.convertToSQLDate(temp[1]), UtilConvert.convertToSQLDate(temp[2])));
+
+                    } catch (Exception e) {
+                        criteria.add(Restrictions.between(temp[0], Double.valueOf(temp[1]), Double.valueOf(temp[2])));
+                    }
+                }
+                
+            }
+            ventillations = criteria.list();
+            for(int index=0;index<ventillations.size();index++){
+                Ventillation ventillation = ventillations.get(index);
+                ventillation.setSoumission(VentillationService.find(ventillation, session));
+                ventillation.getSoumission().setOffre(SoumissionService.find(ventillation.getSoumission(), session));
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception("impossible d'extraire les factures cause "+e.getMessage());
+                    
+        }finally{
+            if(session!=null)session.close();
+        }
+        return ventillations;
+    }
+    
     public List<VentillationTS> findPopulateVentillationTs(List<String[]> arg,String payement,String retard,String order,String orderOld,Pagination pagination)throws Exception{
         List<VentillationTS> ventillations = null;
         Session session = null; 
@@ -375,6 +468,102 @@ public class VentillationService extends ServiceModel {
             }
             criteria.setFirstResult((pagination.getPage() - 1) * pagination.getTaillePage());
             criteria.setMaxResults(pagination.getTaillePage());
+            
+            if(payement!=null&&payement.compareTo("")!=0){
+                if(payement.compareToIgnoreCase("true")==0){
+                    criteria.add(Restrictions.isNotNull("ventilation.datepaiement"));
+                }else{
+                    criteria.add(Restrictions.isNull("ventilation.datepaiement"));
+                }            
+            }
+            if(retard!=null&&retard.compareTo("")!=0){
+                if(payement==null||payement.compareTo("")==0){   
+                    criteria.add(Restrictions.isNull("ventilation.datepaiement"));
+                    if(retard.compareToIgnoreCase("true")==0){
+                        criteria.add(Restrictions.lt("ventilation.date",Calendar.getInstance().getTime()));
+                       
+                    }else{
+                        criteria.add(Restrictions.ge("ventilation.date",Calendar.getInstance().getTime()));
+                        
+                    }
+                    
+                }else{
+                    if(payement.compareToIgnoreCase("true")==0){
+                        if(retard.compareToIgnoreCase("true")==0){
+                            criteria.add(Restrictions.ltProperty("ventilation.date","ventilation.datepaiement"));
+                        }else{
+                            criteria.add(Restrictions.geProperty("ventilation.date","ventilation.datepaiement"));
+                        }
+                        
+                    }else{
+                        if(retard.compareToIgnoreCase("true")==0){
+                            criteria.add(Restrictions.lt("ventilation.date",Calendar.getInstance().getTime()));
+                        }else{
+                            criteria.add(Restrictions.ge("ventilation.date",Calendar.getInstance().getTime()));
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < arg.size(); i++) {
+                String[] temp = arg.get(i);
+                if (temp.length == 2) {   
+                    try{
+                        if(temp[0].contains(".id")){
+                            criteria.add(Restrictions.eq(temp[0], Long.valueOf(temp[1])));
+                        }else{
+                            criteria.add(Restrictions.eq(temp[0], Integer.valueOf(temp[1])));
+                        }
+                    }catch(Exception e){
+                       
+                        criteria.add(Restrictions.ilike(temp[0], "%" + temp[1] + "%"));
+                        
+                    }
+                    
+                }
+                if (temp.length == 3) {
+                    try {
+                        criteria.add(Restrictions.between(temp[0], UtilConvert.convertToSQLDate(temp[1]), UtilConvert.convertToSQLDate(temp[2])));
+
+                    } catch (Exception e) {
+                        criteria.add(Restrictions.between(temp[0], Double.valueOf(temp[1]), Double.valueOf(temp[2])));
+                    }
+                }
+                
+            }
+            ventillations = criteria.list();
+            for(int index=0;index<ventillations.size();index++){
+                VentillationTS ventillation = ventillations.get(index);
+                ventillation.setTravauxSupplementaire(VentillationService.find(ventillation, session));
+                ventillation.getTravauxSupplementaire().setOffre(TravauxSupplementaireService.find(ventillation.getTravauxSupplementaire(), session));
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception("impossible d'extraire les factures cause "+e.getMessage());
+                    
+        }finally{
+            if(session!=null)session.close();
+        }
+        return ventillations;
+    }
+    
+    public List<VentillationTS> findPopulateVentillationTs(List<String[]> arg,String payement,String retard,String order,String orderOld)throws Exception{
+        List<VentillationTS> ventillations = null;
+        Session session = null; 
+        try{
+            session = this.hibernateDao.getSessionFactory().openSession();
+            
+            Criteria criteria = session.createCriteria(VentillationTS.class, "ventilation");
+            criteria.createAlias("ventilation.travauxSupplementaire", "travauxSupplementaire"); 
+            criteria.createAlias("travauxSupplementaire.offre", "offre");
+            
+            if (order != null && order.compareTo("") != 0) {
+                if(orderOld.compareTo(order)==0){
+                    criteria.addOrder(Order.desc(order));
+                }else{
+                    criteria.addOrder(Order.asc(order));
+                }
+                
+            }
             
             if(payement!=null&&payement.compareTo("")!=0){
                 if(payement.compareToIgnoreCase("true")==0){

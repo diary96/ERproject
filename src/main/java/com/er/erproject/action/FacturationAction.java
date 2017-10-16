@@ -11,7 +11,9 @@ import com.er.erproject.data.SessionReference;
 import com.er.erproject.data.StatuReference;
 import com.er.erproject.data.VentilationData;
 import com.er.erproject.generator.FactureGenerator;
+import com.er.erproject.generator.FacturePdfGenerator;
 import com.er.erproject.generator.FactureTSGenerator;
+import com.er.erproject.generator.FactureTsPdfGenerator;
 import com.er.erproject.model.BonCommande;
 import com.er.erproject.model.Historique;
 import com.er.erproject.model.Offre;
@@ -894,6 +896,31 @@ public class FacturationAction extends ActionModel {
         return Action.SUCCESS;
     }
     
+    public String downloadListeFacture()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        if(user.getNiveau()<4)return Action.NONE;
+        try{
+            this.ventillationsData = this.ventillationService.findPopulateVentillation(getArgVentillation(),paye, retard, order,orderOld);
+            FacturePdfGenerator pv = new FacturePdfGenerator(ventillationsData,this.servletRequest);
+            File fileToDownload = new File(this.servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PDF_FACTURE_LISTE);
+            fileName = fileToDownload.getName();
+            fileInputStream = new FileInputStream(fileToDownload);
+            
+            
+            
+            this.titre = "Liste des factures";
+        
+        }catch(Exception e){
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+    
     public String listeFactureTs()throws Exception{
         this.setSessionUser();
         if (this.user == null) {
@@ -929,6 +956,31 @@ public class FacturationAction extends ActionModel {
         
         }catch(Exception e){
             e.printStackTrace();
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(e.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+
+    public String downloadListeFactureTS()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        if(user.getNiveau()<4)return Action.NONE;
+        try{
+            this.ventillationsTsData = this.ventillationService.findPopulateVentillationTs(getArgVentillationTs(),paye, retard, order,orderOld);
+            FactureTsPdfGenerator pv = new FactureTsPdfGenerator(ventillationsTsData,this.servletRequest);
+            File fileToDownload = new File(this.servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PDF_FACTURE_TS_LISTE);
+            fileName = fileToDownload.getName();
+            fileInputStream = new FileInputStream(fileToDownload);
+            
+            
+            
+            this.titre = "Liste des factures";
+        
+        }catch(Exception e){
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
             return Action.ERROR;

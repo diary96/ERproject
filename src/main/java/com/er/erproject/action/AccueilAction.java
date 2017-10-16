@@ -5,8 +5,10 @@
  */
 package com.er.erproject.action;
 
+import com.er.erproject.data.PathData;
 import com.er.erproject.data.Reference;
 import com.er.erproject.data.SessionReference;
+import com.er.erproject.generator.OffreGenerator;
 import com.er.erproject.model.Offre;
 import com.er.erproject.model.Pagination;
 import com.er.erproject.model.TypeOffre;
@@ -15,6 +17,9 @@ import com.er.erproject.service.OffreService;
 import com.er.erproject.service.TypeOffreService;
 import com.er.erproject.util.ReferenceUtil;
 import com.opensymphony.xwork2.Action;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
@@ -43,6 +48,46 @@ public class AccueilAction extends ActionModel{
     private User userTemp;
     private String bcTest;
     private String bcTsTest;
+    private String pvTest;
+    private String dateTravaux;
+
+    private InputStream fileInputStream;
+    private String fileName;
+
+    public InputStream getFileInputStream() {
+        return fileInputStream;
+    }
+
+    public void setFileInputStream(InputStream fileInputStream) {
+        this.fileInputStream = fileInputStream;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+    
+    
+    public String getPvTest() {
+        return pvTest;
+    }
+
+    public void setPvTest(String pvTest) {
+        this.pvTest = pvTest;
+    }
+
+    
+    public String getDateTravaux() {
+        return dateTravaux;
+    }
+
+    public void setDateTravaux(String dateTravaux) {
+        this.dateTravaux = dateTravaux;
+    }
+    
 
     public String getBcTest() {
         return bcTest;
@@ -133,6 +178,12 @@ public class AccueilAction extends ActionModel{
     private List<String[]> getArg() throws Exception {
         List<String[]> reponse = new ArrayList<>();
         String[] temp = null;
+        if(getDateTravaux()!=null && this.dateTravaux.compareTo("")!=0){
+            temp = this.initTabStrign(2);
+            temp[0] = "offre.datetravauxprevu";
+            temp[1] = this.dateTravaux;
+            reponse.add(temp);
+        }
         if (this.reference != null && this.reference.compareTo("") != 0) {
             temp = this.initTabStrign(2);
             Offre offre = null;
@@ -265,9 +316,9 @@ public class AccueilAction extends ActionModel{
             return Action.LOGIN;
         }
         this.setUserTemp(user);
-        List<String[]> arg = this.getArg();
         this.titre = "Accueil";
         try{
+            
             this.typeOffres = this.typeOffreService.findAll();
             this.parameter = new Pagination();
             this.parameter.setTaillePage(20);
@@ -282,23 +333,39 @@ public class AccueilAction extends ActionModel{
             if(pagination>1){
                 this.setOrderOld(this.orderPage);
             }
-            this.offres = this.offreService.find(arg,order,orderOld, parameter,bcTest,bcTsTest);
+            this.offres = this.offreService.find(this.getArg(),order,orderOld, parameter,bcTest,bcTsTest,pvTest);
             if(!this.checkerData(this.getOrderOld())&&pagination==0){
                 this.setOrderOld(this.getOrder());
             }else if(this.checkerData(this.getOrderOld())==true&&this.getOrderOld().compareTo(this.getOrder())==0&&pagination==0){
                 this.setOrderOld("");
             }else if(this.checkerData(this.getOrderOld())==true&&this.getOrderOld().compareTo(this.getOrder())!=0&&pagination==0){
                 this.setOrderOld(this.getOrder());
-            }
-            
-            
-            
+            }   
         }catch(Exception e){
-            e.printStackTrace();
             this.setLinkError(Reference.VISIBIBLE);
             this.setMessageError(e.getMessage());
             return Action.ERROR;
         }
         return Action.SUCCESS;
     }  
+    
+    public String download()throws Exception{
+        this.setSessionUser();
+        if (this.user == null) {
+            return Action.LOGIN;
+        }
+        try {
+            this.offres = this.offreService.find(this.getArg(),order,orderOld,bcTest,bcTsTest,pvTest);
+            OffreGenerator pv = new OffreGenerator(offres,this.servletRequest);
+            File fileToDownload = new File(this.servletRequest.getSession().getServletContext().getRealPath("/")+PathData.PATH_PDF_OFFRE);
+            fileName = fileToDownload.getName();
+            fileInputStream = new FileInputStream(fileToDownload);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            this.setLinkError(Reference.VISIBIBLE);
+            this.setMessageError(ex.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
 }

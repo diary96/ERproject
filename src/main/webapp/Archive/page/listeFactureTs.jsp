@@ -19,7 +19,7 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Reference : <span class="required"></span>
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input name="reference" value="<s:property value="getReference()"/>" type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                                <input name="reference" value="<s:property value="getReference()"/>" type="text" id="reference"  required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         
@@ -27,7 +27,7 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Reference de l'offre : 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input name="referenceOffre" value="<s:property value="getReferenceOffre()"/>" type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                                <input name="referenceOffre" value="<s:property value="getReferenceOffre()"/>" type="texte" id="referenceOffre"  required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                           
@@ -35,14 +35,14 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nom de paiement : 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                               <input name="nomPaiement" value="<s:property value="getNomPaiement()"/>"type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                               <input name="nomPaiement" value="<s:property value="getNomPaiement()"/>"type="texte" id="nomPaiement" required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Type de paiement : 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                               <input name="typePaiement" value="<s:property value="getTypePaiement()"/>"type="texte" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                               <input name="typePaiement" value="<s:property value="getTypePaiement()"/>"type="texte" id="typePaiement" required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         
@@ -50,7 +50,7 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="type">Pay&eacute; 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select id="heard" name="paye"class="form-control" required="">
+                                <select id="paye" name="paye"class="form-control" required="">
                                     <option value="">Tout</option>
                                     <option value="true" <s:if test="getPaye().equalsIgnoreCase(true)">selected="true"</s:if>>Pay&eacute;</option>
                                     <option value="false" <s:if test="getPaye().equalsIgnoreCase(false)">selected="true"</s:if>>Non-Pay&eacute;</option>         
@@ -62,7 +62,7 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="type">En retard 
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select id="heard" name="retard"class="form-control" required="">
+                                <select id="retard" name="retard"class="form-control" required="">
                                     <option value="" >Tout</option>
                                     <option value="true" <s:if test="getRetard().equalsIgnoreCase(true)">selected="true"</s:if>>Oui</option>
                                     <option value="false" <s:if test="getRetard().equalsIgnoreCase(false)">selected="true"</s:if>>Non</option>         
@@ -82,6 +82,9 @@
                         </div>
 
                     </form>
+                    <div class="">
+                        <button class="telecharger btn btn-primary"><i class="fa fa-2x fa-file-pdf-o" aria-hidden="true"></i> T&eacute;l&eacute;charger la recherche</button>
+                    </div>
                     <table class="table table-hover">
                       <thead>
                         <tr>
@@ -162,7 +165,17 @@
                         </ul>
                     </div>
                 </div>
-
+<script>
+    jQuery(document).ready(function ()
+    {
+        $('.telecharger').on('click', function ()
+        {
+            if (confirm("Voulez-vous vraiment telecharger la liste de cette recherche ?")) {
+                window.location.replace("downloadListeFactureTS?reference="+document.getElementById('reference').value+"&referenceOffre="+document.getElementById('referenceOffre').value+"&nomPaiement="+document.getElementById('nomPaiement').value+"&typePaiement="+document.getElementById('typePaiement').value+"&paye="+document.getElementById('paye').options[document.getElementById('paye').selectedIndex].value+"&retard="+document.getElementById('retard').options[document.getElementById('retard').selectedIndex].value);
+            }
+        });
+    });
+</script>
 <script>
     jQuery(document).ready(function ($) {
         $(".clickable-row").dblclick(function () {
